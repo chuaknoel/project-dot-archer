@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAttackRange
+public interface IAttackRangeStat
 {
     float AttackRange { get; }
 }

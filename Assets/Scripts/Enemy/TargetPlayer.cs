@@ -4,42 +4,37 @@ using UnityEngine;
 public class TargetPlayer : MonoBehaviour
 {
     public Transform target;
-    public float speed = 2f;
     public float detectionDistance = 1f;
     public LayerMask obstacleLayer;
+    public float MoveSpeed = 2f;
+    private bool isAvoiding = false;
 
-    private bool isAvoiding = false; // 회피 중인지 여부
-
-    void Start()
+    public void Init()
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    void Update()
+    public void FollowPlayer()
     {
         if (!isAvoiding)
         {
-            FollowPlayer();
-        }
-    }
+            if (target == null) return;
 
-    void FollowPlayer()
-    {
-        if (target == null) return;
+            Vector3 moveDir = (target.position - transform.position).normalized;
+            transform.localScale = new Vector3(target.position.x < transform.position.x ? -1 : 1, 1, 1);
 
-        Vector3 moveDir = (target.position - transform.position).normalized;
-        transform.localScale = new Vector3(target.position.x < transform.position.x ? -1 : 1, 1, 1);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, moveDir, detectionDistance, obstacleLayer);
+            Debug.DrawRay(transform.position, moveDir * detectionDistance, Color.red);
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, moveDir, detectionDistance, obstacleLayer);
-        Debug.DrawRay(transform.position, moveDir * detectionDistance, Color.red);
+            if (hit.collider != null)
+            {
+                StartCoroutine(AvoidObstacle(moveDir));
+            }
+            else
+            {
+                transform.position += moveDir * MoveSpeed * Time.deltaTime;
+            }
 
-        if (hit.collider != null)
-        {
-            StartCoroutine(AvoidObstacle(moveDir)); // 회피 코루틴 실행
-        }
-        else
-        {
-            transform.position += moveDir * speed * Time.deltaTime;
         }
     }
 
@@ -52,7 +47,7 @@ public class TargetPlayer : MonoBehaviour
         float timer = 0f;
         while (timer < 0.8f)
         {
-            transform.position += avoidDir * speed * Time.deltaTime;
+            transform.position += avoidDir * MoveSpeed * Time.deltaTime;
             timer += Time.deltaTime;
             yield return null;
         }
