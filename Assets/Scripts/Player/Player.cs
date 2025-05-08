@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     public PlayerController controller;
     private SpriteRenderer characterImage;
     private Animator playerAnime;
+    private SearchTarget searchTarget;
     
     private Vector3 inputDir;
 
@@ -51,9 +52,13 @@ public class Player : MonoBehaviour
 
     public void Init()
     {
-        stat = GetComponent<PlayerStat>();
-        characterImage = GetComponentInChildren<SpriteRenderer>();
-        playerAnime = GetComponent<Animator>();
+        stat ??= GetComponent<PlayerStat>();
+        characterImage ??= GetComponentInChildren<SpriteRenderer>();
+        playerAnime ??= GetComponent<Animator>();
+
+        searchTarget ??= GetComponent<SearchTarget>();
+
+
         SetWeapon();
         ControllerRegister();
     }
