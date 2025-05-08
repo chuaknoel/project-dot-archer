@@ -18,14 +18,14 @@ public class PlayerMoveState : PlayerStates
         player.ChangeAnime(PlayerState.Move);
     }
 
-    public override void OnUpdate()
+    public override void OnUpdate(float deltaTime)
     {
-        base.OnUpdate();
+        base.OnUpdate(deltaTime);
         inputDir = player.GetInputDir();
 
         if (inputDir == Vector3.zero)
         {
-            player.controller.ChangeState(nameof(PlayerIdleState));
+            player.Controller.ChangeState(nameof(PlayerIdleState));
         }
     }
 

@@ -5,9 +5,14 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [HideInInspector] public PlayerStat stat;
-    public PlayerController controller;
+    
+    public PlayerController Controller { get { return controller; } }
+    private PlayerController controller;
+
     private SpriteRenderer characterImage;
     private Animator playerAnime;
+
+    public SearchTarget SearchTarget { get { return searchTarget; } }
     private SearchTarget searchTarget;
     
     private Vector3 inputDir;
@@ -27,7 +32,7 @@ public class Player : MonoBehaviour
 
         GetInputDir();
         LookRotate();
-        controller?.OnUpdate();
+        controller?.OnUpdate(Time.deltaTime);
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -118,6 +123,7 @@ public class Player : MonoBehaviour
             //weaponHandler.Attack();
         }
     }
+
 
     public bool IsAttackable(PlayerState curstate)
     {

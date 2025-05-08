@@ -24,9 +24,9 @@ public abstract class BaseController<T> where T: MonoBehaviour
         registedSatae[state.GetType().Name] = state;
     }
 
-    public virtual void OnUpdate()
+    public virtual void OnUpdate(float deltaTime)
     {
-        currentState?.OnUpdate();
+        currentState?.OnUpdate(deltaTime);
     }
 
     public virtual void OnFixedUpdate()

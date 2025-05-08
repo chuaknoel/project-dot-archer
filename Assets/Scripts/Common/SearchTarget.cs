@@ -1,34 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class SearchTarget : MonoBehaviour
 {
     [SerializeField] private LayerMask targetLayer;
-    public List<IDefenceStat> targetList = new List<IDefenceStat>();
+    public List<GameObject> targetList = new List<GameObject>();
 
     private float targetDistance;
     private float nearestDistance;
+    private int targetNum;
 
-    public void SetTarget(List<IDefenceStat> targetList)
+    public void SetTarget(List<GameObject> targetList)
     {
         this.targetList = targetList;
     }
 
-    public IDefenceStat SearchNearestTarget()
+    public GameObject SearchNearestTarget()
     {
         if (targetList.Count == 0) return null;
 
-        targetDistance = 0;
-        nearestDistance = 0;
+        targetDistance = float.MaxValue;
+        nearestDistance = float.MaxValue;
 
-        foreach (var target in targetList)
+        for (int i = 0; i < targetList.Count; i++)
         {
-            if(target is MonoBehaviour)
-            {
+            targetDistance = (transform.position - targetList[0].transform.position).magnitude;
 
+            if(targetDistance < nearestDistance)
+            {
+                nearestDistance = targetDistance;
+                targetNum = i;
             }
         }
-        return targetList[0];
+
+        return targetList[targetNum];
     }
 }
