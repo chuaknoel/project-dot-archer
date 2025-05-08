@@ -12,6 +12,7 @@ public class PlayerIdleState : PlayerStates
 
     public override void OnEnter()
     {
+        base.OnEnter();
         player.ChangeAnime(PlayerState.Idle);
     }
 
@@ -23,9 +24,12 @@ public class PlayerIdleState : PlayerStates
             player.Controller.ChangeState(nameof(PlayerMoveState));
         }
 
-        if(player.SearchTarget.SearchNearestTarget() != null)
+        if (player.SearchTarget.SearchNearestTarget() != null)
         {
-            player.Controller.ChangeState(nameof(PlayerAttackState));
+            if (player.WeaponHandler.IsUseable())
+            {
+                player.Controller.ChangeState(nameof(PlayerAttackState));
+            }
         }
     }
 

@@ -1,29 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Android.Types;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public Inventory Inventory => inventory;
+    [SerializeField] private Inventory inventory;
+
     [HideInInspector] public PlayerStat stat;
     
     public PlayerController Controller { get { return controller; } }
     private PlayerController controller;
+    private Vector3 inputDir;
 
     private SpriteRenderer characterImage;
     private Animator playerAnime;
 
-
     public SearchTarget SearchTarget { get { return searchTarget; } }
     private SearchTarget searchTarget;
 
-    private Vector3 inputDir;
-
     [SerializeField] private Transform weaponPivot;
-    [SerializeField] private WeaponHandler weaponHandler; //추후 추가
-
-    // 인벤토리 참조 추가 (다른 클래스에 스탯 관리 위임)
-    [SerializeField] private Inventory inventory;
-    public Inventory Inventory => inventory;
+    [SerializeField] private WeaponHandler weaponHandler;
+    public WeaponHandler WeaponHandler { get { return weaponHandler; } }
 
     public LayerMask targetMask;
 
@@ -39,11 +38,8 @@ public class Player : MonoBehaviour
         LookRotate();
         controller?.OnUpdate(Time.deltaTime);
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            Attack();
-        }
 
+        // UI 매니저 생기면 옮겨주세요!
         // 인벤토리 UI 토글 (I 키)
         if (Input.GetKeyDown(KeyCode.I) && inventory != null)
         {
@@ -73,7 +69,6 @@ public class Player : MonoBehaviour
         playerAnime ??= GetComponent<Animator>();
         searchTarget ??= GetComponent<SearchTarget>();
 
-        // 인벤토리 참조 확인
         inventory ??= GetComponent<Inventory>();
         
         SetWeapon();
@@ -126,14 +121,6 @@ public class Player : MonoBehaviour
         }
 
         weaponHandler.Rotate(rotZ);
-    }
-
-    public void Attack()
-    {
-        if (IsAttackable((controller.GetState() as PlayerStates).GetState()))
-        {
-            weaponHandler.Attack();
-        }
     }
 
     public float TotalDamage()
