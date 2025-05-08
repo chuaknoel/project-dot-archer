@@ -3,26 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 아이템 카테고리 열거형
-public enum ItemCategory
-{
-    Weapon,
-    Armor
-}
-
-// 무기 타입 열거형
+// 무기 타입 열거형 - None 추가
 public enum WeaponType
 {
-    Bow,    // 활
-    Sword,  // 검
-    Scythe  // 낫
+    None, // 기본값으로 추가
+    Bow,  // 활
+    Sword, // 검
+    Scythe // 낫
 }
 
-// 방어구 타입 열거형
+// 방어구 타입 열거형 - None 추가
 public enum ArmorType
 {
-    Helmet,  // 투구
-    Armor,   // 갑옷
-    Boots    // 신발
+    None, // 기본값으로 추가
+    Helmet, // 투구
+    Armor,  // 갑옷
+    Boots   // 신발
+}
+
+// 아이템 카테고리 열거형 - None 추가
+public enum ItemCategory
+{
+    None, // 기본값으로 추가
+    Weapon,
+    Armor
 }
 
 // 아이템 등급 열거형
