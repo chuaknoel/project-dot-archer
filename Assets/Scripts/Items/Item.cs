@@ -3,8 +3,6 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     [SerializeField] private ItemData itemData;
-
-    // 장비 상태
     private bool isEquipped = false;
 
     // 프로퍼티
@@ -27,18 +25,7 @@ public class Item : MonoBehaviour
         }
     }
 
-    // 아이템 효과 적용 (장비 장착)
-    public void ApplyEffect(Player player)
-    {
-        // 장비 아이템일 경우 장착
-        if (itemData.ItemCategory == ItemCategory.Weapon ||
-            itemData.ItemCategory == ItemCategory.Armor)
-        {
-            player.EquipItem(this);
-        }
-    }
-
-    // 장착 상태 변경 (Player에서 호출)
+    // 장착 상태 설정
     public void SetEquipped(bool equipped)
     {
         isEquipped = equipped;

@@ -12,46 +12,13 @@ public class Player : MonoBehaviour
     private Vector3 inputDir;
 
     [SerializeField] private Transform weaponPivot;
-    //[SerializeField] private WeaponHandler weaponHandler; 
+    //[SerializeField] private WeaponHandler weaponHandler; //추후 추가
 
-    // 아이템 시스템 추가 시작 ---------------------------------
-    // 싱글톤 인스턴스
-    public static Player Instance { get; private set; }
-
-    // 인벤토리 참조
+    // 인벤토리 참조 추가 (다른 클래스에 스탯 관리 위임)
     [SerializeField] private Inventory inventory;
-
-    // 장착된 아이템 (Dictionary로 관리하여 코드 간소화)
-    private Dictionary<ItemCategory, Item> equippedItems = new Dictionary<ItemCategory, Item>();
-
-    // 아이템 보너스
-    private float attackBonus = 0f;
-    private float defenceBonus = 0f;
-
-    // 프로퍼티
     public Inventory Inventory => inventory;
-    public float TotalAttack => stat.AttackDamage + attackBonus;
-    public float TotalDefence => stat.Defence + defenceBonus;
-    // 아이템 시스템 추가 끝 -----------------------------------
 
     public LayerMask targetMask;
-
-    private void Awake()
-    {
-        // 싱글톤 설정 추가
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
-        // 장비 딕셔너리 초기화
-        equippedItems[ItemCategory.Weapon] = null;
-        equippedItems[ItemCategory.Armor] = null;
-    }
 
     // Update is called once per frame
     void Update()
@@ -98,7 +65,7 @@ public class Player : MonoBehaviour
         characterImage = GetComponentInChildren<SpriteRenderer>();
         playerAnime = GetComponent<Animator>();
 
-        // 인벤토리 초기화
+        // 인벤토리 참조 확인
         if (inventory == null)
         {
             inventory = GetComponent<Inventory>();
@@ -162,8 +129,9 @@ public class Player : MonoBehaviour
         {
             //weaponHandler.Attack();
 
-            // 보너스가 적용된 총 공격력 사용
-            Debug.Log($"공격! 데미지: {TotalAttack}");
+            // 인벤토리에서 계산된 총 데미지 사용
+            float totalDamage = stat.AttackDamage + inventory.GetTotalAttackBonus();
+            Debug.Log($"공격! 데미지: {totalDamage}");
         }
     }
 
@@ -178,93 +146,6 @@ public class Player : MonoBehaviour
             default: return false;
         }
     }
-
-    // 아이템 시스템 메서드 추가 시작 ----------------------------
-    // 아이템 장착 (간소화된 버전 - 모든 장비 타입에 사용 가능)
-    public void EquipItem(Item item)
-    {
-        ItemCategory category = item.ItemData.ItemCategory;
-
-        // 같은 카테고리의 기존 장비가 있으면 해제
-        if (equippedItems[category] != null)
-        {
-            UnequipItem(category);
-        }
-
-        // 새 아이템 장착
-        equippedItems[category] = item;
-
-        // 아이템 타입에
-        if (category == ItemCategory.Weapon)
-        {
-            // 무기 장착 - 공격력 보너스 적용
-            AddAttackBonus(item.ItemData.AttackBonus);
-            Debug.Log($"무기 장착: {item.ItemData.ItemName}");
-        }
-        else if (category == ItemCategory.Armor)
-        {
-            // 방어구 장착 - 방어력 보너스 적용
-            AddDefenseBonus(item.ItemData.DefenseBonus);
-            Debug.Log($"방어구 장착: {item.ItemData.ItemName}");
-        }
-
-        // 장착 상태 변경
-        item.SetEquipped(true);
-    }
-
-    // 아이템 해제
-    public void UnequipItem(ItemCategory category)
-    {
-        Item equippedItem = equippedItems[category];
-
-        if (equippedItem != null)
-        {
-            if (category == ItemCategory.Weapon)
-            {
-                // 무기 해제 - 공격력 보너스 제거
-                RemoveAttackBonus(equippedItem.ItemData.AttackBonus);
-            }
-            else if (category == ItemCategory.Armor)
-            {
-                // 방어구 해제 - 방어력 보너스 제거
-                RemoveDefenseBonus(equippedItem.ItemData.DefenseBonus);
-            }
-
-            // 장착 상태 변경
-            equippedItem.SetEquipped(false);
-
-            // 장비 목록에서 제거
-            equippedItems[category] = null;
-
-            Debug.Log($"{equippedItem.ItemData.ItemName} 장비 해제");
-        }
-    }
-
-    // 스탯 보너스 관리
-    private void AddAttackBonus(float bonus)
-    {
-        attackBonus += bonus;
-        Debug.Log($"공격력 보너스 추가: +{bonus}, 총 공격력: {TotalAttack}");
-    }
-
-    private void RemoveAttackBonus(float bonus)
-    {
-        attackBonus -= bonus;
-        Debug.Log($"공격력 보너스 제거: -{bonus}, 총 공격력: {TotalAttack}");
-    }
-
-    private void AddDefenseBonus(float bonus)
-    {
-        defenceBonus += bonus;
-        Debug.Log($"방어력 보너스 추가: +{bonus}, 총 방어력: {TotalDefence}");
-    }
-
-    private void RemoveDefenseBonus(float bonus)
-    {
-        defenceBonus -= bonus;
-        Debug.Log($"방어력 보너스 제거: -{bonus}, 총 방어력: {TotalDefence}");
-    }
-    // 아이템 시스템 메서드 추가 끝 ----------------------------
 }
 
 public enum PlayerState
