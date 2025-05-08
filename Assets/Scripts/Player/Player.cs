@@ -5,14 +5,21 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [HideInInspector] public PlayerStat stat;
-    public PlayerController controller;
+    
+    public PlayerController Controller { get { return controller; } }
+    private PlayerController controller;
+
     private SpriteRenderer characterImage;
     private Animator playerAnime;
+
+
+    public SearchTarget SearchTarget { get { return searchTarget; } }
+    private SearchTarget searchTarget;
 
     private Vector3 inputDir;
 
     [SerializeField] private Transform weaponPivot;
-    //[SerializeField] private WeaponHandler weaponHandler; //추후 추가
+    [SerializeField] private WeaponHandler weaponHandler; //추후 추가
 
     // 인벤토리 참조 추가 (다른 클래스에 스탯 관리 위임)
     [SerializeField] private Inventory inventory;
@@ -30,7 +37,7 @@ public class Player : MonoBehaviour
 
         GetInputDir();
         LookRotate();
-        controller?.OnUpdate();
+        controller?.OnUpdate(Time.deltaTime);
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -61,23 +68,21 @@ public class Player : MonoBehaviour
 
     public void Init()
     {
-        stat = GetComponent<PlayerStat>();
-        characterImage = GetComponentInChildren<SpriteRenderer>();
-        playerAnime = GetComponent<Animator>();
+        stat ??= GetComponent<PlayerStat>();
+        characterImage ??= GetComponentInChildren<SpriteRenderer>();
+        playerAnime ??= GetComponent<Animator>();
+        searchTarget ??= GetComponent<SearchTarget>();
 
         // 인벤토리 참조 확인
-        if (inventory == null)
-        {
-            inventory = GetComponent<Inventory>();
-        }
-
+        inventory ??= GetComponent<Inventory>();
+        
         SetWeapon();
         ControllerRegister();
     }
 
     private void SetWeapon()
     {
-        //weaponHandler.Init(stat, targetMask);
+        weaponHandler.Init(inventory.GetCurrentWeapon() , stat, targetMask);
     }
 
     public void ControllerRegister()
@@ -120,14 +125,14 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
-        //weaponHandler.Rotate(rotZ);
+        weaponHandler.Rotate(rotZ);
     }
 
     public void Attack()
     {
         if (IsAttackable((controller.GetState() as PlayerStates).GetState()))
         {
-            //weaponHandler.Attack();
+            weaponHandler.Attack();
         }
     }
 

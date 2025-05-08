@@ -352,6 +352,20 @@ public class Inventory : MonoBehaviour
         return equipped;
     }
 
+    public Item GetCurrentWeapon()
+    {
+        // 장착된 무기 반환 (활, 검, 낫 중 하나)
+        Item weapon = GetEquippedWeapon(WeaponType.Bow);
+        if (weapon != null) return weapon;
+
+        weapon = GetEquippedWeapon(WeaponType.Sword);
+        if (weapon != null) return weapon;
+
+        weapon = GetEquippedWeapon(WeaponType.Scythe);
+        return weapon;
+    }
+
+
     // 특정 타입의 장착된 무기 가져오기
     public Item GetEquippedWeapon(WeaponType type)
     {
