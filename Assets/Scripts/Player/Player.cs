@@ -12,13 +12,18 @@ public class Player : MonoBehaviour
     private SpriteRenderer characterImage;
     private Animator playerAnime;
 
+
     public SearchTarget SearchTarget { get { return searchTarget; } }
     private SearchTarget searchTarget;
-    
+
     private Vector3 inputDir;
 
     [SerializeField] private Transform weaponPivot;
     //[SerializeField] private WeaponHandler weaponHandler; //추후 추가
+
+    // 인벤토리 참조 추가 (다른 클래스에 스탯 관리 위임)
+    [SerializeField] private Inventory inventory;
+    public Inventory Inventory => inventory;
 
     public LayerMask targetMask;
 
@@ -37,6 +42,12 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Attack();
+        }
+
+        // 인벤토리 UI 토글 (I 키)
+        if (Input.GetKeyDown(KeyCode.I) && inventory != null)
+        {
+            inventory.ToggleInventoryUI();
         }
     }
 
@@ -57,11 +68,20 @@ public class Player : MonoBehaviour
 
     public void Init()
     {
+
         stat ??= GetComponent<PlayerStat>();
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();
 
         searchTarget ??= GetComponent<SearchTarget>();
+
+
+
+        // 인벤토리 참조 확인
+        if (inventory == null)
+        {
+            inventory = GetComponent<Inventory>();
+        }
 
 
         SetWeapon();
@@ -124,6 +144,12 @@ public class Player : MonoBehaviour
         }
     }
 
+    public float TotalDamage()
+    {
+        // 인벤토리에서 계산된 총 데미지 사용
+        return stat.AttackDamage + inventory.GetTotalAttackBonus();
+    }
+
 
     public bool IsAttackable(PlayerState curstate)
     {
@@ -131,7 +157,7 @@ public class Player : MonoBehaviour
         {
             case PlayerState.Idle:
             case PlayerState.Move:
-            return true;
+                return true;
 
             default: return false;
         }
