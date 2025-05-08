@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     private Vector3 inputDir;
 
     [SerializeField] private Transform weaponPivot;
-    //[SerializeField] private WeaponHandler weaponHandler; //추후 추가
+    [SerializeField] private WeaponHandler weaponHandler; //추후 추가
 
     // 인벤토리 참조 추가 (다른 클래스에 스탯 관리 위임)
     [SerializeField] private Inventory inventory;
@@ -68,29 +68,21 @@ public class Player : MonoBehaviour
 
     public void Init()
     {
-
         stat ??= GetComponent<PlayerStat>();
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();
-
         searchTarget ??= GetComponent<SearchTarget>();
 
-
-
         // 인벤토리 참조 확인
-        if (inventory == null)
-        {
-            inventory = GetComponent<Inventory>();
-        }
-
-
+        inventory ??= GetComponent<Inventory>();
+        
         SetWeapon();
         ControllerRegister();
     }
 
     private void SetWeapon()
     {
-        //weaponHandler.Init(stat, targetMask);
+        weaponHandler.Init(inventory.GetCurrentWeapon() , stat, targetMask);
     }
 
     public void ControllerRegister()
@@ -133,14 +125,14 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
-        //weaponHandler.Rotate(rotZ);
+        weaponHandler.Rotate(rotZ);
     }
 
     public void Attack()
     {
         if (IsAttackable((controller.GetState() as PlayerStates).GetState()))
         {
-            //weaponHandler.Attack();
+            weaponHandler.Attack();
         }
     }
 

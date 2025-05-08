@@ -11,20 +11,22 @@ public abstract class WeaponHandler : MonoBehaviour
     [SerializeField] protected float attackDelay;
     protected bool isUseable;
 
+    protected Item weapon;
     protected IAttackStat owner;
     protected LayerMask targetMask;
 
     [SerializeField]protected List<GameObject> targetList = new List<GameObject>();
 
-    public virtual void Init(IAttackStat ownerStat, LayerMask targetMask) 
-    { 
+    public virtual void Init(Item weapon, IAttackStat ownerStat, LayerMask targetMask)
+    {
+        this.weapon = weapon;
         animator = GetComponent<Animator>();
         isUseable = true;
         owner = ownerStat;
         this.targetMask = targetMask;
     }
 
-    public virtual void Attack() 
+    public virtual void Attack()
     {
         if (isUseable)
         {
