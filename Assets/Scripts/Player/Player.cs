@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private Vector3 inputDir;
 
     [SerializeField] private Transform weaponPivot;
-    //[SerializeField] private WeaponHandler weaponHandler;
+    //[SerializeField] private WeaponHandler weaponHandler; //추후 추가
 
     public LayerMask targetMask;
 
