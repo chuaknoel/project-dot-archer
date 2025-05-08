@@ -128,12 +128,15 @@ public class Player : MonoBehaviour
         if (IsAttackable((controller.GetState() as PlayerStates).GetState()))
         {
             //weaponHandler.Attack();
-
-            // 인벤토리에서 계산된 총 데미지 사용
-            float totalDamage = stat.AttackDamage + inventory.GetTotalAttackBonus();
-            Debug.Log($"공격! 데미지: {totalDamage}");
         }
     }
+
+    public float TotalDamage()
+    {
+        // 인벤토리에서 계산된 총 데미지 사용
+        return stat.AttackDamage + inventory.GetTotalAttackBonus();
+    }
+
 
     public bool IsAttackable(PlayerState curstate)
     {
