@@ -1,21 +1,17 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class TargetPlayer : MonoBehaviour
+public class BaseEnemyController : MonoBehaviour
 {
-    public Transform target;
     public float detectionDistance = 1f;
-    public LayerMask obstacleLayer;
+    public LayerMask obstacleLayer = 1 << 4; // 레이어 마스크 설정
     public float MoveSpeed = 2f;
     private bool isAvoiding = false;
-
-    public void Init()
+    
+    public void MoveToPlayer(Transform target)
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform;
-    }
-
-    public void FollowPlayer()
-    {
+      
         if (!isAvoiding)
         {
             if (target == null) return;
@@ -26,7 +22,7 @@ public class TargetPlayer : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(transform.position, moveDir, detectionDistance, obstacleLayer);
             Debug.DrawRay(transform.position, moveDir * detectionDistance, Color.red);
 
-            if (hit.collider != null)
+            if (hit.collider != null && hit.collider.gameObject.layer == LayerMask.NameToLayer("Water"))
             {
                 StartCoroutine(AvoidObstacle(moveDir));
             }
