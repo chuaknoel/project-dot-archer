@@ -10,13 +10,12 @@ public class BaseEnemyController : MonoBehaviour
     private bool isAvoiding = false;
     private BaseEnemy ownerEnemy;
     private BaseStat ownerStat;
+    private EnemySkill ownerSKill;
     private float attackTimer = 0f;
     private bool canMove = true;
-    private float time;
 
     private void Update()
     {
-
         if (ownerStat is IAttackRangeStat range && ownerStat is IAttackStat attack)
         {
             if (attackTimer >= range.AttackDelay)
@@ -34,6 +33,19 @@ public class BaseEnemyController : MonoBehaviour
             }
             attackTimer += Time.deltaTime;
         }
+
+        //else if (ownerStat is IEnemySkill enemyskill)
+        //{
+        //    if (enemyskill.currentcooldown >= enemyskill.cooldown)
+        //    {
+        //        enemyskill.UseSkill();
+        //        enemyskill.currentcooldown = 0f;
+        //    }
+        //    else
+        //    {
+        //        enemyskill.currentcooldown += Time.deltaTime;
+        //    }
+        //}
 
         else
         {
@@ -111,12 +123,6 @@ public class BaseEnemyController : MonoBehaviour
         isAvoiding = false;
     }
 
-    IEnumerator CanMove(float time)
-    {
-        yield return new WaitForSeconds(time);
-        canMove = true; // 이동 중지
-
-    }
 
     private IEnumerator RangeAttackRoutine(float damage, IAttackRangeStat range)
     {
