@@ -10,9 +10,6 @@ public class MainMenuController : MonoBehaviour
     public GameObject mainMenuPanel;   // 메인 메뉴 버튼 5개
     public GameObject optionsPanel;    // 옵션 패널 (볼륨 슬라이더)
 
-    [Header("슬라이더 (빈 껍데기)")]
-    public Slider musicSlider;         // 음악 볼륨용 (아직 기능 없음)
-    public Slider sfxSlider;           // 효과음 볼륨용 (아직 기능 없음)
 
     void Start()
     {
