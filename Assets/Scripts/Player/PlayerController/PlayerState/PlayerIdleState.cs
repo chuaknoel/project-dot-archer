@@ -12,16 +12,25 @@ public class PlayerIdleState : PlayerStates
 
     public override void OnEnter()
     {
+        base.OnEnter();
         player.ChangeAnime(PlayerState.Idle);
     }
 
-    public override void OnUpdate()
+    public override void OnUpdate(float deltaTime)
     {
-        base.OnUpdate();
+        base.OnUpdate(deltaTime);
         if(player.GetInputDir() != Vector3.zero)
         {
-            player.controller.ChangeState(nameof(PlayerMoveState));
+            player.Controller.ChangeState(nameof(PlayerMoveState));
         }
+
+        //if (player.SearchTarget.SearchNearestTarget() != null)
+        //{
+        //    if (player.WeaponHandler.IsUseable())
+        //    {
+        //        player.Controller.ChangeState(nameof(PlayerAttackState));
+        //    }
+        //}
     }
 
     public override void OnExit()
