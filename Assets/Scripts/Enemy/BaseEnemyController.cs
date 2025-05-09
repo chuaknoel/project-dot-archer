@@ -8,8 +8,39 @@ public class BaseEnemyController : MonoBehaviour
     public LayerMask obstacleLayer = 1 << 4; // 레이어 마스크 설정
     public float MoveSpeed = 2f;
     private bool isAvoiding = false;
-    
-    public void MoveToPlayer(Transform target)
+    private BaseEnemy ownerEnemy;
+    private BaseStat ownerStat;
+
+    private void Update()
+    {
+        if ((ownerEnemy.target.transform.position - transform.position).magnitude < 1.0f)
+        {
+            if (ownerStat is IAttackStat attackStat)
+            {
+                Attack();
+            }
+        }
+        else
+        {
+            if (ownerStat is IMoveStat moveStat)
+            {
+                MoveToPlayer(ownerEnemy.target, moveStat.MoveSpeed);
+            }
+        }
+    }
+
+    public void Attack()
+    {
+
+    }
+
+    public void Init(BaseEnemy ownerEnemy)
+    {
+        this.ownerEnemy = ownerEnemy;
+        ownerStat = ownerEnemy.GetComponent<BaseStat>();
+    }
+
+    public void MoveToPlayer(Transform target,float speed)
     {
       
         if (!isAvoiding)
@@ -28,7 +59,7 @@ public class BaseEnemyController : MonoBehaviour
             }
             else
             {
-                transform.position += moveDir * MoveSpeed * Time.deltaTime;
+                transform.position += moveDir * speed * Time.deltaTime;
             }
 
         }

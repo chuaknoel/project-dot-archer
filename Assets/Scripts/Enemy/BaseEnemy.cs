@@ -10,6 +10,7 @@ public class BaseEnemy : MonoBehaviour
     protected SpriteRenderer monsterImage;
     protected Animator monsterAnime;
     protected BaseEnemyController EnemyController;
+    
     protected Rigidbody2D rb;
     public Transform target;
 
@@ -18,9 +19,9 @@ public class BaseEnemy : MonoBehaviour
         Init();
     }
 
-     void Update()
+    void Update()
     {
-        EnemyController.MoveToPlayer(target);
+        //EnemyController.MoveToPlayer(target);
     }
 
     public virtual void Init()
@@ -29,7 +30,8 @@ public class BaseEnemy : MonoBehaviour
         monsterAnime = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         EnemyController = this.AddComponent<BaseEnemyController>();
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        EnemyController.Init(this);
+        target??= GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     public virtual void UseSkill()
