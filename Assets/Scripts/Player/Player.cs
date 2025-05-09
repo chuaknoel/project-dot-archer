@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Android.Types;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     public Inventory Inventory => inventory;
-    [SerializeField] private Inventory inventory;
+    private Inventory inventory;
 
     [HideInInspector] public PlayerStat stat;
     
@@ -21,7 +20,7 @@ public class Player : MonoBehaviour
     private SearchTarget searchTarget;
 
     [SerializeField] private Transform weaponPivot;
-    [SerializeField] private WeaponHandler weaponHandler;
+    private WeaponHandler weaponHandler;
     public WeaponHandler WeaponHandler { get { return weaponHandler; } }
 
     public LayerMask targetMask;
@@ -71,13 +70,13 @@ public class Player : MonoBehaviour
 
         inventory ??= GetComponent<Inventory>();
         
-        SetWeapon();
+        //SetWeapon();
         ControllerRegister();
     }
 
     private void SetWeapon()
     {
-        weaponHandler.Init(inventory.GetCurrentWeapon() , stat, targetMask);
+        weaponHandler?.Init(inventory.GetCurrentWeapon() , stat, targetMask);
     }
 
     public void ControllerRegister()
@@ -120,7 +119,7 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
-        weaponHandler.Rotate(rotZ);
+        weaponHandler?.Rotate(rotZ);
     }
 
     public float TotalDamage()

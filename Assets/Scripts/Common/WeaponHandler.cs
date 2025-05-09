@@ -28,8 +28,8 @@ public abstract class WeaponHandler : MonoBehaviour
 
     public virtual void Attack()
     {
-        isUseable = false;
-        Invoke("ApplyDelay", attackDelay);
+       
+        Invoke("ApplyDelay", weapon.ItemData.AttackCooldown);
         AttackAnimation();
         AttackAction();
     }
@@ -41,16 +41,35 @@ public abstract class WeaponHandler : MonoBehaviour
         animator.SetTrigger("Attack");
     }
 
-    public virtual void ApplyDelay()
+    public void ResetCooldown()
+    {
+        StartCoroutine(eResetCooldown());
+    }
+
+    IEnumerator eResetCooldown()
+    {
+        isUseable = false;
+
+        yield return new WaitForSeconds(weapon.ItemData.AttackCooldown);
+
+        isUseable = true;
+    }
+
+    public void ApplyDelay()
     {
         isUseable = true;
     }
 
     public virtual void Rotate(float angle) { }
 
-    public virtual bool IsUseable()
+    public bool IsUseable()
     {
         return isUseable;
+    }
+
+    public float GetWeaponDelay()
+    {
+        return weapon.ItemData.attackDelay;
     }
 }
 

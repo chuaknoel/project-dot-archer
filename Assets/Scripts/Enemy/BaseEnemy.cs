@@ -1,26 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class BaseEnemy : MonoBehaviour
 {
-    [HideInInspector] public EnemyStat stat;
-    public TargetPlayer targetPlayer;
-    private SpriteRenderer monsterImage;
-    private Animator monsterAnime;
+    protected SpriteRenderer monsterImage;
+    protected Animator monsterAnime;
+    protected EnemyController EnemyController;
+    
+    protected Rigidbody2D rb;
+    public Transform target;
 
-    private Rigidbody2D rb;
-
-    public void Init()
+    public void Awake()
     {
-        stat = GetComponent<EnemyStat>();
-        monsterImage = GetComponentInChildren<SpriteRenderer>();
-        monsterAnime = GetComponent<Animator>();
-        targetPlayer = GetComponent<TargetPlayer>();
-        rb = GetComponent<Rigidbody2D>();
+        Init();
     }
 
+    
+    public virtual void Init()
+    {
+        monsterImage = GetComponentInChildren<SpriteRenderer>();
+        monsterAnime = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+        EnemyController = this.AddComponent<EnemyController>();
+        EnemyController.Init(this);
+        target= GameObject.FindGameObjectWithTag("Player").transform;
+    }
 
+    
+
+    protected virtual void UseSkill()
+    {
+
+    }
 
 
 }
