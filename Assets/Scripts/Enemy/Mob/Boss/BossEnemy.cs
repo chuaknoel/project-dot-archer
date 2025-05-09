@@ -29,7 +29,7 @@ public class BossEnemy : MonoBehaviour
     //protected override void Reward()
     //{
 
-    //}
+    //***}
     string SelectSkill()
     {
         string[] skillNames = { "BossSkill01", "BossSkill02", "BossSkill03" };
