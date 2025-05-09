@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class BaseController<T> where T: MonoBehaviour
 {
-    public Dictionary<string, State<T>> registedSatae = new Dictionary<string, State<T>>();
+    public Dictionary<string, State<T>> registedState = new Dictionary<string, State<T>>();
 
     protected State<T> currentState;
 
@@ -21,7 +21,7 @@ public abstract class BaseController<T> where T: MonoBehaviour
     public virtual void RegisterState(State<T> state, T owner)
     {
         state.Init(owner);
-        registedSatae[state.GetType().Name] = state;
+        registedState[state.GetType().Name] = state;
     }
 
     public virtual void OnUpdate(float deltaTime)
@@ -42,7 +42,7 @@ public abstract class BaseController<T> where T: MonoBehaviour
         
         previousState = currentState;
 
-        currentState = registedSatae[newState];
+        currentState = registedState[newState];
         currentState.OnEnter();
     }
 

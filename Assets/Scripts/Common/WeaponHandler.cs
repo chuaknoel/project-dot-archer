@@ -15,7 +15,7 @@ public abstract class WeaponHandler : MonoBehaviour
     protected IAttackStat owner;
     protected LayerMask targetMask;
 
-    [SerializeField]protected List<GameObject> targetList = new List<GameObject>();
+    //[SerializeField]protected List<GameObject> targetList = new List<GameObject>();
 
     public virtual void Init(Item weapon, IAttackStat ownerStat, LayerMask targetMask)
     {
@@ -28,13 +28,10 @@ public abstract class WeaponHandler : MonoBehaviour
 
     public virtual void Attack()
     {
-        if (isUseable)
-        {
-            isUseable = false;
-            Invoke("ApplyDelay", attackDelay);
-            AttackAnimation();
-            AttackAction();
-        }
+        isUseable = false;
+        Invoke("ApplyDelay", attackDelay);
+        AttackAnimation();
+        AttackAction();
     }
 
     public virtual void AttackAction() { }
@@ -50,6 +47,11 @@ public abstract class WeaponHandler : MonoBehaviour
     }
 
     public virtual void Rotate(float angle) { }
+
+    public virtual bool IsUseable()
+    {
+        return isUseable;
+    }
 }
 
 

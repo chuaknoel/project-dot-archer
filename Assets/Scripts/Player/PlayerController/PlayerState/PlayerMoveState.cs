@@ -15,6 +15,7 @@ public class PlayerMoveState : PlayerStates
 
     public override void OnEnter()
     {
+        base.OnEnter();
         player.ChangeAnime(PlayerState.Move);
     }
 
