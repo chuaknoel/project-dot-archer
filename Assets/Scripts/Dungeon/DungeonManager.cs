@@ -9,35 +9,41 @@ public class DungeonManager : MonoBehaviour
     public RoomNavigator navigator;
     public GameObject player;
 
-    private Dictionary<Vector2Int, Room> rooms;
-    private Room currentRoom;
+    public Dictionary<Vector2Int, Room> rooms;
+    public Room currentRoom;
 
     void Start()
-    {
-        Debug.Log("DungeonManager Start Called");
-
+    {   
+        // 맵 생성
         rooms = roomGenerator.GenerateDungeon();
-        currentRoom = rooms[Vector2Int.zero];
-        navigator.MovePlayerToRoom(currentRoom, player);
-    }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.W)) TryMove(Vector2Int.up);
-        else if (Input.GetKeyDown(KeyCode.S)) TryMove(Vector2Int.down);
-        else if (Input.GetKeyDown(KeyCode.A)) TryMove(Vector2Int.left);
-        else if (Input.GetKeyDown(KeyCode.D)) TryMove(Vector2Int.right);
-    }
-
-    void TryMove(Vector2Int dir)
-    {
-        Vector2Int nextPos = currentRoom.position + dir;
-        if (rooms.TryGetValue(nextPos, out Room nextRoom))
+        // 시작 위치 설정
+        if (rooms.TryGetValue(Vector2Int.zero, out Room startRoom))
         {
-            currentRoom = nextRoom;
-            navigator.MovePlayerToRoom(currentRoom, player);
+            currentRoom = startRoom;
+            navigator.MovePlayerToRoom(currentRoom, player, Vector2Int.zero); // 초기엔 방향 없음
+        }
+        else
+        {
+            Debug.LogError("초기 위치(Vector2Int.zero)에 방이 없습니다!");
         }
     }
 
+    /// 이동 시도 후 유효한 경우 true 반환
+    public bool TryMove(Vector2Int direction, out Room newRoom)
+    {
+        Vector2Int nextPos = currentRoom.position + direction;
+        
+        if (rooms.TryGetValue(nextPos, out newRoom))
+        {
+            currentRoom = newRoom;
+            return true;
+        }
+        else
+        {
+            Debug.Log("다음 방이 존재하지 않습니다.");
+        }
 
+        return false;
+    }
 }
