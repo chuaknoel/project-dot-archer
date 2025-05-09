@@ -5,8 +5,8 @@ using UnityEngine;
 public class EnemySkill : MonoBehaviour
 {
     public string skillName;
-    private float damage;
-    private float cooldown=3F;
+    public float damage;
+    public float cooldown=3F;
     public float currentCooldown;
     public GameObject effect;
 
