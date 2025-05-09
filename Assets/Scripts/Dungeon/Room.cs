@@ -9,6 +9,7 @@ public class Room : MonoBehaviour
     public Vector2Int position;           // 이 방의 Grid 좌표
     public ROOMTYPE roomType;
     public Tilemap tilemap;              // Floor 기준 Tilemap
+    [SerializeField] private TilemapRenderer roomBounds;
     public bool isVisited = false;
 
     private Dictionary<Vector2Int, Vector3> entryPositions = new();
@@ -62,5 +63,10 @@ public class Room : MonoBehaviour
     {
         Vector2Int oppositeDir = -fromDirection;
         return entryPositions.ContainsKey(oppositeDir) ? entryPositions[oppositeDir] : transform.position;
+    }
+
+    public TilemapRenderer GetRoomBounds()
+    {
+        return roomBounds;
     }
 }

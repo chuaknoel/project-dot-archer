@@ -16,15 +16,15 @@ public class CameraController : MonoBehaviour
 
     private float cameraLimitsHeight;
     private float cameraLimitsWidth;
+    private Vector3 boundsOffset = new Vector2(1, 0);
 
     private Vector3 cameraOffset = new Vector3(0, 0, -10);
 
     private Vector3 cameraPos;
     private Vector3 cameraVelocity = Vector3.zero;
-
     [SerializeField] private float chaseSpeed;
 
-    private bool isApply;
+    [SerializeField] private bool isApply;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +39,7 @@ public class CameraController : MonoBehaviour
         cameraPos.z = cameraOffset.z;
         //target = GameMangaer 구현시 GameManager로부터 플레이어 인스턴스 호출
     }
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         CameraMove();
     }
@@ -57,6 +57,8 @@ public class CameraController : MonoBehaviour
         Bounds bounds = tilemapRenderer.bounds;
         areaMin = bounds.min;
         areaMax = bounds.max;
+
+        Debug.Log(areaMin.x + " " + areaMax.x + " " + cameraHalfWidth + " " + cameraHalfHeight);
     }
 
     private void ApplyCameraBounds()
@@ -71,8 +73,8 @@ public class CameraController : MonoBehaviour
         }
         else
         {
-            cameraPos.x = target.position.x;
-            cameraPos.y = target.position.y;
+            cameraPos = target.position;
+            cameraPos.z = cameraOffset.z;
         }
     }
 }

@@ -7,21 +7,25 @@ public class DungeonManager : MonoBehaviour
 {
     public RoomGenerator roomGenerator;
     public RoomNavigator navigator;
-    public GameObject player;
+    public Player player;
 
     public Dictionary<Vector2Int, Room> rooms;
     public Room currentRoom;
+
+    private CameraController cameraController;
 
     void Start()
     {   
         // 맵 생성
         rooms = roomGenerator.GenerateDungeon();
+        cameraController = Camera.main.GetComponent<CameraController>();
 
         // 시작 위치 설정
         if (rooms.TryGetValue(Vector2Int.zero, out Room startRoom))
         {
             currentRoom = startRoom;
-            navigator.MovePlayerToRoom(currentRoom, player, Vector2Int.zero); // 초기엔 방향 없음
+            cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
+            navigator.MovePlayerToRoom(currentRoom, player.gameObject, Vector2Int.zero); // 초기엔 방향 없음
         }
         else
         {
@@ -37,6 +41,7 @@ public class DungeonManager : MonoBehaviour
         if (rooms.TryGetValue(nextPos, out newRoom))
         {
             currentRoom = newRoom;
+            cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
             return true;
         }
         else
