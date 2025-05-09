@@ -20,7 +20,7 @@ public abstract class WeaponHandler : MonoBehaviour
     public virtual void Init(Item weapon, IAttackStat ownerStat, LayerMask targetMask)
     {
         this.weapon = weapon;
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
         isUseable = true;
         owner = ownerStat;
         this.targetMask = targetMask;
@@ -28,9 +28,8 @@ public abstract class WeaponHandler : MonoBehaviour
 
     public virtual void Attack()
     {
-       
-        Invoke("ApplyDelay", weapon.ItemData.AttackCooldown);
-        AttackAnimation();
+        ResetCooldown();
+        //AttackAnimation();
         AttackAction();
     }
 
@@ -50,13 +49,8 @@ public abstract class WeaponHandler : MonoBehaviour
     {
         isUseable = false;
 
-        yield return new WaitForSeconds(weapon.ItemData.AttackCooldown);
+        yield return new WaitForSeconds(10f);
 
-        isUseable = true;
-    }
-
-    public void ApplyDelay()
-    {
         isUseable = true;
     }
 

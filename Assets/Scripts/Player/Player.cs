@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Player : MonoBehaviour
 {
@@ -20,8 +21,11 @@ public class Player : MonoBehaviour
     private SearchTarget searchTarget;
 
     [SerializeField] private Transform weaponPivot;
-    private WeaponHandler weaponHandler;
     public WeaponHandler WeaponHandler { get { return weaponHandler; } }
+    [SerializeField]private WeaponHandler weaponHandler;
+
+
+    public Item TestItme;
 
     public LayerMask targetMask;
 
@@ -56,11 +60,6 @@ public class Player : MonoBehaviour
         controller?.OnFixedUpdate();
     }
 
-    private void Start()
-    {
-        Init();
-    }
-
     public void Init()
     {
         stat ??= GetComponent<PlayerStat>();
@@ -69,7 +68,13 @@ public class Player : MonoBehaviour
         searchTarget ??= GetComponent<SearchTarget>();
 
         inventory ??= GetComponent<Inventory>();
-        
+
+        //임시 아이템 장착
+        GameObject go = ItemManager.Instance.SpawnItem(weaponPivot.position, TestItme.ItemData);
+        go.transform.SetParent(weaponPivot);
+        weaponHandler = go.GetComponent<WeaponHandler>();
+        weaponHandler?.Init(go.GetComponent<Item>(), stat, targetMask);
+
         //SetWeapon();
         ControllerRegister();
     }
