@@ -71,7 +71,7 @@ public class Player : MonoBehaviour
 
         inventory ??= GetComponent<Inventory>();
         
-        SetWeapon();
+        //SetWeapon();
         ControllerRegister();
     }
 
@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
-        weaponHandler.Rotate(rotZ);
+        //weaponHandler.Rotate(rotZ);
     }
 
     public float TotalDamage()
