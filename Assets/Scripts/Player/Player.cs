@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Android.Types;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     public Inventory Inventory => inventory;
-    [SerializeField] private Inventory inventory;
+    private Inventory inventory;
 
     [HideInInspector] public PlayerStat stat;
     
@@ -21,7 +20,7 @@ public class Player : MonoBehaviour
     private SearchTarget searchTarget;
 
     [SerializeField] private Transform weaponPivot;
-    [SerializeField] private WeaponHandler weaponHandler;
+    private WeaponHandler weaponHandler;
     public WeaponHandler WeaponHandler { get { return weaponHandler; } }
 
     public LayerMask targetMask;
