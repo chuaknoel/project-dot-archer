@@ -35,7 +35,7 @@ public class CameraController : MonoBehaviour
     public void Init()
     {
         cameraHalfHeight = Camera.main.orthographicSize;
-        cameraHalfWidth = Camera.main.orthographicSize * Camera.main.aspect;
+        cameraHalfWidth = Mathf.Round(Camera.main.orthographicSize * Camera.main.aspect);
         cameraPos.z = cameraOffset.z;
         //target = GameMangaer 구현시 GameManager로부터 플레이어 인스턴스 호출
     }
@@ -57,8 +57,6 @@ public class CameraController : MonoBehaviour
         Bounds bounds = tilemapRenderer.bounds;
         areaMin = bounds.min;
         areaMax = bounds.max;
-
-        Debug.Log(areaMin.x + " " + areaMax.x + " " + cameraHalfWidth + " " + cameraHalfHeight);
     }
 
     private void ApplyCameraBounds()
