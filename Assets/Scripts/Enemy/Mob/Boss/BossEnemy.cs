@@ -29,7 +29,7 @@ public class BossEnemy : MonoBehaviour
     //protected override void Reward()
     //{
 
-    //}
+    //***}
     string SelectSkill()
     {
         string[] skillNames = { "BossSkill01", "BossSkill02", "BossSkill03" };
@@ -38,12 +38,12 @@ public class BossEnemy : MonoBehaviour
     }
     void UseSkill(string skillName)
     {
-        // 이름에 맞는 스킬 사용
+        // 
         var skill = skills.Find(s => s.skillName == skillName);
         if (skill.CanUse())
         {
             skill.currentCooldown += Time.deltaTime;
-            // 이펙트 발사
+            // ?
             skill.ExecuteEffect(transform, skill.effect);
         }
     }
