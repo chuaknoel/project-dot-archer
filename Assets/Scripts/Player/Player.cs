@@ -70,7 +70,7 @@ public class Player : MonoBehaviour
 
         inventory ??= GetComponent<Inventory>();
         
-        SetWeapon();
+        //SetWeapon();
         ControllerRegister();
     }
 

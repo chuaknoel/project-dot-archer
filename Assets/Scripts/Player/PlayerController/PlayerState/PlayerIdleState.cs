@@ -24,13 +24,13 @@ public class PlayerIdleState : PlayerStates
             player.Controller.ChangeState(nameof(PlayerMoveState));
         }
 
-        if (player.SearchTarget.SearchNearestTarget() != null)
-        {
-            if (player.WeaponHandler.IsUseable())
-            {
-                player.Controller.ChangeState(nameof(PlayerAttackState));
-            }
-        }
+        //if (player.SearchTarget.SearchNearestTarget() != null)
+        //{
+        //    if (player.WeaponHandler.IsUseable())
+        //    {
+        //        player.Controller.ChangeState(nameof(PlayerAttackState));
+        //    }
+        //}
     }
 
     public override void OnExit()
