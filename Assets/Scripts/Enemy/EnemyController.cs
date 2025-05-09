@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -24,10 +25,10 @@ public class EnemyController : MonoBehaviour
 
     public void Init(BaseEnemy ownerEnemy)
     {
-        moveController = GetComponent<MoveController>();
+        moveController = this.AddComponent<MoveController>();
         this.ownerEnemy = ownerEnemy;
         ownerStat = ownerEnemy.GetComponent<BaseStat>();
-        rangeAttackController = GetComponent<RangeAttackController>();
+        rangeAttackController = this.AddComponent<RangeAttackController>();
     }
 
 }

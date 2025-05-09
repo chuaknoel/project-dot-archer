@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class RangeAttackController : MonoBehaviour
 {
-    private float attackTimer = 0f;
     private bool canMove = true;
 
 
