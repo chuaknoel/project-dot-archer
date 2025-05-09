@@ -19,11 +19,7 @@ public class BaseEnemy : MonoBehaviour
         Init();
     }
 
-    void Update()
-    {
-        //EnemyController.MoveToPlayer(target);
-    }
-
+    
     public virtual void Init()
     {
         monsterImage = GetComponentInChildren<SpriteRenderer>();
@@ -31,17 +27,11 @@ public class BaseEnemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         EnemyController = this.AddComponent<BaseEnemyController>();
         EnemyController.Init(this);
-        target??= GameObject.FindGameObjectWithTag("Player").transform;
+        target= GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     public virtual void UseSkill()
     {
 
     }
-
-
-
-
-
-
 }
