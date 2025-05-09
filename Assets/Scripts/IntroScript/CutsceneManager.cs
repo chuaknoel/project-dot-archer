@@ -49,7 +49,7 @@ public class CutsceneManager : MonoBehaviour
                 if (index >= storyImages.Length)
                 {
                     PlayerPrefs.SetInt("HasPlayedCutscene", 1);
-                    SceneManager.LoadScene("SampleScene");
+                    SceneManager.LoadScene("DungeonScene");
                 }
                 else
                 {

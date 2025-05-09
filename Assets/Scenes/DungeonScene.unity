@@ -617,7 +617,7 @@ GameObject:
   - component: {fileID: 7661601651325916196}
   - component: {fileID: 8137848149066883852}
   m_Layer: 0
-  m_Name: MainRenerer
+  m_Name: MainRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

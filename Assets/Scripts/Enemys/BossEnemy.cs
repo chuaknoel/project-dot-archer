@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossEnemy : MonoBehaviour 
+public class BossEnemy : MonoBehaviour
 {
     public bool angryMode;
     public List<BossSkill> skills = new List<BossSkill>();
-   
+
     private void Start()
     {
-         SettingSkills();
+        SettingSkills();
         UseSkill(SelectSkill());
     }
-        public void SettingSkills()
+    public void SettingSkills()
     {
         GameObject effect01 = Resources.Load<GameObject>("Effects/BossEffect01");
         GameObject effect02 = Resources.Load<GameObject>("Effects/BossEffect02");
@@ -30,21 +30,21 @@ public class BossEnemy : MonoBehaviour
     //{
 
     //}
-     string SelectSkill()
+    string SelectSkill()
     {
-       string[] skillNames = { "BossSkill01", "BossSkill02", "BossSkill03" };
+        string[] skillNames = { "BossSkill01", "BossSkill02", "BossSkill03" };
         int index = Random.Range(0, skillNames.Length);
         return skillNames[index];
     }
     void UseSkill(string skillName)
-    { 
+    {
         // 이름에 맞는 스킬 사용
-        var skill = skills.Find(s=>s.skillName == skillName);
-        if(skill.CanUse())
+        var skill = skills.Find(s => s.skillName == skillName);
+        if (skill.CanUse())
         {
             skill.currentCooldown += Time.deltaTime;
             // 이펙트 발사
-            skill.ExecuteEffect(transform,skill.effect);
-        }     
+            skill.ExecuteEffect(transform, skill.effect);
+        }
     }
 }
