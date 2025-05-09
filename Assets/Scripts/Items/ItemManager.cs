@@ -102,6 +102,10 @@ public class ItemManager : MonoBehaviour
         sword1.itemRarity = ItemRarity.Common;
         sword1.attackBonus = 5;
         sword1.price = 100;
+        // 공격 관련 값 추가
+        sword1.attackRange = 1.5f;
+        sword1.attackDelay = 0.2f;
+        sword1.attackCooldown = 0.5f;
 
         if (itemSprites.TryGetValue("sword_common", out Sprite sprite))
         {
@@ -121,6 +125,10 @@ public class ItemManager : MonoBehaviour
         sword2.itemRarity = ItemRarity.Uncommon;
         sword2.attackBonus = 10;
         sword2.price = 200;
+        // 공격 관련 값 추가
+        sword2.attackRange = 1.8f;
+        sword2.attackDelay = 0.18f;
+        sword2.attackCooldown = 0.45f;
 
         if (itemSprites.TryGetValue("sword_uncommon", out sprite))
         {
@@ -140,6 +148,10 @@ public class ItemManager : MonoBehaviour
         sword3.itemRarity = ItemRarity.Rare;
         sword3.attackBonus = 15;
         sword3.price = 400;
+        // 공격 관련 값 추가
+        sword3.attackRange = 2.0f;
+        sword3.attackDelay = 0.16f;
+        sword3.attackCooldown = 0.4f;
 
         if (itemSprites.TryGetValue("sword_rare", out sprite))
         {
@@ -159,6 +171,10 @@ public class ItemManager : MonoBehaviour
         sword4.itemRarity = ItemRarity.Epic;
         sword4.attackBonus = 25;
         sword4.price = 800;
+        // 공격 관련 값 추가
+        sword4.attackRange = 2.5f;
+        sword4.attackDelay = 0.15f;
+        sword4.attackCooldown = 0.35f;
 
         if (itemSprites.TryGetValue("sword_epic", out sprite))
         {
@@ -182,6 +198,10 @@ public class ItemManager : MonoBehaviour
         bow1.itemRarity = ItemRarity.Common;
         bow1.attackBonus = 4;
         bow1.price = 100;
+        // 공격 관련 값 추가
+        bow1.attackRange = 6.0f;
+        bow1.attackDelay = 0.5f;
+        bow1.attackCooldown = 1.0f;
 
         if (itemSprites.TryGetValue("bow_common", out Sprite sprite))
         {
@@ -201,6 +221,10 @@ public class ItemManager : MonoBehaviour
         bow2.itemRarity = ItemRarity.Uncommon;
         bow2.attackBonus = 8;
         bow2.price = 200;
+        // 공격 관련 값 추가
+        bow2.attackRange = 7.0f;
+        bow2.attackDelay = 0.45f;
+        bow2.attackCooldown = 0.9f;
 
         if (itemSprites.TryGetValue("bow_uncommon", out sprite))
         {
@@ -220,6 +244,10 @@ public class ItemManager : MonoBehaviour
         bow3.itemRarity = ItemRarity.Rare;
         bow3.attackBonus = 12;
         bow3.price = 400;
+        // 공격 관련 값 추가
+        bow3.attackRange = 8.0f;
+        bow3.attackDelay = 0.4f;
+        bow3.attackCooldown = 0.8f;
 
         if (itemSprites.TryGetValue("bow_rare", out sprite))
         {
@@ -239,6 +267,10 @@ public class ItemManager : MonoBehaviour
         bow4.itemRarity = ItemRarity.Epic;
         bow4.attackBonus = 20;
         bow4.price = 800;
+        // 공격 관련 값 추가
+        bow4.attackRange = 10.0f;
+        bow4.attackDelay = 0.35f;
+        bow4.attackCooldown = 0.7f;
 
         if (itemSprites.TryGetValue("bow_epic", out sprite))
         {
@@ -262,6 +294,10 @@ public class ItemManager : MonoBehaviour
         scythe1.itemRarity = ItemRarity.Common;
         scythe1.attackBonus = 6;
         scythe1.price = 120;
+        // 공격 관련 값 추가
+        scythe1.attackRange = 2.0f;
+        scythe1.attackDelay = 0.3f;
+        scythe1.attackCooldown = 0.7f;
 
         if (itemSprites.TryGetValue("scythe_common", out Sprite sprite))
         {
@@ -281,6 +317,10 @@ public class ItemManager : MonoBehaviour
         scythe2.itemRarity = ItemRarity.Uncommon;
         scythe2.attackBonus = 12;
         scythe2.price = 240;
+        // 공격 관련 값 추가
+        scythe2.attackRange = 2.3f;
+        scythe2.attackDelay = 0.28f;
+        scythe2.attackCooldown = 0.65f;
 
         if (itemSprites.TryGetValue("scythe_uncommon", out sprite))
         {
@@ -300,6 +340,10 @@ public class ItemManager : MonoBehaviour
         scythe3.itemRarity = ItemRarity.Rare;
         scythe3.attackBonus = 18;
         scythe3.price = 480;
+        // 공격 관련 값 추가
+        scythe3.attackRange = 2.7f;
+        scythe3.attackDelay = 0.25f;
+        scythe3.attackCooldown = 0.6f;
 
         if (itemSprites.TryGetValue("scythe_rare", out sprite))
         {
@@ -319,6 +363,10 @@ public class ItemManager : MonoBehaviour
         scythe4.itemRarity = ItemRarity.Epic;
         scythe4.attackBonus = 30;
         scythe4.price = 960;
+        // 공격 관련 값 추가
+        scythe4.attackRange = 3.0f;
+        scythe4.attackDelay = 0.22f;
+        scythe4.attackCooldown = 0.5f;
 
         if (itemSprites.TryGetValue("scythe_epic", out sprite))
         {
