@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
 
     private void SetWeapon()
     {
-        weaponHandler.Init(inventory.GetCurrentWeapon() , stat, targetMask);
+        weaponHandler?.Init(inventory.GetCurrentWeapon() , stat, targetMask);
     }
 
     public void ControllerRegister()
@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
-        weaponHandler.Rotate(rotZ);
+        weaponHandler?.Rotate(rotZ);
     }
 
     public float TotalDamage()
