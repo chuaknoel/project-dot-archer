@@ -8,7 +8,7 @@ public class CreditScroller : MonoBehaviour
     public RectTransform creditContent;
 
     [Header("스크롤 시간 조절 (초)")]
-    public float scrollDuration = 40f; // 총 스크롤 시간
+    public float scrollDuration = 50f; // 총 스크롤 시간
 
     public float endY = 700f;
 
