@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,15 +9,20 @@ public class PlayerController : BaseController<Player>
     protected Player player;
     private Vector3 inputDir;
 
+    private Action lookAction;
+
+    private bool enemyAlive;
+
     public PlayerController(State<Player> initState, Player player) : base(initState, player)
     {
         this.player = player;
+        lookAction = LookEnemy;
     }
 
     public override void OnUpdate(float deltaTime)
     {
         GetInputDir();
-        LookRotate();
+        lookAction?.Invoke();
         base.OnUpdate(deltaTime);
     }
 
@@ -27,10 +33,44 @@ public class PlayerController : BaseController<Player>
         return inputDir;
     }
 
-    public void LookRotate()
+    public void ChangeLook()
+    {
+        lookAction = null;
+
+        if (enemyAlive) //임시로 만든 bool 변수 //추후 EnemyManager에서 남은 Enemy를 체크하여 변경
+        {
+            lookAction = LookEnemy;
+        }
+        else
+        {
+            lookAction += LookMouse;
+        }
+    }
+
+    public void LookMouse()
     {
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 lookDir = worldPos - (Vector2)player.transform.position;
+        RotateToDir(lookDir);
+        //player.WeaponHandler?.Rotate(rotZ);
+    }
+
+    public void LookEnemy()
+    {
+        GameObject target = player.SearchTarget.SearchNearestTarget();
+
+        if (target == null)
+        {
+            return;
+        }
+
+        Vector2 targetPos = target.transform.position;
+        Vector2 lookDir = targetPos - (Vector2)player.transform.position;
+        RotateToDir(lookDir);
+    }
+
+    public void RotateToDir(Vector2 lookDir)
+    {
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
 
         float rotZ = Mathf.Abs(angle);
@@ -45,7 +85,5 @@ public class PlayerController : BaseController<Player>
         {
             player.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
-
-        player.WeaponHandler?.Rotate(rotZ);
     }
 }

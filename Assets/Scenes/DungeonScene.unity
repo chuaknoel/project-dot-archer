@@ -840,7 +840,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04122d8da0c7aae44937cbe3a8d3f372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stat: {fileID: 0}
   weaponPivot: {fileID: 5602784775834551166}
   targetMask:
     serializedVersion: 2
@@ -893,24 +892,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &6556173609417827704
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9161907693779686750}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62a0009d92307cc418b6fe8c065fea8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  level: 1
-  maxHealth: 100
-  currentHealth: 100
-  attackDamage: 100
-  defence: 1
-  moveSpeed: 5
 --- !u!95 &6829161297940834138
 Animator:
   serializedVersion: 5
@@ -1071,7 +1052,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6904851356808984096}
   - component: {fileID: 4972835396792796529}
-  - component: {fileID: 6556173609417827704}
   - component: {fileID: 1486112182380505232}
   - component: {fileID: 7375818631047491449}
   - component: {fileID: 1476430683942102477}
