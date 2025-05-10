@@ -19,7 +19,7 @@ public class PlayerIdleState : PlayerStates
     public override void OnUpdate(float deltaTime)
     {
         base.OnUpdate(deltaTime);
-        if(player.GetInputDir() != Vector3.zero)
+        if(player.Controller.GetInputDir() != Vector3.zero)
         {
             player.Controller.ChangeState(nameof(PlayerMoveState));
         }

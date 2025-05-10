@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Enums;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class DungeonManager : MonoBehaviour
 {
@@ -21,7 +22,10 @@ public class DungeonManager : MonoBehaviour
         // 맵 생성
         rooms = roomGenerator.GenerateDungeon();
         cameraController = Camera.main.GetComponent<CameraController>();
-        player.Init();
+
+        //테스트 매서드
+        SetPlayerData();
+
         // 시작 위치 설정
         if (rooms.TryGetValue(Vector2Int.zero, out Room startRoom))
         {
@@ -54,5 +58,17 @@ public class DungeonManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void SetPlayerData()
+    {
+        PlayerData testData = new PlayerData
+            (
+                playerName: "sdf",
+                statData: new StatData(new AttackStatData(), new MoveStatData(5f))
+                
+            );
+
+        player.Init(testData);
     }
 }

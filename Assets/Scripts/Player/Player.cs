@@ -1,19 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class Player : MonoBehaviour
 {
     public Inventory Inventory => inventory;
     private Inventory inventory;
 
-    [HideInInspector] public PlayerStat stat;
+    public PlayerStat stat;
     
     public PlayerController Controller { get { return controller; } }
     private PlayerController controller;
-    private Vector3 inputDir;
-
+   
     private SpriteRenderer characterImage;
     private Animator playerAnime;
 
@@ -22,10 +20,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private Transform weaponPivot;
     public WeaponHandler WeaponHandler { get { return weaponHandler; } }
-    [SerializeField]private WeaponHandler weaponHandler;
-
-
-    public Item TestItme;
+    private WeaponHandler weaponHandler;
 
     public LayerMask targetMask;
 
@@ -37,10 +32,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        GetInputDir();
-        LookRotate();
         controller?.OnUpdate(Time.deltaTime);
-
 
         // UI 매니저 생기면 옮겨주세요!
         // 인벤토리 UI 토글 (I 키)
@@ -60,28 +52,34 @@ public class Player : MonoBehaviour
         controller?.OnFixedUpdate();
     }
 
-    public void Init()
+    public void Init(PlayerData playerData)
     {
-        stat ??= GetComponent<PlayerStat>();
+        stat ??= new PlayerStat(this, playerData);
+
+        Debug.Log(stat.IsDeath);
+
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();
         searchTarget ??= GetComponent<SearchTarget>();
 
         inventory ??= GetComponent<Inventory>();
 
-        //임시 아이템 장착
-        GameObject go = ItemManager.Instance.SpawnItem(weaponPivot.position, TestItme.ItemData);
-        go.transform.SetParent(weaponPivot);
-        weaponHandler = go.GetComponent<WeaponHandler>();
-        weaponHandler?.Init(go.GetComponent<Item>(), stat, targetMask);
-
-        //SetWeapon();
+        SetWeapon();
         ControllerRegister();
     }
 
     private void SetWeapon()
     {
-        weaponHandler?.Init(inventory.GetCurrentWeapon() , stat, targetMask);
+        //임시코드
+        Item item = ItemManager.Instance.itemPrefab.GetComponent<Item>();
+        GameObject go = ItemManager.Instance.SpawnItem(weaponPivot.position, item.ItemData);
+
+        go.transform.SetParent(weaponPivot);
+        weaponHandler = go.GetComponent<WeaponHandler>();
+        weaponHandler?.Init(item, stat, targetMask);
+
+        //구현코드
+        //weaponHandler?.Init(inventory.GetCurrentWeapon() , stat, targetMask);
     }
 
     public void ControllerRegister()
@@ -96,41 +94,6 @@ public class Player : MonoBehaviour
     public void ChangeAnime(PlayerState nextAnime)
     {
         playerAnime.SetInteger("ChangeState", (int)nextAnime);
-    }
-
-    public Vector3 GetInputDir()
-    {
-        inputDir.x = Input.GetAxisRaw("Horizontal");
-        inputDir.y = Input.GetAxisRaw("Vertical");
-        return inputDir;
-    }
-
-    public void LookRotate()
-    {
-        Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 lookDir = worldPos - (Vector2)transform.position;
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-
-        float rotZ = Mathf.Abs(angle);
-
-        bool isLeft = (rotZ > 90);
-
-        if (isLeft)
-        {
-            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-        }
-        else
-        {
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        }
-
-        weaponHandler?.Rotate(rotZ);
-    }
-
-    public float TotalDamage()
-    {
-        // 인벤토리에서 계산된 총 데미지 사용
-        return stat.AttackDamage + inventory.GetTotalAttackBonus();
     }
 
 

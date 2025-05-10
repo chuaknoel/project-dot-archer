@@ -24,7 +24,7 @@ public class ItemManager : MonoBehaviour
     }
 
     // 아이템 프리팹
-    [SerializeField] private GameObject itemPrefab;
+    public GameObject itemPrefab;
 
     // 아이템 데이터 딕셔너리
     private Dictionary<string, ItemData> itemDataDict = new Dictionary<string, ItemData>();
