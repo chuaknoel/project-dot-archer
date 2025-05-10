@@ -1547,7 +1547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creditContent: {fileID: 2023525936}
-  scrollDuration: 40
+  scrollDuration: 50
   endY: 700
 --- !u!4 &1356697779
 Transform:
