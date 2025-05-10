@@ -4,7 +4,7 @@ using System.Collections;
 
 public class BlinkText : MonoBehaviour
 {
-    public float interval = 0.4f;
+    public float interval = 0.7f;
     private Text uiText;
 
     void Awake()
