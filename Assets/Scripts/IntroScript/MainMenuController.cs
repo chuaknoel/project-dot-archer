@@ -48,6 +48,12 @@ public class MainMenuController : MonoBehaviour
         optionsPanel.SetActive(true);
     }
 
+    // 크레딧 버튼 클릭
+    public void OnCredits()
+    {
+        SceneManager.LoadScene("CreditsScene");
+    }
+
     // 옵션화면 → 뒤로가기 버튼
     public void OnOptionsBack()
     {
