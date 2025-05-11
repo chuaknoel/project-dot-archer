@@ -599,7 +599,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC6B0\uB9AC\uC870 \uAD50\uC218\uB2D8"
+  m_Text: "\uC5EC\uC2E0"
 --- !u!222 &461332070
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1547,7 +1547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creditContent: {fileID: 2023525936}
-  scrollDuration: 50
+  scrollDuration: 30
   endY: 700
 --- !u!4 &1356697779
 Transform:
