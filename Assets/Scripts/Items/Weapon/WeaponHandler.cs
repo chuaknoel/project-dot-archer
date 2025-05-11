@@ -6,7 +6,6 @@ public abstract class WeaponHandler : MonoBehaviour
 {
     protected Animator animator;
     [SerializeField] protected SpriteRenderer weaponRenderer;
-    [SerializeField] protected bool isRotate;
   
     protected bool isUseable;
 
