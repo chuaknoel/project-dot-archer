@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -14,20 +15,23 @@ public class EnemyController : MonoBehaviour
     {
         if (ownerStat is IMoveStat moveStat)
         {
-            moveController.MoveToPlayer(ownerEnemy.target, moveStat.MoveSpeed);
+            if (rangeAttackController.canMove)
+            moveController.MoveToPlayer(ownerEnemy.target, moveStat);
         }
-        if(ownerStat is IAttackRangeStat range && ownerStat is IAttackStat attack)
+
+        if (ownerStat is IAttackRangeStat range && ownerStat is IAttackStat attack)
         {
-            rangeAttackController.RangeAttack(attack.AttackDamage, range, ownerEnemy);
+            if (rangeAttackController.isAttacking)
+                rangeAttackController.RangeAttack(attack.AttackDamage, range, ownerEnemy);
         }
     }
 
     public void Init(BaseEnemy ownerEnemy)
     {
-        moveController = GetComponent<MoveController>();
         this.ownerEnemy = ownerEnemy;
         ownerStat = ownerEnemy.GetComponent<BaseStat>();
-        rangeAttackController = GetComponent<RangeAttackController>();
+        moveController = this.AddComponent<MoveController>();
+        rangeAttackController = this.AddComponent<RangeAttackController>();
     }
 
 }

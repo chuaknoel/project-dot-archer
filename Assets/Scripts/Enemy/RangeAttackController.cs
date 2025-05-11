@@ -1,26 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RangeAttackController : MonoBehaviour
 {
-    private float attackTimer = 0f;
-    private bool canMove = true;
-
+    public bool isAttacking = true;
+    public bool canMove = true;
 
     public void RangeAttack(float damage, IAttackRangeStat range, BaseEnemy ownerEnemy)
     {
-        if (canMove)
-        {
-            StartCoroutine(RangeAttackRoutine(damage, range, ownerEnemy));
-        }
+        if (!isAttacking) return;
+        StartCoroutine(RangeAttackRoutine(damage, range, ownerEnemy));
     }
     public IEnumerator RangeAttackRoutine(float damage, IAttackRangeStat range, BaseEnemy ownerEnemy)
     {
+        isAttacking = false;
+
+        yield return new WaitForSeconds(range.AttackDelay);
 
         canMove = false;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(range.AttackDelay);
 
         GameObject projectile = Instantiate(range.ProjectilePrefab, transform.position, Quaternion.identity);
 
@@ -32,7 +33,11 @@ public class RangeAttackController : MonoBehaviour
             rb.velocity = direction * range.ProjectileSpeed;
         }
 
-        yield return new WaitForSeconds(0.5f);
+
+
         canMove = true;
+        isAttacking = true;
+
     }
+
 }

@@ -17,7 +17,7 @@ public class MoveController : MonoBehaviour
         }
     }
 
-    public void MoveToPlayer(Transform target, float speed)
+    public void MoveToPlayer(Transform target, IMoveStat move)
     {
 
         if (!isAvoiding)
@@ -32,11 +32,11 @@ public class MoveController : MonoBehaviour
 
             if (hit.collider != null && hit.collider.gameObject.layer == LayerMask.NameToLayer("Water"))
             {
-                StartCoroutine(AvoidObstacle(moveDir, speed));
+                StartCoroutine(AvoidObstacle(moveDir, move.MoveSpeed));
             }
             else
             {
-                transform.position += moveDir * speed * Time.deltaTime;
+                transform.position += moveDir * move.MoveSpeed * Time.deltaTime;
             }
 
         }
