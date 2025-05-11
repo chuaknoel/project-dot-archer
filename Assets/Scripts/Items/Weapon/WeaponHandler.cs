@@ -55,7 +55,7 @@ public abstract class WeaponHandler : MonoBehaviour
         isUseable = true;
     }
 
-    public virtual void Rotate(float angle) { }
+    public virtual void Rotate(Vector3 angle) { }
 
     public bool IsUseable()
     {

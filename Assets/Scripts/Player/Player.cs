@@ -72,7 +72,7 @@ public class Player : MonoBehaviour
     {
         //임시코드
         Item item = ItemManager.Instance.itemPrefab.GetComponent<Item>();
-        GameObject go = ItemManager.Instance.SpawnItem(weaponPivot.position, item.ItemData);
+        GameObject go = ItemManager.Instance.SpawnItem(item.transform.position, item.ItemData);
 
         go.transform.SetParent(weaponPivot);
         weaponHandler = go.GetComponent<WeaponHandler>();
@@ -94,6 +94,11 @@ public class Player : MonoBehaviour
     public void ChangeAnime(PlayerState nextAnime)
     {
         playerAnime.SetInteger("ChangeState", (int)nextAnime);
+    }
+
+    public void LookRotate(bool isLeft)
+    {
+        characterImage.flipX = isLeft;
     }
 
 

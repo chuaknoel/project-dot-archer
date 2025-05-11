@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class PlayerController : BaseController<Player>
@@ -24,6 +25,12 @@ public class PlayerController : BaseController<Player>
         GetInputDir();
         lookAction?.Invoke();
         base.OnUpdate(deltaTime);
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            enemyAlive = !enemyAlive;
+            ChangeLook();
+        }
     }
 
     public Vector3 GetInputDir()
@@ -51,8 +58,16 @@ public class PlayerController : BaseController<Player>
     {
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 lookDir = worldPos - (Vector2)player.transform.position;
-        RotateToDir(lookDir);
-        //player.WeaponHandler?.Rotate(rotZ);
+        var (angle, isLeft) = RotateToDir(lookDir);
+
+        if (isLeft)
+        {
+            player.WeaponHandler?.Rotate(new Vector3(0, 180, 0));
+        }
+        else
+        {
+            player.WeaponHandler?.Rotate(new Vector3(0, 0, 0));
+        }
     }
 
     public void LookEnemy()
@@ -66,10 +81,11 @@ public class PlayerController : BaseController<Player>
 
         Vector2 targetPos = target.transform.position;
         Vector2 lookDir = targetPos - (Vector2)player.transform.position;
-        RotateToDir(lookDir);
+        var (angle , isLeft) = RotateToDir(lookDir);
+        player.WeaponHandler?.Rotate(new Vector3(0,0,angle));
     }
 
-    public void RotateToDir(Vector2 lookDir)
+    public (float angle, bool isLeft) RotateToDir(Vector2 lookDir)
     {
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
 
@@ -77,13 +93,7 @@ public class PlayerController : BaseController<Player>
 
         bool isLeft = (rotZ > 90);
 
-        if (isLeft)
-        {
-            player.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-        }
-        else
-        {
-            player.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        }
+        player.LookRotate(isLeft);
+        return (angle , isLeft);
     }
 }
