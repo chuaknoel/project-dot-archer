@@ -13,9 +13,9 @@ public class ZombieStat : EnemyStat, IMoveStat, IAttackStat , IAttackRangeStat
 
     public float AttackDelay => attakDelay;
 
-    public GameObject ProjectilePrefab => projectilePrefab;
-
     public float ProjectileSpeed => projectileSpeed;
+
+    public GameObject ProjectilePrefab => projectilePrefab;
 
 
     public GameObject projectilePrefab;

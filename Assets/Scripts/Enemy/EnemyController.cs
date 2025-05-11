@@ -15,9 +15,11 @@ public class EnemyController : MonoBehaviour
     {
         if (ownerStat is IMoveStat moveStat)
         {
-            moveController.MoveToPlayer(ownerEnemy.target, moveStat.MoveSpeed);
+            if (rangeAttackController.canMove)
+                moveController.MoveToPlayer(ownerEnemy.target, moveStat);
         }
-        if(ownerStat is IAttackRangeStat range && ownerStat is IAttackStat attack)
+
+        if (ownerStat is IAttackRangeStat range && ownerStat is IAttackStat attack)
         {
             rangeAttackController.RangeAttack(attack.AttackDamage, range, ownerEnemy);
         }
@@ -25,9 +27,9 @@ public class EnemyController : MonoBehaviour
 
     public void Init(BaseEnemy ownerEnemy)
     {
-        moveController = this.AddComponent<MoveController>();
         this.ownerEnemy = ownerEnemy;
         ownerStat = ownerEnemy.GetComponent<BaseStat>();
+        moveController = this.AddComponent<MoveController>();
         rangeAttackController = this.AddComponent<RangeAttackController>();
     }
 

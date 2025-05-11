@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RangeAttackController : MonoBehaviour
 {
-    private bool canMove = true;
+    public bool canMove = true;
 
 
     public void RangeAttack(float damage, IAttackRangeStat range, BaseEnemy ownerEnemy)
@@ -19,7 +20,6 @@ public class RangeAttackController : MonoBehaviour
 
         canMove = false;
 
-        yield return new WaitForSeconds(0.5f);
 
         GameObject projectile = Instantiate(range.ProjectilePrefab, transform.position, Quaternion.identity);
 
@@ -31,7 +31,8 @@ public class RangeAttackController : MonoBehaviour
             rb.velocity = direction * range.ProjectileSpeed;
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(range.AttackDelay);
         canMove = true;
     }
+    
 }
