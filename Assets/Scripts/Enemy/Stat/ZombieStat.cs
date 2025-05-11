@@ -24,5 +24,4 @@ public class ZombieStat : EnemyStat, IMoveStat, IAttackStat , IAttackRangeStat
     [SerializeField] private float attakRange;
     [SerializeField] private float attakDelay;
     [SerializeField] private float projectileSpeed;
-    [SerializeField] private float attackDelay;
 }

@@ -16,12 +16,13 @@ public class EnemyController : MonoBehaviour
         if (ownerStat is IMoveStat moveStat)
         {
             if (rangeAttackController.canMove)
-                moveController.MoveToPlayer(ownerEnemy.target, moveStat);
+            moveController.MoveToPlayer(ownerEnemy.target, moveStat);
         }
 
         if (ownerStat is IAttackRangeStat range && ownerStat is IAttackStat attack)
         {
-            rangeAttackController.RangeAttack(attack.AttackDamage, range, ownerEnemy);
+            if (rangeAttackController.isAttacking)
+                rangeAttackController.RangeAttack(attack.AttackDamage, range, ownerEnemy);
         }
     }
 
