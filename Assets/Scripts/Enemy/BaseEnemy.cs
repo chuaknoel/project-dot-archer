@@ -33,7 +33,6 @@ public class BaseEnemy : MonoBehaviour
         EnemyController.Init(this);
         rb = GetComponent<Rigidbody2D>();
         target= GameObject.FindGameObjectWithTag("Player").transform;
-        skillController.AddSkill(this);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
