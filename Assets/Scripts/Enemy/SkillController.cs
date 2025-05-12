@@ -27,11 +27,11 @@ public class SkillController : MonoBehaviour
 
     private IEnumerator RunSkill(BaseEnemy owner)
     {
-        canMove = false;
-
-        yield return new WaitForSeconds(2f);
-
         canUse = false;
+
+        yield return new WaitForSeconds(1.5f);
+
+        canMove = false;
 
         foreach (var skill in skills)
         {
@@ -40,7 +40,7 @@ public class SkillController : MonoBehaviour
                 skill.UseSkill(owner);  
             }
         }
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
 
 
         canMove = true;
