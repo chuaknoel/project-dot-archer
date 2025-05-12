@@ -40,8 +40,7 @@ public class BaseEnemy : MonoBehaviour
         if (collision.TryGetComponent<IDefenceStat>(out IDefenceStat damage))
         {
             if (TryGetComponent<IAttackStat>(out IAttackStat attack))
-                damage.TakeDamage(attack.AttackDamage);
+                damage.TakeDamage(attack.GetTotalAttack());
         }
     }
-    
 }
