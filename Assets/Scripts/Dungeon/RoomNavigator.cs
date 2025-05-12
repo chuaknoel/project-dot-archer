@@ -10,7 +10,7 @@ public class RoomNavigator : MonoBehaviour
     public void MovePlayerToRoom(Room room, GameObject player, Vector2Int fromDirection)
     {
         Vector3 entry = room.GetEntryPositionFrom(fromDirection);
-        Vector3 offset = ((Vector2)fromDirection).normalized * 1.0f;
+        Vector3 offset = ((Vector2)fromDirection).normalized * 1.5f;
         Vector3 targetPos = entry + offset;
 
         StartCoroutine(MovePlayerWithCollisionPause(player, targetPos));
@@ -23,7 +23,7 @@ public class RoomNavigator : MonoBehaviour
     {
         if (roomGenerator.Rooms.TryGetValue(targetPosition, out Room targetRoom))
         {
-            Vector2Int fromDirection = -GetDirectionToRoom(player.transform.position, targetRoom);
+            Vector2Int fromDirection = GetDirectionToRoom(player.transform.position, targetRoom);
             MovePlayerToRoom(targetRoom, player, fromDirection);
         }
         else
@@ -57,7 +57,7 @@ public class RoomNavigator : MonoBehaviour
 
         player.transform.position = targetPosition;
 
-        yield return new WaitForSeconds(0.2f); // 0.2초 후 충돌 복원
+        yield return new WaitForSeconds(0.3f); // 0.2초 후 충돌 복원
 
         if (playerCollider != null)
         {
