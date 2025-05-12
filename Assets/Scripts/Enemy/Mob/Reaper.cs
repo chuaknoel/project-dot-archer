@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Goblin : BaseEnemy
+public class Reaper : BaseEnemy
 {
-    public GoblinStat goblinStat;
+    public ReaperStat reaperStat;
 
     public override void Init()
     {
         base.Init();
-        goblinStat = GetComponent<GoblinStat>();
+        reaperStat = GetComponent<ReaperStat>();
+
+
 
     }
-
-
 }
