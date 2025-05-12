@@ -5604,7 +5604,6 @@ MonoBehaviour:
   - {fileID: 4279269843784533207, guid: bfa05a133b772984d9b3b3d93e272bbb, type: 3}
   - {fileID: 1526210570879138725, guid: 6dd6f2d3ca3c5f14e879cfdcdbeff959, type: 3}
   - {fileID: 2461354974165407363, guid: aef47b5338ebef346ac6ac17b9996c06, type: 3}
-  - {fileID: 2461354974165407363, guid: aef47b5338ebef346ac6ac17b9996c06, type: 3}
   - {fileID: 1614638298615382868, guid: 92bb3c00d723f5b4ead359e0a45b5eb0, type: 3}
   - {fileID: 6558297929894013120, guid: 9cbb3127b9af6c943873bc8843381488, type: 3}
   armorPrefabs:

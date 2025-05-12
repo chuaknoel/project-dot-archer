@@ -2,14 +2,16 @@ using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
-/// ÇÃ·¹ÀÌ¾îÀÇ ÀåÂø ¾ÆÀÌÅÛ(¹«±â¡¤¹æ¾î±¸)À» °ü¸®ÇÏ°í,
-/// ÀåÂøµÈ ÇÁ¸®ÆÕÀ» InstantiateÇÏ¿© ½ºÅÈ º¸³Ê½º¸¦ Àû¿ëÇÏ¸ç,
-/// ÇöÀç ÀåÂø ¾ÆÀÌÅÛ Á¶È¸ ¹× ÀÎº¥Åä¸® UI Åä±Û ±â´ÉÀ» Á¦°øÇÕ´Ï´Ù.
+/// ÇÃ·¹ÀÌ¾îÀÇ ÀåÂø ¾ÆÀÌÅÛ(¹«±â¡¤¹æ¾î±¸)À» °ü¸®ÇÕ´Ï´Ù.
+/// - ¹«±â ¡¤ ¹æ¾î±¸ PrefabÀº Inspector¿¡¼­ µå·¡±×&µå·ÓÀ¸·Î µî·Ï  
+/// - ÀÎº¥Åä¸®´Â PrefabÀ» InstantiateÇÏÁö ¾Ê°í, ´Ü¼øÈ÷ ¸ÅÇÎ¸¸ ¼öÇà  
+/// - Player.SetWeapon() °°Àº ¿ÜºÎ ·ÎÁ÷ÀÌ Instantiate ¹× ºÎ¸ð ¼³Á¤À» Ã¥ÀÓÁü  
+/// - ´É·ÂÄ¡ °è»ê, Á¶È¸¿ë GetCurrentWeapon(), UI Åä±Û ±â´ÉÀº ±×´ë·Î À¯Áö  
 /// </summary>
 public class Inventory : MonoBehaviour
 {
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 1) Inspector ¼³Á¤ ¿µ¿ª
+    // 1) Inspector ¼³Á¤ ÇÊµå
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     [Header("ÀåÂøÇÒ ¾ÆÀÌÅÛ ID (Inspector¿¡ ÀÔ·Â)")]
@@ -22,18 +24,21 @@ public class Inventory : MonoBehaviour
     [Tooltip("ÀåÂøÇÒ ½Å¹ß ID (¿¹: boots_common)")]
     [SerializeField] private string equippedBootsId = "boots_common";
 
-    [Header("ÀåÂø ¾ÆÀÌÅÛ Prefab ¸®½ºÆ®")]
-    [Tooltip("¸ðµç ¹«±â Prefab (Item ÄÄÆ÷³ÍÆ®ÀÇ ItemId¸¦ ¼³Á¤ ÈÄ µå·¡±×&µå·Ó)")]
+    [Header("¹«±â Prefab ¸®½ºÆ® (Inspector µî·Ï)")]
+    [Tooltip("¸ðµç ¹«±â PrefabÀ» µå·¡±×&µå·ÓÇÏ°í, °¢ PrefabÀÇ ItemId¸¦ ¼³Á¤ÇÏ¼¼¿ä.")]
     [SerializeField] private List<GameObject> weaponPrefabs;
-    [Tooltip("¸ðµç ¹æ¾î±¸ Prefab (Item ÄÄÆ÷³ÍÆ®ÀÇ ItemId¸¦ ¼³Á¤ ÈÄ µå·¡±×&µå·Ó)")]
+
+    [Header("¹æ¾î±¸ Prefab ¸®½ºÆ® (Inspector µî·Ï)")]
+    [Tooltip("¸ðµç ¹æ¾î±¸ PrefabÀ» µå·¡±×&µå·ÓÇÏ°í, °¢ PrefabÀÇ ItemId¸¦ ¼³Á¤ÇÏ¼¼¿ä.")]
     [SerializeField] private List<GameObject> armorPrefabs;
 
-    [Header("UI ÆÐ³Î (ÀÎº¥Åä¸® Ã¢)")]
-    [Tooltip("ÀÎº¥Åä¸® UI ÆÐ³ÎÀ» ¿¬°áÇÏ¼¼¿ä")]
+    [Header("ÀÎº¥Åä¸® UI ÆÐ³Î")]
+    [Tooltip("ÀÎº¥Åä¸® Ã¢À¸·Î »ç¿ëÇÒ UI ÆÐ³ÎÀ» ¿¬°áÇØÁÖ¼¼¿ä.")]
     [SerializeField] private GameObject inventoryUIPanel;
 
+
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 2) ³»ºÎ »óÅÂ ÀúÀå¿ë µñ¼Å³Ê¸®
+    // 2) ³»ºÎ »óÅÂ ÀúÀå¿ë º¯¼ö ¹× µñ¼Å³Ê¸®
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     // ID ¡æ Prefab ¸ÅÇÎ
@@ -44,40 +49,27 @@ public class Inventory : MonoBehaviour
     private Dictionary<WeaponType, ItemData> equippedWeapons = new Dictionary<WeaponType, ItemData>();
     private Dictionary<ArmorType, ItemData> equippedArmors = new Dictionary<ArmorType, ItemData>();
 
-    // InstantiateµÈ Item ÄÄÆ÷³ÍÆ® ÂüÁ¶
-    private Dictionary<WeaponType, Item> virtualWeaponItems = new Dictionary<WeaponType, Item>();
-    private Dictionary<ArmorType, Item> virtualArmorItems = new Dictionary<ArmorType, Item>();
+    // ¹«±â Prefab ÂüÁ¶¸¸ ÀúÀå (Instantiate´Â Player ÂÊ¿¡¼­ Ã³¸®)
+    private Dictionary<WeaponType, GameObject> equippedWeaponPrefabs = new Dictionary<WeaponType, GameObject>();
+
+    // ¹æ¾î±¸´Â Inventory¿¡¼­ InstantiateÇÑ Item ÄÄÆ÷³ÍÆ® ÂüÁ¶
+    private Dictionary<ArmorType, Item> equippedArmorInstances = new Dictionary<ArmorType, Item>();
 
     // º¸³Ê½º ½ºÅÈ ÇÕ»ê
     private float attackBonus = 0f;
     private float defenseBonus = 0f;
 
-    // ÀÎº¥Åä¸® UI Åä±Û »óÅÂ
+    // UI Åä±Û »óÅÂ
     private bool isInventoryOpen = false;
 
+
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 3) Unity ÀÌº¥Æ® ÄÝ¹é
+    // 3) Unity »ý¸íÁÖ±â ÄÝ¹é
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     private void Awake()
     {
-        // ÀÇµµ: Awake¿¡¼­ Prefab ¸®½ºÆ®¸¦ ÀÐ¾î ID¡æPrefab ¸ÅÇÎÀ» ÃÊ±âÈ­
-        InitializeWeaponPrefabDict();
-        InitializeArmorPrefabDict();
-    }
-
-    private void Start()
-    {
-        // ÀÇµµ: Start¿¡¼­ Inspector¿¡ ÀÔ·ÂµÈ ID·Î ÃÊ±â ÀåÂø ¾ÆÀÌÅÛ ¼¼ÆÃ
-        EquipSelectedItems();
-    }
-
-    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 4) Prefab ¸®½ºÆ® ¡æ µñ¼Å³Ê¸® ÃÊ±âÈ­
-    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-
-    private void InitializeWeaponPrefabDict()
-    {
+        // (1) Inspector¿¡ µå·ÓµÈ PrefabµéÀ» ID¡æPrefab µñ¼Å³Ê¸®¿¡ Ã¤¿ö³Ö±â
         weaponPrefabDict.Clear();
         foreach (var prefab in weaponPrefabs)
         {
@@ -85,12 +77,9 @@ public class Inventory : MonoBehaviour
             if (it != null && !string.IsNullOrEmpty(it.ItemId))
                 weaponPrefabDict[it.ItemId] = prefab;
             else
-                Debug.LogWarning($"[Inventory] Weapon Prefab ´©¶ô: {prefab.name}");
+                Debug.LogWarning($"[Inventory] Weapon Prefab ´©¶ô ¶Ç´Â ItemId ¹Ì¼³Á¤: {prefab.name}");
         }
-    }
 
-    private void InitializeArmorPrefabDict()
-    {
         armorPrefabDict.Clear();
         foreach (var prefab in armorPrefabs)
         {
@@ -98,33 +87,47 @@ public class Inventory : MonoBehaviour
             if (it != null && !string.IsNullOrEmpty(it.ItemId))
                 armorPrefabDict[it.ItemId] = prefab;
             else
-                Debug.LogWarning($"[Inventory] Armor Prefab ´©¶ô: {prefab.name}");
+                Debug.LogWarning($"[Inventory] Armor Prefab ´©¶ô ¶Ç´Â ItemId ¹Ì¼³Á¤: {prefab.name}");
         }
+
+        // (2) ¸ðµç WeaponType/ArmorType Å° ÃÊ±âÈ­
+        foreach (WeaponType wt in System.Enum.GetValues(typeof(WeaponType)))
+            if (wt != WeaponType.None)
+                equippedWeaponPrefabs[wt] = null;
+
+        foreach (ArmorType at in System.Enum.GetValues(typeof(ArmorType)))
+            if (at != ArmorType.None)
+                equippedArmorInstances[at] = null;
     }
 
+    private void Start()
+    {
+        // Inspector¿¡ ÀÔ·ÂµÈ ID·Î ÃÊ±â ÀåÂø ½ÇÇà
+        EquipSelectedItems();
+    }
+
+
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 5) ÃÊ±â ÀåÂø ¼³Á¤ (Inspector ID ¡æ ÀåÂø)
+    // 4) ÃÊ±â ÀåÂø (ID ¡æ ItemData ¡æ ¸ÅÇÎ/Instantiate °»½Å)
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     public void EquipSelectedItems()
     {
         if (!string.IsNullOrEmpty(equippedWeaponId))
             SetupEquippedWeaponById(equippedWeaponId);
+
         if (!string.IsNullOrEmpty(equippedHelmetId))
             SetupEquippedArmorById(equippedHelmetId, ArmorType.Helmet);
+
         if (!string.IsNullOrEmpty(equippedArmorId))
             SetupEquippedArmorById(equippedArmorId, ArmorType.Armor);
+
         if (!string.IsNullOrEmpty(equippedBootsId))
             SetupEquippedArmorById(equippedBootsId, ArmorType.Boots);
     }
 
-    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 6) ID ¡æ ItemData Á¶È¸ ÈÄ ÀåÂø ¾÷µ¥ÀÌÆ®
-    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-
     private void SetupEquippedWeaponById(string weaponId)
     {
-        // ÀÇµµ: ItemManager¿¡¼­ µ¥ÀÌÅÍ Á¶È¸
         var data = ItemManager.Instance.GetItemDataById(weaponId);
         if (data != null)
             UpdateEquippedWeapon(data);
@@ -134,7 +137,6 @@ public class Inventory : MonoBehaviour
 
     private void SetupEquippedArmorById(string armorId, ArmorType type)
     {
-        // ÀÇµµ: ItemManager¿¡¼­ µ¥ÀÌÅÍ Á¶È¸
         var data = ItemManager.Instance.GetItemDataById(armorId);
         if (data != null)
             UpdateEquippedArmor(data, type);
@@ -142,86 +144,78 @@ public class Inventory : MonoBehaviour
             Debug.LogError($"[Inventory] ¹æ¾î±¸ µ¥ÀÌÅÍ ¾øÀ½: {armorId}");
     }
 
+
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 7) ½ÇÁ¦ ÀåÂø ·ÎÁ÷: º¸³Ê½º ½ºÅÈ Àû¿ë + Prefab Instantiate
+    // 5) º¸³Ê½º ½ºÅÈ Àû¿ë + Prefab ¸ÅÇÎ/Instantiate
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     private void UpdateEquippedWeapon(ItemData item)
     {
-        // ÀÇµµ: ±âÁ¸ ÀåÂø ¹«±â º¸³Ê½º Á¦°Å
+        // (1) ±âÁ¸ ÀåÂø ¹«±â º¸³Ê½º Á¦°Å
         if (equippedWeapons.TryGetValue(item.WeaponType, out var prev) && prev != null)
             attackBonus -= prev.AttackBonus;
 
-        // ÀÇµµ: »õ ¹«±â µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
+        // (2) »õ ¹«±â µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
         equippedWeapons[item.WeaponType] = item;
         attackBonus += item.AttackBonus;
 
-        // ÀÇµµ: Prefab¿¡¼­ ½ÇÁ¦ Item ÄÄÆ÷³ÍÆ® Æ÷ÇÔ ÀÎ½ºÅÏ½º »ý¼º
-        virtualWeaponItems[item.WeaponType] = InstantiateItemPrefab(item, weaponPrefabDict);
+        // (3) ¹«±â PrefabÀº InstantiateÇÏÁö ¾Ê°í ¸ÅÇÎ¸¸
+        if (weaponPrefabDict.TryGetValue(item.ItemId, out var prefab))
+            equippedWeaponPrefabs[item.WeaponType] = prefab;
+        else
+            Debug.LogWarning($"[Inventory] ¸ÅÇÎµÈ Weapon Prefab ¾øÀ½: {item.ItemId}");
     }
 
     private void UpdateEquippedArmor(ItemData item, ArmorType type)
     {
-        // ÀÇµµ: ±âÁ¸ ÀåÂø ¹æ¾î±¸ º¸³Ê½º Á¦°Å
+        // (1) ±âÁ¸ ÀåÂø ¹æ¾î±¸ º¸³Ê½º Á¦°Å
         if (equippedArmors.TryGetValue(type, out var prev) && prev != null)
             defenseBonus -= prev.DefenseBonus;
 
-        // ÀÇµµ: »õ ¹æ¾î±¸ µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
+        // (2) »õ ¹æ¾î±¸ µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
         equippedArmors[type] = item;
         defenseBonus += item.DefenseBonus;
 
-        // ÀÇµµ: Prefab¿¡¼­ ½ÇÁ¦ Item ÄÄÆ÷³ÍÆ® Æ÷ÇÔ ÀÎ½ºÅÏ½º »ý¼º
-        virtualArmorItems[type] = InstantiateItemPrefab(item, armorPrefabDict);
-    }
-
-    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 8) Prefab µñ¼Å³Ê¸®¿¡¼­ Instantiate ÈÄ Item ¹ÝÈ¯
-    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-
-    private Item InstantiateItemPrefab(ItemData itemData, Dictionary<string, GameObject> prefabDict)
-    {
-        if (prefabDict.TryGetValue(itemData.ItemId, out var prefab))
+        // (3) ¹æ¾î±¸´Â Inventory¿¡¼­ Instantiate
+        if (armorPrefabDict.TryGetValue(item.ItemId, out var prefab))
         {
-            var obj = Instantiate(prefab, transform);           // Inventory ÀÚ½ÄÀ¸·Î ¹èÄ¡
-            obj.name = $"Item_{itemData.ItemId}";                // ½Äº°¿ë ÀÌ¸§ ¼³Á¤
+            var obj = Instantiate(prefab, transform);
+            obj.name = $"Armor_{item.ItemId}";
             var comp = obj.GetComponent<Item>() ?? obj.AddComponent<Item>();
-            comp.Initialize(itemData);                           // µ¥ÀÌÅÍ ÃÊ±âÈ­
-            return comp;
+            comp.Initialize(item);
+            equippedArmorInstances[type] = comp;
         }
         else
         {
-            Debug.LogError($"[Inventory] Prefab ¹Ìµî·Ï: {itemData.ItemId}");
-            return CreateFallbackItem(itemData);
+            Debug.LogWarning($"[Inventory] ¸ÅÇÎµÈ Armor Prefab ¾øÀ½: {item.ItemId}");
         }
     }
 
-    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 9) Fallback: Prefab ¾øÀ» ¶§ ºó GameObject¿¡ Item ÄÄÆ÷³ÍÆ®¸¸ ºÙÀÓ
-    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-
-    private Item CreateFallbackItem(ItemData itemData)
-    {
-        var go = new GameObject($"VirtualItem_{itemData.ItemId}");
-        go.transform.SetParent(transform);
-        go.SetActive(false);
-        var comp = go.AddComponent<Item>();
-        comp.Initialize(itemData);
-        return comp;
-    }
 
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 10) Á¶È¸ ¹× UI Á¦¾î¿ë °ø¿ë ¸Þ¼­µå
+    // 6) Á¶È¸¿ë ¸Þ¼­µå ¹× UI Åä±Û
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     /// <summary>
-    /// ÇöÀç ÀåÂøµÈ Item ÄÄÆ÷³ÍÆ® ¹ÝÈ¯ (Bow¡æSword¡æScythe ¿ì¼±¼øÀ§)
+    /// ·¹°Å½Ã È£Ãâ Áö¿ø: Player.SetWeapon() µî¿¡¼­ »ç¿ëÇÏ´Â ¸Þ¼­µå.
+    /// ÇöÀç ÀåÂøµÈ ¹«±â Item ÄÄÆ÷³ÍÆ®¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
     /// </summary>
     public Item GetCurrentWeapon()
     {
-        if (virtualWeaponItems.TryGetValue(WeaponType.Bow, out var bow) && bow != null) return bow;
-        if (virtualWeaponItems.TryGetValue(WeaponType.Sword, out var sword) && sword != null) return sword;
-        if (virtualWeaponItems.TryGetValue(WeaponType.Scythe, out var scythe) && scythe != null) return scythe;
-        return null; // ÀåÂøµÈ ¹«±â ¾øÀ½
+        // ³»ºÎ¿¡ ¸ÅÇÎµÈ Prefab(GameObject)¿¡¼­ Item ÄÄÆ÷³ÍÆ®¸¦ ²¨³»¼­ ¹ÝÈ¯
+        var prefab = GetCurrentWeaponPrefab();
+        return prefab != null ? prefab.GetComponent<Item>() : null;
+    }
+
+    /// <summary>
+    /// ÇöÀç ÀåÂøµÈ ¹«±â Prefab(GameObject)À» ¿ì¼±¼øÀ§ Bow¡æSword¡æScythe·Î ¹ÝÈ¯ÇÕ´Ï´Ù.
+    /// </summary>
+    public GameObject GetCurrentWeaponPrefab()
+    {
+        if (equippedWeaponPrefabs.TryGetValue(WeaponType.Bow, out var bow) && bow != null) return bow;
+        if (equippedWeaponPrefabs.TryGetValue(WeaponType.Sword, out var sword) && sword != null) return sword;
+        if (equippedWeaponPrefabs.TryGetValue(WeaponType.Scythe, out var scythe) && scythe != null) return scythe;
+        return null;
     }
 
     /// <summary>ÃÑ °ø°Ý·Â º¸³Ê½º ¹ÝÈ¯</summary>
@@ -229,9 +223,7 @@ public class Inventory : MonoBehaviour
     /// <summary>ÃÑ ¹æ¾î·Â º¸³Ê½º ¹ÝÈ¯</summary>
     public float GetTotalDefenseBonus() => defenseBonus;
 
-    /// <summary>
-    /// ÀÎº¥Åä¸® UI ÆÐ³Î È°¼ºÈ­/ºñÈ°¼ºÈ­ Åä±Û
-    /// </summary>
+    /// <summary>ÀÎº¥Åä¸® UI ÆÐ³Î È°¼ºÈ­/ºñÈ°¼ºÈ­ Åä±Û</summary>
     public void ToggleInventoryUI()
     {
         if (inventoryUIPanel == null)
@@ -243,9 +235,7 @@ public class Inventory : MonoBehaviour
         inventoryUIPanel.SetActive(isInventoryOpen);
     }
 
-    /// <summary>
-    /// µð¹ö±×¿ë: ÄÜ¼Ö¿¡ ÀåÂøµÈ ¾ÆÀÌÅÛ°ú º¸³Ê½º ½ºÅÈ Ãâ·Â
-    /// </summary>
+    /// <summary>µð¹ö±×¿ë: ÀåÂø ÇöÈ² ¹× º¸³Ê½º ½ºÅÈ Ãâ·Â</summary>
     public void PrintEquippedItems()
     {
         Debug.Log("=== ÀåÂø ¾ÆÀÌÅÛ ÇöÈ² ===");
@@ -256,4 +246,3 @@ public class Inventory : MonoBehaviour
         Debug.Log($"°ø°Ý·Â º¸³Ê½º: +{attackBonus}, ¹æ¾î·Â º¸³Ê½º: +{defenseBonus}");
     }
 }
-
