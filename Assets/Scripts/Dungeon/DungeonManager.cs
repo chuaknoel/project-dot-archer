@@ -2,19 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using Enums;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class DungeonManager : MonoBehaviour
+public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임자
 {
+    public static DungeonManager Instance { get; private set; }
+
     public RoomGenerator roomGenerator;
     public RoomNavigator navigator;
     public Player player;
-   
+    public EnemyManager enemyManager;
+
     public Dictionary<Vector2Int, Room> rooms;
     public Room currentRoom;
 
     private CameraController cameraController;
-    [SerializeField] private Inventory inventory; //추후 게임 매니저 생성 시 이동 부탁드립니다.
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Debug.LogWarning("여러 개의 DungeonManager 인스턴스가 존재합니다. 하나만 유지해야 합니다.");
+            Destroy(gameObject); // 혹은 중복 방지 처리
+        }
+    }
 
     void Start()
     {   
@@ -22,16 +36,13 @@ public class DungeonManager : MonoBehaviour
         rooms = roomGenerator.GenerateDungeon();
         cameraController = Camera.main.GetComponent<CameraController>();
 
-        inventory.EquipSelectedItems();
-        //테스트 매서드
-        SetPlayerData();
-
         // 시작 위치 설정
         if (rooms.TryGetValue(Vector2Int.zero, out Room startRoom))
         {
             currentRoom = startRoom;
             cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
             navigator.MovePlayerToRoom(currentRoom, player.gameObject, Vector2Int.zero); // 초기엔 방향 없음
+            currentRoom.GetComponent<RoomManager>().OnPlayerEnter();  // 플레이어가 첫 번째 방에 들어갈 때 적 생성
         }
         else
         {
@@ -48,7 +59,7 @@ public class DungeonManager : MonoBehaviour
         {
             currentRoom = newRoom;
             cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
-
+            newRoom.GetComponent<RoomManager>().OnPlayerEnter();  // 방 이동 시 적 생성
             return true;
         }
         else
@@ -57,17 +68,5 @@ public class DungeonManager : MonoBehaviour
         }
 
         return false;
-    }
-
-    public void SetPlayerData()
-    {
-        PlayerData testData = new PlayerData
-            (
-                playerName: "sdf",
-                statData: new StatData(new AttackStatData(), new MoveStatData(5f))
-                
-            );
-
-        player.Init(testData,inventory); //인벤토리 부문 게임 매니저 생성시 수정 필요
     }
 }

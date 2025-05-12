@@ -8,18 +8,8 @@ public class MoveController : MonoBehaviour
     public LayerMask obstacleLayer = 1 << 4;
     private bool isAvoiding = false;
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.TryGetComponent<IDefenceStat>(out IDefenceStat damage))
-        {
-            if (TryGetComponent<IAttackStat>(out IAttackStat attack))
-                damage.TakeDamage(attack.AttackDamage);
-        }
-    }
-
     public void MoveToPlayer(Transform target, IMoveStat move)
     {
-
         if (!isAvoiding)
         {
             if (target == null) return;

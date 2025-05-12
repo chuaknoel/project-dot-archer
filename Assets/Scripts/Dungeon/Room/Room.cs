@@ -5,12 +5,14 @@ using Enums;
 
 public class Room : MonoBehaviour
 {
-    public int roomID;
+    public static DungeonManager Instance { get; private set; }
+
     public Vector2Int position;           // 이 방의 Grid 좌표
-    public ROOMTYPE roomType;
     public Tilemap tilemap;              // Floor 기준 Tilemap
     [SerializeField] private TilemapRenderer roomBounds;
+
     public bool isVisited = false;
+    public ROOMTYPE roomType;
 
     private Dictionary<Vector2Int, Vector3> entryPositions = new();
 
@@ -50,10 +52,33 @@ public class Room : MonoBehaviour
         entryPositions.Clear();
 
         // 각 입구를 월드 좌표에 맞게 조정
-        entryPositions[Vector2Int.left] = new Vector3(transform.position.x + bounds.min.x + 1f, center.y, 0f);
-        entryPositions[Vector2Int.right] = new Vector3(transform.position.x + bounds.max.x - 1f, center.y, 0f);
-        entryPositions[Vector2Int.up] = new Vector3(center.x, transform.position.y + bounds.max.y - 1.5f, 0f);
-        entryPositions[Vector2Int.down] = new Vector3(center.x, transform.position.y + bounds.min.y + 1f, 0f);
+        if (roomType == ROOMTYPE.Long)
+        {
+            // 긴방: 좌우 길이 2칸. 좌우 1개, 위아래 각 2개 입구 설정
+            float halfX = roomSize.x / 2f;
+            float leftCenterX = transform.position.x + bounds.min.x + halfX / 2f;
+            float rightCenterX = transform.position.x + bounds.min.x + halfX + halfX / 2f;
+
+            // 좌우
+            entryPositions[Vector2Int.left] = new Vector3(transform.position.x + bounds.min.x + 1.25f, center.y, 0f);
+            entryPositions[Vector2Int.right] = new Vector3(transform.position.x + bounds.max.x - 1.25f, center.y, 0f);
+
+            // 위 2개
+            entryPositions[Vector2Int.up + Vector2Int.left] = new Vector3(leftCenterX, transform.position.y + bounds.max.y - 0.75f, 0f);
+            entryPositions[Vector2Int.up + Vector2Int.right] = new Vector3(rightCenterX, transform.position.y + bounds.max.y - 0.75f, 0f);
+
+            // 아래 2개
+            entryPositions[Vector2Int.down + Vector2Int.left] = new Vector3(leftCenterX, transform.position.y + bounds.min.y + 0.75f, 0f);
+            entryPositions[Vector2Int.down + Vector2Int.right] = new Vector3(rightCenterX, transform.position.y + bounds.min.y + 0.75f, 0f);
+        }
+        else
+        {
+            // 일반방
+            entryPositions[Vector2Int.left] = new Vector3(transform.position.x + bounds.min.x + 1.25f, center.y, 0f);
+            entryPositions[Vector2Int.right] = new Vector3(transform.position.x + bounds.max.x - 1.25f, center.y, 0f);
+            entryPositions[Vector2Int.up] = new Vector3(center.x, transform.position.y + bounds.max.y - 0.75f, 0f);
+            entryPositions[Vector2Int.down] = new Vector3(center.x, transform.position.y + bounds.min.y + 0.750f, 0f);
+        }
     }
     public Vector3 GetCenterPosition()
     {
