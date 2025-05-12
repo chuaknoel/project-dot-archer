@@ -14,19 +14,5 @@ public class Goblin : BaseEnemy
 
     }
 
-    
-
-    protected  void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            if (other.TryGetComponent<IDefenceStat>(out IDefenceStat target))
-            {
-                target.TakeDamage(goblinStat.AttackDamage);
-            }
-        }
-    }
-
-
 
 }
