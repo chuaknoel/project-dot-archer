@@ -57,7 +57,7 @@ public class RoomNavigator : MonoBehaviour
 
         player.transform.position = targetPosition;
 
-        yield return new WaitForSeconds(0.3f); // 0.2초 후 충돌 복원
+        yield return new WaitForSeconds(1f); // 1초 후 충돌 복원
 
         if (playerCollider != null)
         {
