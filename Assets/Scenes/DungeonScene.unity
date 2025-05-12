@@ -5593,6 +5593,33 @@ MonoBehaviour:
   equippedHelmetId: helmet_common
   equippedArmorId: armor_common
   equippedBootsId: boots_common
+  weaponPrefabs:
+  - {fileID: 6541726669296173903, guid: c4277c43974a34b45a95f1b8823495e2, type: 3}
+  - {fileID: 1387918880873009285, guid: fc3de61dd70f3464aae38d840fb0a979, type: 3}
+  - {fileID: 9020691431192269741, guid: d926349743c5eec45a1775bac53ec3d5, type: 3}
+  - {fileID: 7738351989106001939, guid: 6ddd66a870e30df4c9ed3b4deb64cfa7, type: 3}
+  - {fileID: 6995745254526456092, guid: 36d79fc0833c976458e2313de07ea1a6, type: 3}
+  - {fileID: 4472456198683891173, guid: 59f930a0d7f85764a8fb959005312413, type: 3}
+  - {fileID: 2847209675967837725, guid: 20212c84c7af10a4b81ac232c2a59727, type: 3}
+  - {fileID: 4279269843784533207, guid: bfa05a133b772984d9b3b3d93e272bbb, type: 3}
+  - {fileID: 1526210570879138725, guid: 6dd6f2d3ca3c5f14e879cfdcdbeff959, type: 3}
+  - {fileID: 2461354974165407363, guid: aef47b5338ebef346ac6ac17b9996c06, type: 3}
+  - {fileID: 1614638298615382868, guid: 92bb3c00d723f5b4ead359e0a45b5eb0, type: 3}
+  - {fileID: 6558297929894013120, guid: 9cbb3127b9af6c943873bc8843381488, type: 3}
+  armorPrefabs:
+  - {fileID: 6955775600207952648, guid: 4fba36bb0920dbd46b35bccaf8e374c6, type: 3}
+  - {fileID: 2684533746895904502, guid: 754b5e60e049b1549a10f07c99905387, type: 3}
+  - {fileID: 4628406644037531132, guid: a58c552c1cc7fc94b82e590d252a0a6a, type: 3}
+  - {fileID: 2801378332193008673, guid: 08736894a4b473c48a982972684d21e3, type: 3}
+  - {fileID: 8589626537491872994, guid: f961138c25e637543b9d9593174da7b2, type: 3}
+  - {fileID: 5315195509022570247, guid: 61dc92695d0e5ba48ba12c86761540e1, type: 3}
+  - {fileID: 7158107074183430892, guid: 1ab8d9440ca4ec845a8cdcb5fa8f1835, type: 3}
+  - {fileID: 2994660129011558286, guid: d45017bc1fbdb034d881530683ed3549, type: 3}
+  - {fileID: 4370274008959678549, guid: ac73732c419c81542b3f2c57992f1626, type: 3}
+  - {fileID: 4137053162875875209, guid: e753b12c498af8a46b8ae2546c8eb96d, type: 3}
+  - {fileID: 9106420927835929464, guid: 1ae2f7e31d09cc849b7f976afc01f0b1, type: 3}
+  - {fileID: 3988586288488223422, guid: f2ca76c6971d55e469992ddb8c6e5fb5, type: 3}
+  inventoryUIPanel: {fileID: 0}
 --- !u!1 &1720869359
 GameObject:
   m_ObjectHideFlags: 0
