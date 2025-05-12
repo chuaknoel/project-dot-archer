@@ -29,8 +29,6 @@ public class ItemManager : MonoBehaviour
     // 아이템 스프라이트 (리소스 폴더에서 로드)
     private Dictionary<string, Sprite> itemSprites = new Dictionary<string, Sprite>();
 
-    public Item TestWeapon; //임시 무기
-
     private void Awake()
     {
         // 싱글톤 설정
