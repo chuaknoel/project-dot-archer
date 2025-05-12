@@ -24,7 +24,7 @@ public class ThrowStone : EnemySkill
             GameObject stone = Instantiate(stonePrefab, throwPoint.position, throwPoint.rotation);
             Rigidbody2D rb = stone.GetComponent<Rigidbody2D>();
             rb.velocity = dir * throwForce;
-            currentCooldown = 0;
+            base.UseSkill(owner);
         }
     }
 }
