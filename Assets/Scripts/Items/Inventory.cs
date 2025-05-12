@@ -1,12 +1,14 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
-/// ÇÃ·¹ÀÌ¾îÀÇ ÀåÂø ¾ÆÀÌÅÛ(¹«±â¡¤¹æ¾î±¸)À» °ü¸®ÇÕ´Ï´Ù.
+/// ÇÃ·¹ÀÌ¾îÀÇ ÀåÂø ¾ÆÀÌÅÛ(¹«±â¡¤¹æ¾î±¸)°ú °ñµå¸¦ °ü¸®ÇÕ´Ï´Ù.
 /// - ¹«±â ¡¤ ¹æ¾î±¸ PrefabÀº Inspector¿¡¼­ µå·¡±×&µå·ÓÀ¸·Î µî·Ï  
-/// - ÀÎº¥Åä¸®´Â PrefabÀ» InstantiateÇÏÁö ¾Ê°í, ´Ü¼øÈ÷ ¸ÅÇÎ¸¸ ¼öÇà  
+/// - Inventory´Â PrefabÀ» InstantiateÇÏÁö ¾Ê°í, ´Ü¼øÈ÷ ¸ÅÇÎ¸¸ ¼öÇà  
 /// - Player.SetWeapon() °°Àº ¿ÜºÎ ·ÎÁ÷ÀÌ Instantiate ¹× ºÎ¸ð ¼³Á¤À» Ã¥ÀÓÁü  
 /// - ´É·ÂÄ¡ °è»ê, Á¶È¸¿ë GetCurrentWeapon(), UI Åä±Û ±â´ÉÀº ±×´ë·Î À¯Áö  
+/// - µå·Ó, »óÁ¡ µî¿¡¼­ AddGold()/SpendGold()¸¦ ÅëÇØ °ñµå¸¦ ¾÷µ¥ÀÌÆ®ÇÏ°í ÀúÀå  
 /// </summary>
 public class Inventory : MonoBehaviour
 {
@@ -36,6 +38,9 @@ public class Inventory : MonoBehaviour
     [Tooltip("ÀÎº¥Åä¸® Ã¢À¸·Î »ç¿ëÇÒ UI ÆÐ³ÎÀ» ¿¬°áÇØÁÖ¼¼¿ä.")]
     [SerializeField] private GameObject inventoryUIPanel;
 
+    [Header("ÇÃ·¹ÀÌ¾î °ñµå")]
+    [Tooltip("ÇöÀç º¸À¯ ÁßÀÎ °ñµå")]
+    [SerializeField] private int gold = 0;
 
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
     // 2) ³»ºÎ »óÅÂ ÀúÀå¿ë º¯¼ö ¹× µñ¼Å³Ê¸®
@@ -62,6 +67,10 @@ public class Inventory : MonoBehaviour
     // UI Åä±Û »óÅÂ
     private bool isInventoryOpen = false;
 
+    /// <summary>
+    /// °ñµå°¡ º¯°æµÉ ¶§ ±¸µ¶ÀÚ¿¡°Ô ¾Ë¸²À» ÁÝ´Ï´Ù.
+    /// </summary>
+    public event Action<int> OnGoldChanged;
 
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
     // 3) Unity »ý¸íÁÖ±â ÄÝ¹é
@@ -69,7 +78,10 @@ public class Inventory : MonoBehaviour
 
     private void Awake()
     {
-        // (1) Inspector¿¡ µå·ÓµÈ PrefabµéÀ» ID¡æPrefab µñ¼Å³Ê¸®¿¡ Ã¤¿ö³Ö±â
+        // (A) ÀúÀåµÈ °ñµå¸¦ ºÒ·¯¿É´Ï´Ù.
+        LoadGold();
+
+        // (B) Inspector¿¡ µå·ÓµÈ PrefabµéÀ» ID¡æPrefab µñ¼Å³Ê¸®¿¡ Ã¤¿ö³Ö±â
         weaponPrefabDict.Clear();
         foreach (var prefab in weaponPrefabs)
         {
@@ -90,25 +102,68 @@ public class Inventory : MonoBehaviour
                 Debug.LogWarning($"[Inventory] Armor Prefab ´©¶ô ¶Ç´Â ItemId ¹Ì¼³Á¤: {prefab.name}");
         }
 
-        // (2) ¸ðµç WeaponType/ArmorType Å° ÃÊ±âÈ­
-        foreach (WeaponType wt in System.Enum.GetValues(typeof(WeaponType)))
+        // (C) ¸ðµç WeaponType/ArmorType Å° ÃÊ±âÈ­
+        foreach (WeaponType wt in Enum.GetValues(typeof(WeaponType)))
             if (wt != WeaponType.None)
                 equippedWeaponPrefabs[wt] = null;
 
-        foreach (ArmorType at in System.Enum.GetValues(typeof(ArmorType)))
+        foreach (ArmorType at in Enum.GetValues(typeof(ArmorType)))
             if (at != ArmorType.None)
                 equippedArmorInstances[at] = null;
     }
 
     private void Start()
     {
-        // Inspector¿¡ ÀÔ·ÂµÈ ID·Î ÃÊ±â ÀåÂø ½ÇÇà
-        //EquipSelectedItems();
+        // ±âÁ¸ ÀåÂø »çÇ× Àç¼³Á¤ (ÇÊ¿äÇÏ´Ù¸é)
+        EquipSelectedItems();
     }
+
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // 4) °ñµå ÀúÀå/ºÒ·¯¿À±â ¸Þ¼­µå
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+
+    private void LoadGold()
+    {
+        gold = PlayerPrefs.GetInt("PlayerGold", 0);
+    }
+
+    private void SaveGold()
+    {
+        PlayerPrefs.SetInt("PlayerGold", gold);
+        PlayerPrefs.Save();
+    }
+
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // 5) °ñµå Á¶ÀÛ¿ë °ø¿ë ¸Þ¼­µå
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+
+    /// <summary>°ñµå¸¦ Áõ°¡½ÃÅµ´Ï´Ù. (¿¹: ¸ó½ºÅÍ µå¶ø, Äù½ºÆ® º¸»ó)</summary>
+    public void AddGold(int amount)
+    {
+        if (amount <= 0) return;
+        gold += amount;
+        SaveGold();
+        OnGoldChanged?.Invoke(gold);
+    }
+
+    /// <summary>°ñµå¸¦ »ç¿ë(Â÷°¨)ÇÕ´Ï´Ù. »óÁ¡ ±¸¸Å µî.</summary>
+    /// <returns>Â÷°¨ ¼º°ø ½Ã true, ºÎÁ· ½Ã false</returns>
+    public bool SpendGold(int amount)
+    {
+        if (amount <= 0) return true;
+        if (gold < amount) return false;
+        gold -= amount;
+        SaveGold();
+        OnGoldChanged?.Invoke(gold);
+        return true;
+    }
+
+    /// <summary>ÇöÀç °ñµå ¼ö·®À» ¹ÝÈ¯ÇÕ´Ï´Ù.</summary>
+    public int GetGold() => gold;
 
 
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 4) ÃÊ±â ÀåÂø (ID ¡æ ItemData ¡æ ¸ÅÇÎ/Instantiate °»½Å)
+    // 6) ÃÊ±â ÀåÂø (ID ¡æ ItemData ¡æ ¸ÅÇÎ/Instantiate °»½Å)
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     public void EquipSelectedItems()
@@ -146,20 +201,20 @@ public class Inventory : MonoBehaviour
 
 
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 5) º¸³Ê½º ½ºÅÈ Àû¿ë + Prefab ¸ÅÇÎ/Instantiate
+    // 7) º¸³Ê½º ½ºÅÈ Àû¿ë + Prefab ¸ÅÇÎ/Instantiate
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     private void UpdateEquippedWeapon(ItemData item)
     {
-        // (1) ±âÁ¸ ÀåÂø ¹«±â º¸³Ê½º Á¦°Å
+        // ÀÌÀü ÀåÂø ¹«±â º¸³Ê½º Á¦°Å
         if (equippedWeapons.TryGetValue(item.WeaponType, out var prev) && prev != null)
             attackBonus -= prev.AttackBonus;
 
-        // (2) »õ ¹«±â µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
+        // »õ ¹«±â µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
         equippedWeapons[item.WeaponType] = item;
         attackBonus += item.AttackBonus;
 
-        // (3) ¹«±â PrefabÀº InstantiateÇÏÁö ¾Ê°í ¸ÅÇÎ¸¸
+        // ¹«±â PrefabÀº InstantiateÇÏÁö ¾Ê°í ¸ÅÇÎ¸¸
         if (weaponPrefabDict.TryGetValue(item.ItemId, out var prefab))
             equippedWeaponPrefabs[item.WeaponType] = prefab;
         else
@@ -168,15 +223,15 @@ public class Inventory : MonoBehaviour
 
     private void UpdateEquippedArmor(ItemData item, ArmorType type)
     {
-        // (1) ±âÁ¸ ÀåÂø ¹æ¾î±¸ º¸³Ê½º Á¦°Å
+        // ÀÌÀü ÀåÂø ¹æ¾î±¸ º¸³Ê½º Á¦°Å
         if (equippedArmors.TryGetValue(type, out var prev) && prev != null)
             defenseBonus -= prev.DefenseBonus;
 
-        // (2) »õ ¹æ¾î±¸ µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
+        // »õ ¹æ¾î±¸ µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
         equippedArmors[type] = item;
         defenseBonus += item.DefenseBonus;
 
-        // (3) ¹æ¾î±¸´Â Inventory¿¡¼­ Instantiate
+        // ¹æ¾î±¸´Â Inventory¿¡¼­ Instantiate ¹× ÃÊ±âÈ­
         if (armorPrefabDict.TryGetValue(item.ItemId, out var prefab))
         {
             var obj = Instantiate(prefab, transform);
@@ -186,14 +241,12 @@ public class Inventory : MonoBehaviour
             equippedArmorInstances[type] = comp;
         }
         else
-        {
             Debug.LogWarning($"[Inventory] ¸ÅÇÎµÈ Armor Prefab ¾øÀ½: {item.ItemId}");
-        }
     }
 
 
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 6) Á¶È¸¿ë ¸Þ¼­µå ¹× UI Åä±Û
+    // 8) Á¶È¸¿ë ¸Þ¼­µå ¹× UI Åä±Û
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     /// <summary>
@@ -202,7 +255,6 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public Item GetCurrentWeapon()
     {
-        // ³»ºÎ¿¡ ¸ÅÇÎµÈ Prefab(GameObject)¿¡¼­ Item ÄÄÆ÷³ÍÆ®¸¦ ²¨³»¼­ ¹ÝÈ¯
         var prefab = GetCurrentWeaponPrefab();
         return prefab != null ? prefab.GetComponent<Item>() : null;
     }
@@ -246,3 +298,4 @@ public class Inventory : MonoBehaviour
         Debug.Log($"°ø°Ý·Â º¸³Ê½º: +{attackBonus}, ¹æ¾î·Â º¸³Ê½º: +{defenseBonus}");
     }
 }
+
