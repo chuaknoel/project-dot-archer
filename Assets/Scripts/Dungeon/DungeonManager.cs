@@ -37,7 +37,7 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
         // 맵 생성
         rooms = roomGenerator.GenerateDungeon();
         cameraController = Camera.main.GetComponent<CameraController>();
-        inventory.EquipSelectedItems();
+        inventory.EquipSelectedItems(); //게임매니저 생기면 그떄 조절
 
         // 시작 위치 설정
         if (rooms.TryGetValue(Vector2Int.zero, out Room startRoom))

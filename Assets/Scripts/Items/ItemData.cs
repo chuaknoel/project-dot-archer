@@ -12,6 +12,12 @@ public enum WeaponType
     Scythe // 낫
 }
 
+public enum AttackTpye
+{
+    Range,
+    Melee
+}
+
 // 방어구 타입 열거형 - None 추가
 public enum ArmorType
 {

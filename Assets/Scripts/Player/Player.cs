@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
     public Inventory Inventory { get { return inventory; } }
     private Inventory inventory;
 
@@ -28,6 +29,8 @@ public class Player : MonoBehaviour
     [SerializeField] private ParticleSystem plalyerDeathParticle;
 
     public LayerMask targetMask;
+
+    private InGameUpgradeManager ingameUpgradeManager = new InGameUpgradeManager();
 
     // Update is called once per frame
     void Update()
@@ -76,13 +79,38 @@ public class Player : MonoBehaviour
         ControllerRegister();
     }
 
-    private void SetWeapon()
+    public void SetWeapon()
     {
-        //구현코드
-        inventory.GetCurrentWeapon().transform.SetParent(weaponPivot, false);
-        weaponHandler = inventory.GetCurrentWeapon().GetComponent<WeaponHandler>();
-        weaponHandler?.Init(inventory.GetCurrentWeapon(), stat, targetMask);
+        // 1) Inventory에서 무기 프리팹(GameObject) 가져오기
+        GameObject prefab = inventory.GetCurrentWeaponPrefab();
+        if (prefab == null)
+        {
+            Debug.LogWarning("장착할 무기 Prefab이 없습니다.");
+            return;
+        }
+
+        // 2) 씬에 인스턴스 생성 (프리팹 에셋을 건드리지 않기 위해 반드시 Instantiate)
+        GameObject instance = Instantiate(prefab, weaponPivot);
+        instance.name = prefab.name;  // 이름 복사
+
+        // 3) Item 컴포넌트 확인 (필요시)
+        Item itemComp = instance.GetComponent<Item>();
+        if (itemComp == null)
+        {
+            Debug.LogError("무기 인스턴스에 Item 컴포넌트가 없습니다!");
+            return;
+        }
+
+        // 4) WeaponHandler 컴포넌트 할당 및 초기화
+        weaponHandler = instance.GetComponent<WeaponHandler>();
+        if (weaponHandler == null)
+        {
+            Debug.LogError("무기 인스턴스에 WeaponHandler 컴포넌트가 없습니다!");
+            return;
+        }
+        weaponHandler.Init(itemComp, stat, targetMask);
     }
+
 
     public void ControllerRegister()
     {
@@ -111,7 +139,6 @@ public class Player : MonoBehaviour
         characterImage.flipX = isLeft;
     }
 
-
     public bool IsAttackable(PlayerState curstate)
     {
         switch (curstate)
@@ -121,6 +148,22 @@ public class Player : MonoBehaviour
                 return true;
 
             default: return false;
+        }
+    }
+
+    //업그레이들 될 정보를 받아 데이터 정보 갱신
+    public void Upgrade(InGameUpgradeData gameUpgradeData)
+    {
+        ingameUpgradeManager.MergeUpgrade(gameUpgradeData);
+        ApplyUpgrade(gameUpgradeData);
+    }
+
+    //업그레이드 적용
+    public void ApplyUpgrade(InGameUpgradeData gameUpgradeData)
+    {
+        if (gameUpgradeData.attackType == AttackTpye.Range)
+        {
+            (weaponHandler as RangeWeaponHandler).ApplyUpgrade(ingameUpgradeManager.GetRangeUpgrade());
         }
     }
 }
