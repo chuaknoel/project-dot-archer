@@ -64,11 +64,11 @@ public class Inventory : MonoBehaviour
     private void Start()
     {
         // 인스펙터에서 선택한 아이템으로 초기 장비 설정
-        EquipSelectedItems();
+        //EquipSelectedItems();
     }
 
     // 인스펙터에서 선택한 아이템 장착
-    private void EquipSelectedItems()
+    public void EquipSelectedItems()
     {
         Debug.Log("Inventory: 초기 장비 설정 시작");
 

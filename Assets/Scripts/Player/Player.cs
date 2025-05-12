@@ -1,18 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Inventory Inventory => inventory;
+    public Inventory Inventory { get { return inventory; } }
     private Inventory inventory;
 
-    [HideInInspector] public PlayerStat stat;
+    public PlayerStat stat;
     
     public PlayerController Controller { get { return controller; } }
     private PlayerController controller;
-    private Vector3 inputDir;
-
+   
     private SpriteRenderer characterImage;
     private Animator playerAnime;
 
@@ -20,8 +21,11 @@ public class Player : MonoBehaviour
     private SearchTarget searchTarget;
 
     [SerializeField] private Transform weaponPivot;
-    private WeaponHandler weaponHandler;
     public WeaponHandler WeaponHandler { get { return weaponHandler; } }
+    private WeaponHandler weaponHandler;
+
+    public ParticleSystem PlalyerDeathParticle { get { return plalyerDeathParticle; } }
+    [SerializeField] private ParticleSystem plalyerDeathParticle;
 
     public LayerMask targetMask;
 
@@ -33,10 +37,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        GetInputDir();
-        LookRotate();
         controller?.OnUpdate(Time.deltaTime);
-
 
         // UI 매니저 생기면 옮겨주세요!
         // 인벤토리 UI 토글 (I 키)
@@ -44,6 +45,12 @@ public class Player : MonoBehaviour
         {
             inventory.ToggleInventoryUI();
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            stat.TakeDamage(123123123123f);
+        }
+
     }
 
     private void FixedUpdate()
@@ -56,27 +63,25 @@ public class Player : MonoBehaviour
         controller?.OnFixedUpdate();
     }
 
-    private void Start()
+    public void Init(PlayerData playerData, Inventory inventory)
     {
-        Init();
-    }
+        stat ??= new PlayerStat(this, playerData);
 
-    public void Init()
-    {
-        stat ??= GetComponent<PlayerStat>();
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();
         searchTarget ??= GetComponent<SearchTarget>();
-
-        inventory ??= GetComponent<Inventory>();
+        this.inventory = inventory;
         
-        //SetWeapon();
+        SetWeapon();
         ControllerRegister();
     }
 
     private void SetWeapon()
     {
-        weaponHandler?.Init(inventory.GetCurrentWeapon() , stat, targetMask);
+        //구현코드
+        inventory.GetCurrentWeapon().transform.SetParent(weaponPivot, false);
+        weaponHandler = inventory.GetCurrentWeapon().GetComponent<WeaponHandler>();
+        weaponHandler?.Init(inventory.GetCurrentWeapon(), stat, targetMask);
     }
 
     public void ControllerRegister()
@@ -90,42 +95,20 @@ public class Player : MonoBehaviour
 
     public void ChangeAnime(PlayerState nextAnime)
     {
-        playerAnime.SetInteger("ChangeState", (int)nextAnime);
-    }
-
-    public Vector3 GetInputDir()
-    {
-        inputDir.x = Input.GetAxisRaw("Horizontal");
-        inputDir.y = Input.GetAxisRaw("Vertical");
-        return inputDir;
-    }
-
-    public void LookRotate()
-    {
-        Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 lookDir = worldPos - (Vector2)transform.position;
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-
-        float rotZ = Mathf.Abs(angle);
-
-        bool isLeft = (rotZ > 90);
-
-        if (isLeft)
+        if (nextAnime == PlayerState.Death)
         {
-            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            playerAnime.SetTrigger("IsDeath");
         }
         else
         {
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            playerAnime.SetInteger("ChangeState", (int)nextAnime);
         }
-
-        weaponHandler?.Rotate(rotZ);
     }
 
-    public float TotalDamage()
+
+    public void LookRotate(bool isLeft)
     {
-        // 인벤토리에서 계산된 총 데미지 사용
-        return stat.AttackDamage + inventory.GetTotalAttackBonus();
+        characterImage.flipX = isLeft;
     }
 
 

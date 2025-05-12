@@ -6,32 +6,37 @@ public abstract class WeaponHandler : MonoBehaviour
 {
     protected Animator animator;
     [SerializeField] protected SpriteRenderer weaponRenderer;
-    [SerializeField] protected bool isRotate;
-    [SerializeField] protected float attackDamage;
-    [SerializeField] protected float attackDelay;
+    [SerializeField] private ParticleSystem ownerDeathParticle;
+
     protected bool isUseable;
 
     protected Item weapon;
-    protected IAttackStat owner;
+    protected IAttackStat ownerStat;
     protected LayerMask targetMask;
 
-    //[SerializeField]protected List<GameObject> targetList = new List<GameObject>();
+    protected SpriteRenderer waeponSprite;
 
     public virtual void Init(Item weapon, IAttackStat ownerStat, LayerMask targetMask)
     {
         this.weapon = weapon;
         animator = GetComponent<Animator>();
         isUseable = true;
-        owner = ownerStat;
+        this.ownerStat = ownerStat;
         this.targetMask = targetMask;
+        waeponSprite ??= GetComponentInChildren<SpriteRenderer>();
+        waeponSprite.sprite = weapon.ItemData.itemIcon;
     }
 
     public virtual void Attack()
     {
-       
-        Invoke("ApplyDelay", weapon.ItemData.AttackCooldown);
+        ResetCooldown();
         AttackAnimation();
         AttackAction();
+    }
+
+    public float GetAttackDamage()
+    {
+        return ownerStat.AttackDamage + weapon.ItemData.attackBonus;
     }
 
     public virtual void AttackAction() { }
@@ -50,17 +55,12 @@ public abstract class WeaponHandler : MonoBehaviour
     {
         isUseable = false;
 
-        yield return new WaitForSeconds(weapon.ItemData.AttackCooldown);
+        yield return new WaitForSeconds(weapon.ItemData.attackCooldown);
 
         isUseable = true;
     }
 
-    public void ApplyDelay()
-    {
-        isUseable = true;
-    }
-
-    public virtual void Rotate(float angle) { }
+    public virtual void Rotate(Vector3 angle) { }
 
     public bool IsUseable()
     {
@@ -70,6 +70,13 @@ public abstract class WeaponHandler : MonoBehaviour
     public float GetWeaponDelay()
     {
         return weapon.ItemData.attackDelay;
+    }
+
+    public void OwnerDeath()
+    {
+        animator.SetTrigger("OwnerDeath");
+        ownerDeathParticle.transform.rotation = Quaternion.Euler(-100f, 0, 0);
+        ownerDeathParticle.Play();
     }
 }
 
