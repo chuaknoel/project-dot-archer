@@ -9,13 +9,12 @@ public class DungeonManager : MonoBehaviour
     public RoomGenerator roomGenerator;
     public RoomNavigator navigator;
     public Player player;
-    public List<GameObject> roomEnemies;
-
+   
     public Dictionary<Vector2Int, Room> rooms;
     public Room currentRoom;
 
     private CameraController cameraController;
-
+    [SerializeField] private Inventory inventory; //추후 게임 매니저 생성 시 이동 부탁드립니다.
 
     void Start()
     {   
@@ -23,6 +22,7 @@ public class DungeonManager : MonoBehaviour
         rooms = roomGenerator.GenerateDungeon();
         cameraController = Camera.main.GetComponent<CameraController>();
 
+        inventory.EquipSelectedItems();
         //테스트 매서드
         SetPlayerData();
 
@@ -32,7 +32,6 @@ public class DungeonManager : MonoBehaviour
             currentRoom = startRoom;
             cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
             navigator.MovePlayerToRoom(currentRoom, player.gameObject, Vector2Int.zero); // 초기엔 방향 없음
-            player.SearchTarget.SetTarget(roomEnemies);
         }
         else
         {
@@ -69,6 +68,6 @@ public class DungeonManager : MonoBehaviour
                 
             );
 
-        player.Init(testData);
+        player.Init(testData,inventory); //인벤토리 부문 게임 매니저 생성시 수정 필요
     }
 }

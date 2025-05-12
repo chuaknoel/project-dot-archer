@@ -1,10 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Inventory Inventory => inventory;
+    public Inventory Inventory { get { return inventory; } }
     private Inventory inventory;
 
     public PlayerStat stat;
@@ -21,6 +23,9 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform weaponPivot;
     public WeaponHandler WeaponHandler { get { return weaponHandler; } }
     private WeaponHandler weaponHandler;
+
+    public ParticleSystem PlalyerDeathParticle { get { return plalyerDeathParticle; } }
+    [SerializeField] private ParticleSystem plalyerDeathParticle;
 
     public LayerMask targetMask;
 
@@ -40,6 +45,12 @@ public class Player : MonoBehaviour
         {
             inventory.ToggleInventoryUI();
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            stat.TakeDamage(123123123123f);
+        }
+
     }
 
     private void FixedUpdate()
@@ -52,34 +63,25 @@ public class Player : MonoBehaviour
         controller?.OnFixedUpdate();
     }
 
-    public void Init(PlayerData playerData)
+    public void Init(PlayerData playerData, Inventory inventory)
     {
         stat ??= new PlayerStat(this, playerData);
-
-        Debug.Log(stat.IsDeath);
 
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();
         searchTarget ??= GetComponent<SearchTarget>();
-
-        inventory ??= GetComponent<Inventory>();
-
+        this.inventory = inventory;
+        
         SetWeapon();
         ControllerRegister();
     }
 
     private void SetWeapon()
     {
-        //임시코드
-        Item item = ItemManager.Instance.itemPrefab.GetComponent<Item>();
-        GameObject go = ItemManager.Instance.SpawnItem(item.transform.position, item.ItemData);
-
-        go.transform.SetParent(weaponPivot);
-        weaponHandler = go.GetComponent<WeaponHandler>();
-        weaponHandler?.Init(item, stat, targetMask);
-
         //구현코드
-        //weaponHandler?.Init(inventory.GetCurrentWeapon() , stat, targetMask);
+        inventory.GetCurrentWeapon().transform.SetParent(weaponPivot, false);
+        weaponHandler = inventory.GetCurrentWeapon().GetComponent<WeaponHandler>();
+        weaponHandler?.Init(inventory.GetCurrentWeapon(), stat, targetMask);
     }
 
     public void ControllerRegister()
@@ -93,8 +95,16 @@ public class Player : MonoBehaviour
 
     public void ChangeAnime(PlayerState nextAnime)
     {
-        playerAnime.SetInteger("ChangeState", (int)nextAnime);
+        if (nextAnime == PlayerState.Death)
+        {
+            playerAnime.SetTrigger("IsDeath");
+        }
+        else
+        {
+            playerAnime.SetInteger("ChangeState", (int)nextAnime);
+        }
     }
+
 
     public void LookRotate(bool isLeft)
     {

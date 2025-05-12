@@ -133,8 +133,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectileName: Arrow
   MaxSize: 5
-  duration: 2
-  projectileSpeed: 2
+  duration: 3
+  projectileSpeed: 10
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!50 &5930038169204023068
 Rigidbody2D:
   serializedVersion: 4

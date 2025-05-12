@@ -6,7 +6,8 @@ public abstract class WeaponHandler : MonoBehaviour
 {
     protected Animator animator;
     [SerializeField] protected SpriteRenderer weaponRenderer;
-  
+    [SerializeField] private ParticleSystem ownerDeathParticle;
+
     protected bool isUseable;
 
     protected Item weapon;
@@ -31,6 +32,11 @@ public abstract class WeaponHandler : MonoBehaviour
         ResetCooldown();
         AttackAnimation();
         AttackAction();
+    }
+
+    public float GetAttackDamage()
+    {
+        return ownerStat.AttackDamage + weapon.ItemData.attackBonus;
     }
 
     public virtual void AttackAction() { }
@@ -64,6 +70,13 @@ public abstract class WeaponHandler : MonoBehaviour
     public float GetWeaponDelay()
     {
         return weapon.ItemData.attackDelay;
+    }
+
+    public void OwnerDeath()
+    {
+        animator.SetTrigger("OwnerDeath");
+        ownerDeathParticle.transform.rotation = Quaternion.Euler(-100f, 0, 0);
+        ownerDeathParticle.Play();
     }
 }
 

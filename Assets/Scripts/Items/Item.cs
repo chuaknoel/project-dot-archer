@@ -31,6 +31,7 @@ public class Item : MonoBehaviour
         isEquipped = equipped;
     }
 
+    
     // æ∆¿Ã≈€ »πµÊ
     public void Pickup(Player player)
     {

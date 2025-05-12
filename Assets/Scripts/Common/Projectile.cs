@@ -16,16 +16,21 @@ public class Projectile : MonoBehaviour
     private float currentDuration;
     private Rigidbody2D proejectileRigidbody;
 
+    private LayerMask targetMask;
+    [SerializeField] private LayerMask obstacleMask;
+
     public void Init()
     {
         isActive = false;
-        duration = 0f;
+        currentDuration = 0f;
         proejectileRigidbody = GetComponent<Rigidbody2D>();
     }
 
-    public void SetProjectile(RangeWeaponHandler rangeWeaponHandler, Transform pivot)
+    public void SetProjectile(RangeWeaponHandler rangeWeaponHandler, Transform pivot, LayerMask targetMask)
     {
         this.rangeWeaponHandler = rangeWeaponHandler;
+
+        this.targetMask = targetMask;
 
         transform.position = pivot.position;
         transform.rotation = pivot.rotation;
@@ -38,9 +43,8 @@ public class Projectile : MonoBehaviour
 
     private void Update()
     {
-        //if (!isActive) return;
+        if (!isActive) return;
 
-        /*
         currentDuration += Time.deltaTime;
 
         if (currentDuration >= duration)
@@ -48,8 +52,25 @@ public class Projectile : MonoBehaviour
             rangeWeaponHandler.connectedPool.Release(this);
             return;
         }
-        */
 
         proejectileRigidbody.velocity = direction * projectileSpeed;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if((targetMask & (1 << collision.gameObject.layer)) != 0)
+        {
+            if(collision.TryGetComponent<IDefenceStat>(out IDefenceStat target))
+            {
+                target.TakeDamage(rangeWeaponHandler.GetAttackDamage());
+                Debug.Log($"{collision.gameObject.name} 에게 {rangeWeaponHandler.GetAttackDamage()} 데미지!");
+            }
+            rangeWeaponHandler.connectedPool.Release(this);
+        }
+
+        if((obstacleMask & (1 << collision.gameObject.layer)) != 0)
+        {
+            rangeWeaponHandler.connectedPool.Release(this);
+        }
     }
 }

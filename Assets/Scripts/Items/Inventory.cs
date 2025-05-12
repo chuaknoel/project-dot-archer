@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
@@ -37,8 +38,6 @@ public class Inventory : MonoBehaviour
     private float attackBonus = 0f;
     private float defenseBonus = 0f;
 
-    private Player player; // 플레이어 참조
-
     // 초기화
     private void Awake()
     {
@@ -59,9 +58,6 @@ public class Inventory : MonoBehaviour
             if (armorType != ArmorType.None)
                 equippedArmors[armorType] = null;
         }
-
-        // 플레이어 참조 가져오기
-        player = GetComponent<Player>();
     }
 
     private void Start()
@@ -74,11 +70,11 @@ public class Inventory : MonoBehaviour
             equipmentUI.SetActive(false);
 
         // 인스펙터에서 선택한 아이템으로 초기 장비 설정
-        EquipSelectedItems();
+        //EquipSelectedItems();
     }
 
     // 인스펙터에서 선택한 아이템 장착
-    private void EquipSelectedItems()
+    public void EquipSelectedItems()
     {
         // 무기 장착
         if (!string.IsNullOrEmpty(equippedWeaponName))
@@ -111,13 +107,10 @@ public class Inventory : MonoBehaviour
         // ItemManager에서 이름으로 아이템 데이터 가져오기
         ItemData weaponData = ItemManager.Instance.GetItemDataByName(weaponName);
 
-        if (weaponData != null && player != null && player.WeaponHandler != null)
+        if (weaponData != null)
         {
             // 가상의 Item 객체 생성
-            Item weaponItem = CreateVirtualItem(weaponData);
-
-            // WeaponHandler에 아이템 정보 전달
-            player.WeaponHandler.Init(weaponItem, player.stat, player.targetMask);
+            Item weaponItem = Instantiate(ItemManager.Instance.TestWeapon);
 
             // 장착 정보 갱신 (인벤토리 시스템용)
             UpdateEquippedWeapon(weaponItem);
@@ -126,7 +119,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"무기 '{weaponName}'을 찾을 수 없거나 WeaponHandler가 설정되지 않았습니다.");
+            Debug.LogWarning($"무기 '{weaponName}'을 찾을 수 없습니다.");
         }
     }
 

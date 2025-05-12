@@ -37,14 +37,19 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
 
     public void TakeDamage(float damage)
     {
-        if(IsDeath) return;
-
-        float applyDamage = Mathf.Clamp(damage - Defence, 0, damage - damage);
+        if (IsDeath) return;
+        float applyDamage = Mathf.Clamp(damage - Defence, 0, damage - Defence);
         currentHealth -= applyDamage;
 
         if (IsDeath)
         {
             Death();
         }
+    }
+
+    public override void Death()
+    {
+        base.Death();
+        player.Controller.ChangeState(nameof(PlayerDeathState));
     }
 }

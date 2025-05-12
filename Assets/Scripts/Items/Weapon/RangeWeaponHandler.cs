@@ -59,6 +59,6 @@ public class RangeWeaponHandler : WeaponHandler
     public override void AttackAction()
     {
         base.AttackAction();
-        connectedPool.Get().SetProjectile(this, projectilePivot);
+        connectedPool.Get().SetProjectile(this, projectilePivot , targetMask);
     }
 }
