@@ -103,7 +103,7 @@ public class Inventory : MonoBehaviour
     private void Start()
     {
         // Inspector에 입력된 ID로 초기 장착 실행
-        EquipSelectedItems();
+        //EquipSelectedItems();
     }
 
 
