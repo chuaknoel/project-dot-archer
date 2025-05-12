@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Orc : BaseEnemy 
+public class Nependes : BaseEnemy
 {
-    public OrcStat orcStat;
+    public NependesStat nependesStat;
+
     public override void Init()
     {
         base.Init();
-        orcStat = GetComponent<OrcStat>();
+        nependesStat = GetComponent<NependesStat>();
+
+        
+
     }
-
-
-    
 }

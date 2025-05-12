@@ -20,7 +20,6 @@ public class EnemyControllerManager : MonoBehaviour
 
         if (skillController.canUse)
         {
-            Debug.Log("Can Use Skill");
             skillController.UseSkill(ownerEnemy);
         }
 
