@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    // 인스펙터에서 이름으로 선택할 수 있는 장착 아이템
-    [Header("현재 장착 아이템 (이름으로 선택)")]
-    [Tooltip("무기 이름을 선택하세요 (예: 일반철검, 좋은활, 더좋은낫 등)")]
-    [SerializeField] private string equippedWeaponName = "일반철검";
+    // 인스펙터에서 ID로 선택할 수 있는 장착 아이템
+    [Header("현재 장착 아이템 (ID로 선택)")]
+    [Tooltip("무기 ID를 입력하세요 (예: sword_common, bow_common 등)")]
+    [SerializeField] private string equippedWeaponId = "bow_common";
 
-    [Tooltip("투구 이름을 선택하세요 (예: 일반투구, 좋은투구 등)")]
-    [SerializeField] private string equippedHelmetName = "일반투구";
+    [Tooltip("투구 ID를 입력하세요 (예: helmet_common 등)")]
+    [SerializeField] private string equippedHelmetId = "helmet_common";
 
-    [Tooltip("갑옷 이름을 선택하세요 (예: 일반갑옷, 좋은갑옷 등)")]
-    [SerializeField] private string equippedArmorName = "일반갑옷";
+    [Tooltip("갑옷 ID를 입력하세요 (예: armor_common 등)")]
+    [SerializeField] private string equippedArmorId = "armor_common";
 
-    [Tooltip("신발 이름을 선택하세요 (예: 일반신발, 좋은신발 등)")]
-    [SerializeField] private string equippedBootsName = "일반신발";
+    [Tooltip("신발 ID를 입력하세요 (예: boots_common 등)")]
+    [SerializeField] private string equippedBootsId = "boots_common";
 
     // 장착된 아이템 관리 (카테고리 별)
     private Dictionary<ItemCategory, ItemData> equippedItems = new Dictionary<ItemCategory, ItemData>();
@@ -70,66 +70,70 @@ public class Inventory : MonoBehaviour
     // 인스펙터에서 선택한 아이템 장착
     private void EquipSelectedItems()
     {
+        Debug.Log("Inventory: 초기 장비 설정 시작");
+
         // 무기 장착
-        if (!string.IsNullOrEmpty(equippedWeaponName))
+        if (!string.IsNullOrEmpty(equippedWeaponId))
         {
-            SetupEquippedWeapon(equippedWeaponName);
+            SetupEquippedWeaponById(equippedWeaponId);
         }
 
         // 투구 장착
-        if (!string.IsNullOrEmpty(equippedHelmetName))
+        if (!string.IsNullOrEmpty(equippedHelmetId))
         {
-            SetupEquippedArmor(equippedHelmetName, ArmorType.Helmet);
+            SetupEquippedArmorById(equippedHelmetId, ArmorType.Helmet);
         }
 
         // 갑옷 장착
-        if (!string.IsNullOrEmpty(equippedArmorName))
+        if (!string.IsNullOrEmpty(equippedArmorId))
         {
-            SetupEquippedArmor(equippedArmorName, ArmorType.Armor);
+            SetupEquippedArmorById(equippedArmorId, ArmorType.Armor);
         }
 
         // 신발 장착
-        if (!string.IsNullOrEmpty(equippedBootsName))
+        if (!string.IsNullOrEmpty(equippedBootsId))
         {
-            SetupEquippedArmor(equippedBootsName, ArmorType.Boots);
+            SetupEquippedArmorById(equippedBootsId, ArmorType.Boots);
         }
+
+        Debug.Log("Inventory: 초기 장비 설정 완료");
     }
 
-    // 무기 이름으로 장착 정보 설정
-    private void SetupEquippedWeapon(string weaponName)
+    // 무기 ID로 장착 정보 설정
+    private void SetupEquippedWeaponById(string weaponId)
     {
-        // ItemManager에서 이름으로 아이템 데이터 가져오기
-        ItemData weaponData = ItemManager.Instance.GetItemDataByName(weaponName);
+        // ItemManager에서 ID로 아이템 데이터 가져오기
+        ItemData weaponData = ItemManager.Instance.GetItemDataById(weaponId);
 
         if (weaponData != null)
         {
             // 장착 정보 갱신 (인벤토리 시스템용)
             UpdateEquippedWeapon(weaponData);
 
-            Debug.Log($"무기 '{weaponName}' 장착 완료");
+            Debug.Log($"무기 '{weaponId}' 장착 완료");
         }
         else
         {
-            Debug.LogWarning($"무기 '{weaponName}'을 찾을 수 없습니다.");
+            Debug.LogWarning($"무기 ID '{weaponId}'를 찾을 수 없습니다.");
         }
     }
 
-    // 방어구 이름으로 방어구 설정
-    private void SetupEquippedArmor(string armorName, ArmorType type)
+    // 방어구 ID로 방어구 설정
+    private void SetupEquippedArmorById(string armorId, ArmorType type)
     {
-        // ItemManager에서 이름으로 아이템 데이터 가져오기
-        ItemData armorData = ItemManager.Instance.GetItemDataByName(armorName);
+        // ItemManager에서 ID로 아이템 데이터 가져오기
+        ItemData armorData = ItemManager.Instance.GetItemDataById(armorId);
 
         if (armorData != null)
         {
             // 장착 정보 갱신 (인벤토리 시스템용)
             UpdateEquippedArmor(armorData);
 
-            Debug.Log($"방어구 '{armorName}' 장착 완료");
+            Debug.Log($"방어구 '{armorId}' 장착 완료");
         }
         else
         {
-            Debug.LogWarning($"방어구 '{armorName}'을 찾을 수 없습니다.");
+            Debug.LogWarning($"방어구 ID '{armorId}'를 찾을 수 없습니다.");
         }
     }
 
@@ -153,6 +157,8 @@ public class Inventory : MonoBehaviour
 
         // 가상 아이템 생성 (Player 호환성용)
         virtualWeaponItems[weaponType] = CreateVirtualItem(item);
+
+        Debug.Log($"무기 장착 정보 업데이트: {item.ItemName}, 공격력 +{item.AttackBonus}");
     }
 
     // 장착된 방어구 정보 업데이트
@@ -175,6 +181,8 @@ public class Inventory : MonoBehaviour
 
         // 가상 아이템 생성 (Player 호환성용)
         virtualArmorItems[armorType] = CreateVirtualItem(item);
+
+        Debug.Log($"방어구 장착 정보 업데이트: {item.ItemName}, 방어력 +{item.DefenseBonus}");
     }
 
     // 가상의 Item 객체 생성 (Player 호환성용)
@@ -188,8 +196,8 @@ public class Inventory : MonoBehaviour
         // Item 컴포넌트 추가 및 초기화
         Item item = tempObj.AddComponent<Item>();
         item.Initialize(itemData);
-        item.SetItemId(itemData.ItemId);
 
+        Debug.Log($"가상 아이템 생성: {itemData.ItemName}, ID: {itemData.ItemId}");
         return item;
     }
 
@@ -212,12 +220,28 @@ public class Inventory : MonoBehaviour
     {
         // 장착된 무기 반환 (활, 검, 낫 중 하나)
         Item weapon = GetEquippedWeapon(WeaponType.Bow);
-        if (weapon != null) return weapon;
+        if (weapon != null)
+        {
+            Debug.Log($"현재 장착된 무기: {weapon.ItemData.ItemName}, ID: {weapon.ItemId}");
+            return weapon;
+        }
 
         weapon = GetEquippedWeapon(WeaponType.Sword);
-        if (weapon != null) return weapon;
+        if (weapon != null)
+        {
+            Debug.Log($"현재 장착된 무기: {weapon.ItemData.ItemName}, ID: {weapon.ItemId}");
+            return weapon;
+        }
 
         weapon = GetEquippedWeapon(WeaponType.Scythe);
+        if (weapon != null)
+        {
+            Debug.Log($"현재 장착된 무기: {weapon.ItemData.ItemName}, ID: {weapon.ItemId}");
+        }
+        else
+        {
+            Debug.LogWarning("GetCurrentWeapon: 장착된 무기가 없습니다.");
+        }
         return weapon;
     }
 
@@ -278,6 +302,43 @@ public class Inventory : MonoBehaviour
     public void ToggleAllUI() { Debug.Log("인벤토리 및 장비 UI 기능이 아직 구현되지 않았습니다."); }
     public bool AddItem(Item item) { Debug.Log($"아이템 '{item.ItemData.ItemName}' 추가 기능이 아직 구현되지 않았습니다."); return true; }
 
+    // 디버그: 현재 장착 정보 출력
+    public void PrintEquippedItems()
+    {
+        Debug.Log("===== 장착 아이템 정보 =====");
+
+        // 무기 정보
+        Debug.Log("== 무기 ==");
+        foreach (var pair in equippedWeapons)
+        {
+            if (pair.Value != null)
+            {
+                Debug.Log($"- {pair.Key}: {pair.Value.ItemName} (ID: {pair.Value.ItemId})");
+            }
+            else
+            {
+                Debug.Log($"- {pair.Key}: 장착 없음");
+            }
+        }
+
+        // 방어구 정보
+        Debug.Log("== 방어구 ==");
+        foreach (var pair in equippedArmors)
+        {
+            if (pair.Value != null)
+            {
+                Debug.Log($"- {pair.Key}: {pair.Value.ItemName} (ID: {pair.Value.ItemId})");
+            }
+            else
+            {
+                Debug.Log($"- {pair.Key}: 장착 없음");
+            }
+        }
+
+        Debug.Log($"총 공격력 보너스: +{attackBonus}");
+        Debug.Log($"총 방어력 보너스: +{defenseBonus}");
+    }
+
     /*
     ==========================================================================
     WeaponHandler 담당자를 위한 설명
@@ -286,27 +347,22 @@ public class Inventory : MonoBehaviour
     아이템 시스템이 변경되어 WeaponHandler에서 아이템 프리팹을 사용하는 방식으로 개선되었습니다.
     
     1. 아이템 프리팹에는 Item 스크립트가 붙어있고 itemId가 설정되어 있습니다.
-    2. 인벤토리에서는 아이템 이름을 선택하여 장착 정보를 관리합니다.
+    2. 인벤토리에서는 아이템 ID를 선택하여 장착 정보를 관리합니다.
     3. WeaponHandler는 인벤토리에서 장착된 무기의 ID를 가져와 해당 ID와 동일한 
        프리팹을 소환합니다.
     
-    WeaponHandler 사용 방법:
+    무기 ID와 경로 설정:
+    - 기본 무기는 Resources/Weapons/ 폴더에 있어야 합니다.
+    - 프리팹 이름은 중요하지 않지만, Item 컴포넌트의 itemId 필드가 중요합니다.
+    - 예: bow_common 아이템은 Resources/Weapons/bow_common.prefab 경로에 있어야 합니다.
     
-    1. 인벤토리에서 현재 장착된 무기 ID 가져오기:
-       string weaponId = inventory.GetCurrentWeaponId();
+    WeaponHandler.Init 메서드는 Item 객체를 받아서 처리합니다:
+    - weapon.ItemId로 아이템 ID를 가져옵니다.
+    - Resources.Load<GameObject>($"Weapons/{weapon.ItemId}")로 프리팹을 로드합니다.
+    - 로드된 프리팹을 인스턴스화하여 무기를 표시합니다.
     
-    2. 해당 ID와 일치하는 프리팹 불러오기:
-       GameObject weaponPrefab = Resources.Load<GameObject>($"Weapons/{weaponId}");
-    
-    3. 무기 프리팹을 인스턴스화하여 부착:
-       Instantiate(weaponPrefab, transform);
-    
-    WeaponHandler.Init은 호환성을 위해 유지되었지만, 향후에는 아이템 ID를 통한
-    프리팹 로드 방식으로 전환될 예정입니다.
-    
-    각 무기 프리팹에는 이미 Item 컴포넌트가 있으며, itemId 필드에 
-    해당 무기의 ID가 설정되어 있습니다. 프리팹을 생성하면 자동으로 
-    해당 ID에 맞는 아이템 데이터를 로드합니다.
+    문제가 있으면 로그를 확인하고 ItemManager, Inventory, WeaponHandler 담당자와
+    함께 문제를 해결하세요.
     ==========================================================================
     */
 }
