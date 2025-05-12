@@ -3,16 +3,32 @@ using System.Collections.Generic;
 using Enums;
 using UnityEngine;
 
-public class DungeonManager : MonoBehaviour
+public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임자
 {
+    public static DungeonManager Instance { get; private set; }
+
     public RoomGenerator roomGenerator;
     public RoomNavigator navigator;
     public Player player;
+    public EnemyManager enemyManager;
 
     public Dictionary<Vector2Int, Room> rooms;
     public Room currentRoom;
 
     private CameraController cameraController;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Debug.LogWarning("여러 개의 DungeonManager 인스턴스가 존재합니다. 하나만 유지해야 합니다.");
+            Destroy(gameObject); // 혹은 중복 방지 처리
+        }
+    }
 
     void Start()
     {   
@@ -26,6 +42,7 @@ public class DungeonManager : MonoBehaviour
             currentRoom = startRoom;
             cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
             navigator.MovePlayerToRoom(currentRoom, player.gameObject, Vector2Int.zero); // 초기엔 방향 없음
+            currentRoom.GetComponent<RoomManager>().OnPlayerEnter();  // 플레이어가 첫 번째 방에 들어갈 때 적 생성
         }
         else
         {
@@ -42,6 +59,7 @@ public class DungeonManager : MonoBehaviour
         {
             currentRoom = newRoom;
             cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
+            newRoom.GetComponent<RoomManager>().OnPlayerEnter();  // 방 이동 시 적 생성
             return true;
         }
         else

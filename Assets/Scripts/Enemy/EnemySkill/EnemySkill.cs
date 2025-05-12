@@ -15,12 +15,12 @@ public class EnemySkill : MonoBehaviour
     // Update is called once per frame
     public bool CanUse()
     {           
-        return currentCooldown < cooldown;
+        return currentCooldown > cooldown;
     }
     
-    public virtual void UseSkill()
+    public virtual void UseSkill(BaseEnemy owner)
     {
-
+        currentCooldown = 0;
     }
 
 }
