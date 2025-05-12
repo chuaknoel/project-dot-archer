@@ -11,6 +11,8 @@ public class Salamandra : BaseEnemy
         base.Init();
         salamandraStat = GetComponent<SalamandraStat>();
 
+        RandomFlame randomFlame = GetComponent<RandomFlame>();
+        skills.Add(randomFlame);
 
 
     }
