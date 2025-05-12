@@ -13,6 +13,12 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
     [SerializeField] private float moveSpeed;
     public float MoveSpeed => moveSpeed;
 
+    private float buffDamage;
+    public float BuffDamage => buffDamage;
+
+    private float buffSpeed;
+    public float BuffSpeed => BuffSpeed;
+
     public void TakeDamage(float damage)
     {
         if(IsDeath) return;
