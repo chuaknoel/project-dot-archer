@@ -12,5 +12,10 @@ public class ZombieStat : EnemyStat, IMoveStat, IAttackStat
 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float attackDamage;
+
+    public float GetTotalStatDamage()
+    {
+        return attackDamage;
+    }
 }
     

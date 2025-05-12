@@ -9,7 +9,10 @@ public class GoblinStat : BaseStat ,  IAttackStat, IMoveStat
 
     [SerializeField] private float attackDamage;
     [SerializeField] private float moveSpeed;
-    
-   
+
+    public float GetTotalStatDamage()
+    {
+        return attackDamage;
+    }
 
 }

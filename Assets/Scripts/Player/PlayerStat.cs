@@ -24,15 +24,20 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
         maxHealth = 100;
     }
 
-    public void Init(Player player)
-    {
-        this.player = player;
-    }
-
-    public float TotalDamage()
+    public float GetTotalStatDamage()
     {
         // 인벤토리에서 계산된 총 데미지 사용
-        return attackDamage + player.Inventory.GetTotalAttackBonus();
+        return attackDamage + player.Inventory.GetTotalAttackBonus() + player.UpgradeManager.permanentUpgradeData.GetAttackDamage() + player.WeaponHandler.GetAttackDamage();
+    }
+
+    public float GetToTalDefence()
+    {
+        return defence + player.Inventory.GetTotalDefenseBonus() + player.UpgradeManager.permanentUpgradeData.GetDefence();
+    }
+
+    public float GetTotalMoveSpeed()
+    {
+        return moveSpeed + player.UpgradeManager.permanentUpgradeData.GetMoveSpeed();
     }
 
     public void TakeDamage(float damage)

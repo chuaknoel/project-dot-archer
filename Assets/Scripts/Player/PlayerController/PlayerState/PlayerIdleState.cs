@@ -19,9 +19,11 @@ public class PlayerIdleState : PlayerStates
     public override void OnUpdate(float deltaTime)
     {
         base.OnUpdate(deltaTime);
+
         if(player.Controller.GetInputDir() != Vector3.zero)
         {
             player.Controller.ChangeState(nameof(PlayerMoveState));
+            return;
         }
 
         if (player.SearchTarget.SearchNearestTarget() != null)

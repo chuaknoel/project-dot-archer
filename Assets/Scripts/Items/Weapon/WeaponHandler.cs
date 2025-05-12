@@ -12,11 +12,13 @@ public abstract class WeaponHandler : MonoBehaviour
 
     protected Item weapon;
     protected IAttackStat ownerStat;
+    protected Collider2D ownerCollider;
+
     protected LayerMask targetMask;
 
     protected SpriteRenderer waeponSprite;
 
-    public virtual void Init(Item weapon, IAttackStat ownerStat, LayerMask targetMask)
+    public virtual void Init(Item weapon, IAttackStat ownerStat, LayerMask targetMask, Collider2D ownerColler)
     {
         this.weapon = weapon;
         animator = GetComponent<Animator>();
@@ -25,6 +27,7 @@ public abstract class WeaponHandler : MonoBehaviour
         this.targetMask = targetMask;
         waeponSprite ??= GetComponentInChildren<SpriteRenderer>();
         waeponSprite.sprite = weapon.ItemData.itemIcon;
+        this.ownerCollider = ownerColler;
     }
 
     public virtual void Attack()
@@ -34,9 +37,9 @@ public abstract class WeaponHandler : MonoBehaviour
         AttackAction();
     }
 
-    public float GetAttackDamage()
+    public virtual float GetAttackDamage()
     {
-        return ownerStat.AttackDamage + weapon.ItemData.attackBonus;
+        return ownerStat.GetTotalStatDamage();
     }
 
     public virtual void AttackAction() { }
@@ -55,7 +58,7 @@ public abstract class WeaponHandler : MonoBehaviour
     {
         isUseable = false;
 
-        yield return new WaitForSeconds(weapon.ItemData.attackCooldown);
+        yield return new WaitForSeconds(GetWeaponCooldown());
 
         isUseable = true;
     }
@@ -67,9 +70,14 @@ public abstract class WeaponHandler : MonoBehaviour
         return isUseable;
     }
 
-    public float GetWeaponDelay()
+    public virtual float GetWeaponDelay()
     {
         return weapon.ItemData.attackDelay;
+    }
+
+    public virtual float GetWeaponCooldown()
+    {
+        return weapon.ItemData.attackCooldown;
     }
 
     public void OwnerDeath()

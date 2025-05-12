@@ -32,7 +32,7 @@ public class PlayerMoveState : PlayerStates
 
     public override void OnFixedUpdate()
     {
-        player.transform.position += inputDir.normalized * player.stat.MoveSpeed * Time.fixedDeltaTime;
+        player.transform.position += inputDir.normalized * player.stat.GetTotalMoveSpeed() * Time.fixedDeltaTime;
     }
 
 

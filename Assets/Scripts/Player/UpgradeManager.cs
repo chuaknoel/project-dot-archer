@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InGameUpgradeManager : MonoBehaviour
+public class UpgradeManager : MonoBehaviour
 {
     public InGameUpgradeData rangeUpgradeData = new();
     public InGameUpgradeData meleeUpgradeData = new();
+
+    public PermanentUpgradeData permanentUpgradeData = new();
 
     public void MergeUpgrade(InGameUpgradeData addUpgrade)
     {
@@ -24,11 +26,11 @@ public class InGameUpgradeManager : MonoBehaviour
         rangeUpgradeData.addProjectile += addupgrade.addProjectile;
         rangeUpgradeData.addProjectileSpeed += addupgrade.addProjectileSpeed;
 
-        rangeUpgradeData.addDamage += addupgrade.addDamage;
-        rangeUpgradeData.addAttackSpeed += addupgrade.addAttackSpeed;
+        rangeUpgradeData.addWeaponDamage += addupgrade.addWeaponDamage;
+        rangeUpgradeData.addAttackCooldown += addupgrade.addAttackCooldown;
         rangeUpgradeData.addAttackDelay += addupgrade.addAttackDelay;
 
-        rangeUpgradeData.addReflict += addupgrade.addReflict;
+        rangeUpgradeData.addReflection += addupgrade.addReflection;
     }
 
     public void MeleeUpgrade(InGameUpgradeData addupgrade)
@@ -36,11 +38,11 @@ public class InGameUpgradeManager : MonoBehaviour
         meleeUpgradeData.addProjectile += addupgrade.addProjectile;
         meleeUpgradeData.addProjectileSpeed += addupgrade.addProjectileSpeed;
 
-        meleeUpgradeData.addDamage += addupgrade.addDamage;
-        meleeUpgradeData.addAttackSpeed += addupgrade.addAttackSpeed;
+        meleeUpgradeData.addWeaponDamage += addupgrade.addWeaponDamage;
+        meleeUpgradeData.addAttackCooldown += addupgrade.addAttackCooldown;
         meleeUpgradeData.addAttackDelay += addupgrade.addAttackDelay;
 
-        meleeUpgradeData.addReflict += addupgrade.addReflict;
+        meleeUpgradeData.addReflection += addupgrade.addReflection;
     }
 
     public InGameUpgradeData GetRangeUpgrade()

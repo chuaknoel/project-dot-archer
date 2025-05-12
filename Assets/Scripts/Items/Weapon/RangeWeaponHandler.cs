@@ -12,11 +12,11 @@ public class RangeWeaponHandler : WeaponHandler
     [SerializeField] private Transform projectilePivot;
 
     public InGameUpgradeData UpgradeData { get { return upgradeData; } }
-    private InGameUpgradeData upgradeData;
+    private InGameUpgradeData upgradeData= new();
 
-    public override void Init(Item weapon, IAttackStat ownerStat, LayerMask targetMask)
+    public override void Init(Item weapon, IAttackStat ownerStat, LayerMask targetMask, Collider2D ownerColler)
     {
-        base.Init(weapon, ownerStat, targetMask);
+        base.Init(weapon, ownerStat, targetMask, ownerColler);
         SetProjectile();
     }
 
@@ -59,14 +59,29 @@ public class RangeWeaponHandler : WeaponHandler
         transform.rotation = Quaternion.Euler(angle);
     }
 
+    public override float GetAttackDamage()
+    {
+        return base.GetAttackDamage() + UpgradeData.addWeaponDamage;
+    }
+
     public override void AttackAction()
     {
         base.AttackAction();
-        connectedPool.Get().SetProjectile(this, projectilePivot , targetMask);
+        connectedPool.Get().SetProjectile(this, projectilePivot , targetMask, ownerCollider);
     }
 
     public void ApplyUpgrade(InGameUpgradeData upgradeData)
     {
         this.upgradeData = upgradeData;
+    }
+
+    public override float GetWeaponDelay()
+    {
+        return weapon.ItemData.attackDelay - UpgradeData.addAttackDelay;
+    }
+
+    public override float GetWeaponCooldown()
+    {
+        return weapon.ItemData.attackDelay - UpgradeData.addAttackCooldown;
     }
 }
