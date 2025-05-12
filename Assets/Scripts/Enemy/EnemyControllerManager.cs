@@ -20,6 +20,7 @@ public class EnemyControllerManager : MonoBehaviour
 
         if (skillController.canUse)
         {
+            Debug.Log("Can Use Skill");
             skillController.UseSkill(ownerEnemy);
         }
 
@@ -32,6 +33,8 @@ public class EnemyControllerManager : MonoBehaviour
         ownerStat = ownerEnemy.GetComponent<BaseStat>();
         moveController = this.AddComponent<MoveController>();
         skillController = this.AddComponent<SkillController>();
+        skillController.AddSkill(ownerEnemy);
+
     }
 
 }

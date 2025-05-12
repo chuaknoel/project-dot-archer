@@ -20,7 +20,7 @@ public class ThrowStone : EnemySkill
         if (CanUse())
         {
             Debug.Log("Throwing stone!");
-            Vector3 dir = (throwPoint.position - owner.target.position).normalized;
+            Vector3 dir = (owner.target.position - throwPoint.position).normalized;
             GameObject stone = Instantiate(stonePrefab, throwPoint.position, throwPoint.rotation);
             Rigidbody2D rb = stone.GetComponent<Rigidbody2D>();
             rb.velocity = dir * throwForce;

@@ -27,12 +27,11 @@ public class SkillController : MonoBehaviour
 
     private IEnumerator RunSkill(BaseEnemy owner)
     {
-        Debug.Log(skills[0]);
-        canUse = false;
+        canMove = false;
 
         yield return new WaitForSeconds(2f);
 
-        canMove = false;
+        canUse = false;
 
         foreach (var skill in skills)
         {
