@@ -284,8 +284,8 @@ public class ItemManager : MonoBehaviour
         // 일반 낫
         ItemData scythe1 = new ItemData();
         scythe1.itemId = "scythe_common";
-        scythe1.itemName = "일반낫";
-        scythe1.itemDescription = "기본적인 낫입니다.";
+        scythe1.itemName = "일반도끼";
+        scythe1.itemDescription = "기본적인 도끼입니다.";
         scythe1.itemCategory = ItemCategory.Weapon;
         scythe1.weaponType = WeaponType.Scythe;
         scythe1.itemRarity = ItemRarity.Common;
@@ -307,8 +307,8 @@ public class ItemManager : MonoBehaviour
         // 좋은 낫
         ItemData scythe2 = new ItemData();
         scythe2.itemId = "scythe_uncommon";
-        scythe2.itemName = "좋은낫";
-        scythe2.itemDescription = "품질이 좋은 낫입니다.";
+        scythe2.itemName = "좋은도끼";
+        scythe2.itemDescription = "품질이 좋은 도끼입니다.";
         scythe2.itemCategory = ItemCategory.Weapon;
         scythe2.weaponType = WeaponType.Scythe;
         scythe2.itemRarity = ItemRarity.Uncommon;
@@ -330,8 +330,8 @@ public class ItemManager : MonoBehaviour
         // 더좋은 낫
         ItemData scythe3 = new ItemData();
         scythe3.itemId = "scythe_rare";
-        scythe3.itemName = "더좋은낫";
-        scythe3.itemDescription = "희귀한 낫입니다.";
+        scythe3.itemName = "더좋은도끼";
+        scythe3.itemDescription = "희귀한 도끼입니다.";
         scythe3.itemCategory = ItemCategory.Weapon;
         scythe3.weaponType = WeaponType.Scythe;
         scythe3.itemRarity = ItemRarity.Rare;
@@ -353,8 +353,8 @@ public class ItemManager : MonoBehaviour
         // 너무좋은 낫
         ItemData scythe4 = new ItemData();
         scythe4.itemId = "scythe_epic";
-        scythe4.itemName = "너무좋은낫";
-        scythe4.itemDescription = "전설적인 낫입니다.";
+        scythe4.itemName = "너무좋은도끼";
+        scythe4.itemDescription = "전설적인 도끼입니다.";
         scythe4.itemCategory = ItemCategory.Weapon;
         scythe4.weaponType = WeaponType.Scythe;
         scythe4.itemRarity = ItemRarity.Epic;
