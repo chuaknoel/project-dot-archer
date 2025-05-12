@@ -29,6 +29,8 @@ public class Player : MonoBehaviour
 
     public LayerMask targetMask;
 
+    private InGameUpgradeManager ingameUpgradeManager = new InGameUpgradeManager();
+
     // Update is called once per frame
     void Update()
     {
@@ -111,7 +113,6 @@ public class Player : MonoBehaviour
         characterImage.flipX = isLeft;
     }
 
-
     public bool IsAttackable(PlayerState curstate)
     {
         switch (curstate)
@@ -121,6 +122,22 @@ public class Player : MonoBehaviour
                 return true;
 
             default: return false;
+        }
+    }
+
+    //업그레이들 될 정보를 받아 데이터 정보 갱신
+    public void Upgrade(InGameUpgradeData gameUpgradeData)
+    {
+        ingameUpgradeManager.MergeUpgrade(gameUpgradeData);
+        ApplyUpgrade(gameUpgradeData);
+    }
+
+    //업그레이드 적용
+    public void ApplyUpgrade(InGameUpgradeData gameUpgradeData)
+    {
+        if (gameUpgradeData.attackType == AttackTpye.Range)
+        {
+            (weaponHandler as RangeWeaponHandler).ApplyUpgrade(ingameUpgradeManager.GetRangeUpgrade());
         }
     }
 }

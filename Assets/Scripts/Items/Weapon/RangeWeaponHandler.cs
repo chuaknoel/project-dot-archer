@@ -11,6 +11,9 @@ public class RangeWeaponHandler : WeaponHandler
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private Transform projectilePivot;
 
+    public InGameUpgradeData UpgradeData { get { return upgradeData; } }
+    private InGameUpgradeData upgradeData;
+
     public override void Init(Item weapon, IAttackStat ownerStat, LayerMask targetMask)
     {
         base.Init(weapon, ownerStat, targetMask);
@@ -60,5 +63,10 @@ public class RangeWeaponHandler : WeaponHandler
     {
         base.AttackAction();
         connectedPool.Get().SetProjectile(this, projectilePivot , targetMask);
+    }
+
+    public void ApplyUpgrade(InGameUpgradeData upgradeData)
+    {
+        this.upgradeData = upgradeData;
     }
 }
