@@ -6,34 +6,35 @@ using UnityEngine;
 
 public class EnemyControllerManager : MonoBehaviour
 {
-    private BaseEnemy ownerEnemy;
-    private BaseStat ownerStat;
-    private MoveController moveController;
-    private SkillController skillController;
+    protected BaseEnemy ownerEnemy;
+    protected BaseStat ownerStat;
+    protected MoveController moveController;
+    protected SkillController skillController;
 
-    private void Update()
+    protected virtual void Update()
     {
-        if (skillController.canMove && ownerStat is IMoveStat moveStat )
+        if (skillController.canMove && ownerStat is IMoveStat moveStat)
         {
             moveController.MoveToPlayer(ownerEnemy.target, moveStat);
         }
-
         if (skillController.canUse)
         {
             skillController.UseSkill(ownerEnemy);
         }
-
-
     }
 
-    public void Init(BaseEnemy ownerEnemy)
+    public virtual void Init(BaseEnemy ownerEnemy)
     {
         this.ownerEnemy = ownerEnemy;
         ownerStat = ownerEnemy.GetComponent<BaseStat>();
-        moveController = this.AddComponent<MoveController>();
-        skillController = this.AddComponent<SkillController>();
+        moveController = this.AddComponent<MoveController>();  
+        InitSkillController();
         skillController.AddSkill(ownerEnemy);
 
     }
-
+   
+    public virtual void InitSkillController()
+    {
+        skillController = this.AddComponent<SkillController>();
+    }
 }

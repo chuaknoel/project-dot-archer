@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking.PlayerConnection;
 using UnityEngine.Pool;
+using UnityEngine.UIElements;
 
 public class RangeWeaponHandler : WeaponHandler
 {
@@ -11,12 +13,16 @@ public class RangeWeaponHandler : WeaponHandler
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private Transform projectilePivot;
 
-    public InGameUpgradeData UpgradeData { get { return upgradeData; } }
-    private InGameUpgradeData upgradeData;
+    [SerializeField] int projectileCount =1;
+    [SerializeField] int burstCount;
+    [SerializeField] float burstDealy;
 
-    public override void Init(Item weapon, IAttackStat ownerStat, LayerMask targetMask)
+    public InGameUpgradeData UpgradeData { get { return upgradeData; } }
+    private InGameUpgradeData upgradeData= new();
+
+    public override void Init(Item weapon, IAttackStat ownerStat, LayerMask targetMask, Collider2D ownerColler)
     {
-        base.Init(weapon, ownerStat, targetMask);
+        base.Init(weapon, ownerStat, targetMask, ownerColler);
         SetProjectile();
     }
 
@@ -37,12 +43,12 @@ public class RangeWeaponHandler : WeaponHandler
                 maxSize: projectilePrefab.MaxSize   //한번에 관리될 오브젝트 갯수
             ));
 
-        connectedPool = projectileManager.FindPool(projectilePrefab.name); //풀링 매니저에서 등록된 발사체 풀을 찾아와서 핸들 매니저에 연결
+        connectedPool = projectileManager.FindPool(projectilePrefab.name);   //풀링 매니저에서 등록된 발사체 풀을 찾아와서 핸들 매니저에 연결
        
-        for (int i = 0; i < projectilePrefab.MaxSize; i++) //한번에 관리될 오브젝트 개수를 풀링에 등록
+        for (int i = 0; i < projectilePrefab.MaxSize; i++)                   //한번에 관리될 오브젝트 개수를 풀링에 등록
         {
             Projectile projectiles = CreateProjectile();       
-            connectedPool.Release(projectiles);            //미리 만들어 놓은 오브젝트이기 때문에 회수하여 저장
+            connectedPool.Release(projectiles);                               //미리 만들어 놓은 오브젝트이기 때문에 회수하여 저장
         }
     }
 
@@ -59,14 +65,59 @@ public class RangeWeaponHandler : WeaponHandler
         transform.rotation = Quaternion.Euler(angle);
     }
 
+    public override float GetAttackDamage()
+    {
+        return base.GetAttackDamage() + UpgradeData.addWeaponDamage;
+    }
+
+    public int GetProjectileCount()
+    {
+        return projectileCount + upgradeData.addProjectileCount;
+    }
+
+    public int GetBurstCount()
+    {
+        return burstCount + upgradeData.addBurstCount;
+    }
+
     public override void AttackAction()
     {
         base.AttackAction();
-        connectedPool.Get().SetProjectile(this, projectilePivot , targetMask);
+
+        MultiProjectile();
+    }
+
+    public void MultiProjectile()
+    {
+        int count = GetProjectileCount();
+        int halfCount = count / 2;
+        float angle = 0;
+
+        for (int i = -halfCount; i <= halfCount; i++)
+        {
+            if (count % 2 == 0 && i == -halfCount)    //발사체가 짝수 일때 첫번째 발사체는 생성에서 제외
+            {                                         //발사체 개수가 4개와 5개일때 둘다 haltCount는 2로 고정. for문의 범위가 -2~2로 같아짐
+                continue;                             //그래서 짝수 발사일때는 첫발을 생성제외하여 발사체 갯수를 맞춰준다. 꼭 첫발이 아니여도 상관없다.
+            }
+
+            angle = i * 10f;
+
+            connectedPool.Get().SetProjectile(this, projectilePivot, Quaternion.Euler(0, 0, angle), targetMask, ownerCollider);
+        }
     }
 
     public void ApplyUpgrade(InGameUpgradeData upgradeData)
     {
         this.upgradeData = upgradeData;
+    }
+
+    public override float GetWeaponDelay()
+    {
+        return weapon.ItemData.attackDelay - UpgradeData.addAttackDelay;
+    }
+
+    public override float GetWeaponCooldown()
+    {
+        return weapon.ItemData.attackDelay - UpgradeData.addAttackCooldown;
     }
 }

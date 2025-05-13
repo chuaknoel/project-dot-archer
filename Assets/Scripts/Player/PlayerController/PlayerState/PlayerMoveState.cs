@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
+using Enums;
 
 public class PlayerMoveState : PlayerStates
 {
@@ -32,7 +32,7 @@ public class PlayerMoveState : PlayerStates
 
     public override void OnFixedUpdate()
     {
-        player.transform.position += inputDir.normalized * player.stat.MoveSpeed * Time.fixedDeltaTime;
+        player.transform.position += inputDir.normalized * player.stat.GetTotalMoveSpeed() * Time.fixedDeltaTime;
     }
 
 
