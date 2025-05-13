@@ -22,7 +22,7 @@ public class PlayerMoveState : PlayerStates
     public override void OnUpdate(float deltaTime)
     {
         base.OnUpdate(deltaTime);
-        inputDir = player.Controller.GetInputDir();
+        inputDir = player.GetInputDir();
 
         if (inputDir == Vector3.zero)
         {
