@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyStat : BaseStat ,IDefenceStat
 {
     public float Defence => defence;
-    private float defence;
+    protected float defence;
 
     public void TakeDamage(float damage)
     {

@@ -7,7 +7,6 @@ using Enums;
 
 public class Player : MonoBehaviour
 {
-
     public Inventory Inventory { get { return inventory; } }
     private Inventory inventory;
 
@@ -53,9 +52,8 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            stat.TakeDamage(123123123123f);
+            stat.GetComponent<IDefenceStat>().TakeDamage(123123);
         }
-
     }
 
     private void FixedUpdate()
@@ -70,7 +68,8 @@ public class Player : MonoBehaviour
 
     public void Init(PlayerData playerData, Inventory inventory)
     {
-        stat ??= new PlayerStat(this, playerData);
+        stat ??= GetComponent<PlayerStat>();
+        stat.Init(this, playerData);
 
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();

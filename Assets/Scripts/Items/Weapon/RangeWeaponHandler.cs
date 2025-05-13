@@ -84,6 +84,11 @@ public class RangeWeaponHandler : WeaponHandler
     {
         base.AttackAction();
 
+        MultiProjectile();
+    }
+
+    public void MultiProjectile()
+    {
         int count = GetProjectileCount();
         int halfCount = count / 2;
         float angle = 0;
