@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemySkill : MonoBehaviour
+public class EnemySkill :MonoBehaviour
 {
     public string skillName;
     public float damage;
@@ -11,8 +11,8 @@ public class EnemySkill : MonoBehaviour
     public GameObject effect;
 
     // Update is called once per frame
-    public bool CanUse()
-    {           
+    public virtual bool CanUse()
+    {
         return currentCooldown > cooldown;
     }
     

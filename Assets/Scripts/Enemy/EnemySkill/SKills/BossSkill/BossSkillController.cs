@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class BossSkillController : SkillController, ISkillController
@@ -8,8 +10,8 @@ public class BossSkillController : SkillController, ISkillController
     public bool angryMode;
     public int skillCount;
     public List<GameObject> effects = new List<GameObject>();
-    private  List<BossSkill> bossSkills = new List<BossSkill>();
-    private BossSkill executionSkills; // 실행할 스킬
+    private List<BossSkill> bossSkills = new List<BossSkill>();
+    GameObject circleEffect;
 
     private void OnEnable()
     {
@@ -17,10 +19,16 @@ public class BossSkillController : SkillController, ISkillController
         SettingSkills();
      //   UseSkill();
     }
+    private void Update()
+    {
+        foreach (var skill in bossSkills)
+        {
+            skill.UpdateCooldown();
+        }
+    }
     public void SettingSkills()
     {
-        GameObject effect = Resources.Load<GameObject>("Effects/BossEffect");
-        Debug.Log("스킬세팅 "+ skillCount);
+        circleEffect = Resources.Load<GameObject>("Effects/BossEffect");
 
         BossEnemy bossEnemy = GetComponent<BossEnemy>();
         if (bossEnemy.bossIndex == 1)
@@ -34,9 +42,14 @@ public class BossSkillController : SkillController, ISkillController
 
         for (int i = 1; i <= skillCount; i++)
         {
-            string skillName = $"BossSkill{i:00}";
-            bossSkills.Add(new BossSkill(skillName, 10*i, 3*i, effect));
+       //     bossSkills.Add(new BossSkill(skillName, 10*i, 3*i, effect));
+       //     bossSkills.Add(bossSkill);
+
+            var skill = gameObject.AddComponent<BossSkill>();
+            skill.Initialize($"BossSkill{i:00}", 10 * i, 6 * i, circleEffect);
+            bossSkills.Add(skill);
         }
+        Debug.Log(bossSkills);
     }
     //public string SelectSkill()
     //{
@@ -49,50 +62,31 @@ public class BossSkillController : SkillController, ISkillController
         string[] skillNames = { "BossSkill01", "BossSkill02", "BossSkill03" };
         int index = UnityEngine.Random.Range(0, skillCount);
      
-        Debug.Log(skillNames[index]);
-        // var skill = skills.Find(s => s.skillName == skillNames[index]);
-        // var skill = bossSkills.Find(s => s.skillName.Trim() == skillNames[index].Trim());
+        //Debug.Log(skillNames[index]);
+        //// var skill = skills.Find(s => s.skillName == skillNames[index]);
+        //// var skill = bossSkills.Find(s => s.skillName.Trim() == skillNames[index].Trim());
         var skill = bossSkills.Find(s => s.skillName.Equals(skillNames[index]));
-        Debug.Log(skill);
-   
 
-       
-        foreach (var s in bossSkills)
-        {
-            Debug.Log("보유 스킬: " + s.skillName);
-        }
-        if (skill == null)
-        {
-            Debug.Log(index);
-            Debug.LogError("스킬을 찾을 수 없습니다: " + skillNames[index]+skill.skillName);
-            return;
-        }
-        else
-        {
-            Debug.Log(index);
-            Debug.LogError("찾은 스킬 : " + skillNames[index] + skill.skillName);
 
-        }
         if (skill.CanUse())
         {
-            // 스킬 쿨타임
-            skill.currentCooldown += Time.deltaTime;
+            skill.CooldownInit(); // 쿨다운 초기화
             // 이펙트 발사
-            ExecuteEffect(transform, skill.effect, skill.skillName);
+            ExecuteEffect(transform, skill.skillName);
         }
     }
-    public void ExecuteEffect(Transform bossTransform, GameObject skillEffect,string skillName)
+    public void ExecuteEffect(Transform bossTransform,string skillName)
     {
-        Debug.Log(skillEffect);
         switch (skillName)
         {
             // 하나만 발사
             case "BossSkill01":
                 OneShot(bossTransform);
+                
                 break;
             // 3방향 각도 (중앙, 왼쪽, 오른쪽) 발사
             case "BossSkill02":
-                ThreeShot(bossTransform, skillEffect);
+                ThreeShot(bossTransform, circleEffect);
                 break;
             // 원 모양 발사
             case "BossSkill03":
@@ -103,12 +97,17 @@ public class BossSkillController : SkillController, ISkillController
     // 하나만 발사
     private void OneShot(Transform bossTransform)
     {
-        GameObject effect01 = GameObject.Instantiate(executionSkills.effect, bossTransform.position, Quaternion.identity);
+
+        GameObject effect01 = GameObject.Instantiate(circleEffect, bossTransform.position, Quaternion.identity);
         Vector2 _dir = (GameObject.Find("Player").transform.position - bossTransform.position).normalized;
-        effect01.GetComponent<Rigidbody2D>().AddForce(_dir * 10f, ForceMode2D.Impulse);
+        // 중력 제거
+        effect01.GetComponent<Rigidbody2D>().gravityScale = 0f;
+        effect01.GetComponent<Rigidbody2D>().AddForce(_dir * 20f, ForceMode2D.Impulse);
+
+        // ShootEffect(circleEffect, _dir, Quaternion.identity, 20);
     }
     // 3방향 각도 (중앙, 왼쪽, 오른쪽) 발사
-    public static void ThreeShot(Transform bossTransform, GameObject effect)
+    public  void ThreeShot(Transform bossTransform, GameObject skillEffect)
     {
         float[] angles = { -15f, 0f, 15f };
         foreach (float angle in angles)
@@ -118,8 +117,11 @@ public class BossSkillController : SkillController, ISkillController
             // 중심 방향 기준으로 각도 회전
             Vector2 rotatedDir = Quaternion.Euler(0, 0, angle) * centerDir;
 
-            GameObject effect02 = GameObject.Instantiate(effect, bossTransform.position, Quaternion.identity);
-            effect02.GetComponent<Rigidbody2D>().AddForce(rotatedDir * 10f, ForceMode2D.Impulse);
+            GameObject effect02 = GameObject.Instantiate(skillEffect, bossTransform.position, Quaternion.identity);
+            // 중력 제거
+            effect02.GetComponent<Rigidbody2D>().gravityScale = 0f;
+            effect02.GetComponent<Rigidbody2D>().AddForce(rotatedDir * 20f, ForceMode2D.Impulse);
+            //  ShootEffect(circleEffect, rotatedDir, Quaternion.identity, 20);
         }
     }
     // 원 모양 발사
@@ -129,8 +131,21 @@ public class BossSkillController : SkillController, ISkillController
         {
             float angle = i * 45;
             Quaternion rot = Quaternion.Euler(0, 0, angle);
-            GameObject effect03 = GameObject.Instantiate(executionSkills.effect, bossTransform.position, rot);
-            effect03.GetComponent<Rigidbody2D>().AddForce(effect03.transform.right * 10f, ForceMode2D.Impulse);
+            GameObject effect03 = GameObject.Instantiate(circleEffect, bossTransform.position, rot);
+            // 중력 제거
+            effect03.GetComponent<Rigidbody2D>().gravityScale = 0f;
+            effect03.GetComponent<Rigidbody2D>().AddForce(effect03.transform.right * 20f, ForceMode2D.Impulse);
+
+            //  ShootEffect(circleEffect, circleEffect.transform.right, rot,20);
         }
     }
-}
+    private void ShootEffect(GameObject effectPrefab, Vector2 direction, Quaternion quaternion, float speed)
+    {
+        Vector2 position = GameObject.FindGameObjectWithTag("Boss").transform.position;
+            GameObject effect03 = GameObject.Instantiate(circleEffect, position, quaternion);
+            // 중력 제거
+            effect03.GetComponent<Rigidbody2D>().gravityScale = 0f;
+            effect03.GetComponent<Rigidbody2D>().AddForce(direction* speed, ForceMode2D.Impulse);
+        
+    }
+  }

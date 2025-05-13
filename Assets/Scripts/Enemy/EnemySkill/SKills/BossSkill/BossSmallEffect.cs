@@ -8,11 +8,16 @@ public class BossSmallEffect : BossEffect
     {
         base.IgnoreCollision();
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D col)
     {
-        if (collision.gameObject.name == "Wall")
+        if (col.gameObject.layer == LayerMask.NameToLayer("Wall"))           
         {
             Destroy(gameObject);
-        }      
+        }   
+       else if(col.gameObject.tag == "Player")
+        {           
+            
+            Destroy(gameObject);
+        }
     }
 }

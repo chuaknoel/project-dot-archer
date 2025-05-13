@@ -7,8 +7,8 @@ public class BossEnemy : BaseEnemy
 {
     public int bossIndex;
     public BossStat bossStat;
-    BossSkillController bossSkillController;
-    MoveController moveController;
+    //BossSkillController bossSkillController;
+    //MoveController moveController;
   
     private void Start()
     {
@@ -19,19 +19,22 @@ public class BossEnemy : BaseEnemy
 
     public override void Init()
     {
+        // base.Init();
         monsterImage = GetComponentInChildren<SpriteRenderer>();
         monsterAnime = GetComponent<Animator>();
-        EnemyController = this.AddComponent<EnemyControllerManager>();
-        bossSkillController = this.AddComponent<BossSkillController>();
-
-        EnemyController.Init(this);
+        AddController();
         rb = GetComponent<Rigidbody2D>();
-        target = GameObject.FindGameObjectWithTag("Player").transform;
-        moveController = this.AddComponent<MoveController>();
+        target = GameObject.FindGameObjectWithTag("Player").gameObject.transform;
+
         bossStat = GetComponent<BossStat>();
 
     }
-    
+    protected override void AddController()
+    {
+        EnemyController = this.AddComponent<BossControllerManager>();
+      //  skillController = this.AddComponent<Enemy>();
+        EnemyController.Init(this);
+    }
     //protected override void Damaged(int damage)
     //{
 
@@ -40,5 +43,5 @@ public class BossEnemy : BaseEnemy
     //{
 
     //***}
-
+   
 }

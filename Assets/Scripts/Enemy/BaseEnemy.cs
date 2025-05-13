@@ -26,9 +26,7 @@ public class BaseEnemy : MonoBehaviour
     {
         monsterImage = GetComponentInChildren<SpriteRenderer>();
         monsterAnime = GetComponent<Animator>();
-        EnemyController = this.AddComponent<EnemyControllerManager>();
-        skillController = this.AddComponent<SkillController>(); 
-        EnemyController.Init(this);
+        AddController();
         rb = GetComponent<Rigidbody2D>();
         target= GameObject.FindGameObjectWithTag("Player").transform;
     }
@@ -41,5 +39,10 @@ public class BaseEnemy : MonoBehaviour
                 damage.TakeDamage(attack.AttackDamage);
         }
     }
-    
+    protected virtual void AddController()
+    {
+        EnemyController = this.AddComponent<EnemyControllerManager>();
+        skillController = this.AddComponent<SkillController>();
+        EnemyController.Init(this);
+    }
 }

@@ -6,46 +6,35 @@ using UnityEngine;
 
 public class EnemyControllerManager : MonoBehaviour
 {
-    private BaseEnemy ownerEnemy;
-    private BaseStat ownerStat;
-    private MoveController moveController;
-    private SkillController skillController;
-    private ISkillController skillInterface;
-    public float dis = 3f;
-    private void Update()
-    {
-        if (Distance())
-        {
-            if (skillController.canUse)
-            {
-                skillInterface.UseSkill(ownerEnemy);
-             
-            }
+    protected BaseEnemy ownerEnemy;
+    protected BaseStat ownerStat;
+    protected MoveController moveController;
+    protected SkillController skillController;
 
-        }
-        else
+    protected virtual void Update()
+    {
+        if (skillController.canMove && ownerStat is IMoveStat moveStat)
         {
-            if (skillController.canMove && ownerStat is IMoveStat moveStat)
-            {
-                moveController.MoveToPlayer(ownerEnemy.target, moveStat);
-            }
+            moveController.MoveToPlayer(ownerEnemy.target, moveStat);
         }
-       
+        if (skillController.canUse)
+        {
+            skillController.UseSkill(ownerEnemy);
+        }
     }
 
-    public void Init(BaseEnemy ownerEnemy)
+    public virtual void Init(BaseEnemy ownerEnemy)
     {
         this.ownerEnemy = ownerEnemy;
         ownerStat = ownerEnemy.GetComponent<BaseStat>();
-        moveController = this.AddComponent<MoveController>();
-        skillController = this.AddComponent<SkillController>();
-        skillInterface = GetComponent<ISkillController>(); ;
+        moveController = this.AddComponent<MoveController>();  
+        InitSkillController();
         skillController.AddSkill(ownerEnemy);
 
     }
-    bool Distance()
+   
+    public virtual void InitSkillController()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        return Vector2.Distance(transform.position, player.transform.position) <= dis ? true : false;
+        skillController = this.AddComponent<SkillController>();
     }
 }

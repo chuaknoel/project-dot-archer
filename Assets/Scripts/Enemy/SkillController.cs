@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillController : MonoBehaviour, ISkillController
+public class SkillController : MonoBehaviour
 {
     public bool canMove = true;
     public bool canUse = true;
