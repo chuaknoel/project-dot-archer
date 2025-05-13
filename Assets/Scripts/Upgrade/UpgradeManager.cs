@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class UpgradeManager : MonoBehaviour
 {
@@ -23,8 +24,10 @@ public class UpgradeManager : MonoBehaviour
 
     public void RangeUpgrade(InGameUpgradeData addupgrade)
     {
-        rangeUpgradeData.addProjectile += addupgrade.addProjectile;
+        rangeUpgradeData.addProjectileCount += addupgrade.addProjectileCount;
         rangeUpgradeData.addProjectileSpeed += addupgrade.addProjectileSpeed;
+
+        rangeUpgradeData.addBurstCount += addupgrade.addBurstCount;
 
         rangeUpgradeData.addWeaponDamage += addupgrade.addWeaponDamage;
         rangeUpgradeData.addAttackCooldown += addupgrade.addAttackCooldown;
@@ -35,8 +38,10 @@ public class UpgradeManager : MonoBehaviour
 
     public void MeleeUpgrade(InGameUpgradeData addupgrade)
     {
-        meleeUpgradeData.addProjectile += addupgrade.addProjectile;
+        meleeUpgradeData.addProjectileCount += addupgrade.addProjectileCount;
         meleeUpgradeData.addProjectileSpeed += addupgrade.addProjectileSpeed;
+
+        meleeUpgradeData.addBurstCount -= addupgrade.addBurstCount;
 
         meleeUpgradeData.addWeaponDamage += addupgrade.addWeaponDamage;
         meleeUpgradeData.addAttackCooldown += addupgrade.addAttackCooldown;

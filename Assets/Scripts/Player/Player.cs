@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using Enums;
 
 public class Player : MonoBehaviour
 {
@@ -169,11 +170,3 @@ public class Player : MonoBehaviour
     }
 }
 
-public enum PlayerState
-{
-    Idle,
-    Move,
-    Attack,
-    Jump,
-    Death,
-}

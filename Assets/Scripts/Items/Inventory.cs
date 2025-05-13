@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Enums;
 
 /// <summary>
 /// 플레이어의 장착 아이템(무기·방어구)을 관리합니다.

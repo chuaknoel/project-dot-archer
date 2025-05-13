@@ -32,14 +32,14 @@ public class Projectile : MonoBehaviour
         myCollider = GetComponent<Collider2D>();
     }
 
-    public void SetProjectile(RangeWeaponHandler rangeWeaponHandler, Transform pivot, LayerMask targetMask, Collider2D ownerCollider)
+    public void SetProjectile(RangeWeaponHandler rangeWeaponHandler, Transform pivot, Quaternion rotate, LayerMask targetMask, Collider2D ownerCollider)
     {
         this.rangeWeaponHandler = rangeWeaponHandler;
         this.ownerCollider = ownerCollider;
         this.targetMask = targetMask;
 
         transform.position = pivot.position;
-        transform.rotation = pivot.rotation;
+        transform.rotation = pivot.rotation * rotate;
 
         direction = transform.right;
 

@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class InGameUpgradeData : MonoBehaviour
 {
     public AttackTpye attackType;
 
-    public int addProjectile;
+    public int addProjectileCount;
     public float addProjectileSpeed;
+
+    public int addBurstCount;
 
     public float addWeaponDamage;
 
