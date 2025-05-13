@@ -11,7 +11,6 @@ public class Goblin : BaseEnemy
     public override void Init()
     {
         base.Init();
-        goblinStat = new GoblinStat(5, 5, 5f);
-
+        goblinStat = GetComponent<GoblinStat>();
     }
 }
