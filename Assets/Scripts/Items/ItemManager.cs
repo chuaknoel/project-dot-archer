@@ -198,8 +198,8 @@ public class ItemManager : MonoBehaviour
         bow1.price = 100;
         // 공격 관련 값 추가
         bow1.attackRange = 6.0f;
-        bow1.attackDelay = 0.5f;
-        bow1.attackCooldown = 1.0f;
+        bow1.attackDelay = .5f;
+        bow1.attackCooldown = 3.0f;
 
         if (itemSprites.TryGetValue("bow_common", out Sprite sprite))
         {

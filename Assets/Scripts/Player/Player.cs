@@ -135,7 +135,6 @@ public class Player : MonoBehaviour
         }
     }
 
-
     public void LookRotate(bool isLeft)
     {
         characterImage.flipX = isLeft;
