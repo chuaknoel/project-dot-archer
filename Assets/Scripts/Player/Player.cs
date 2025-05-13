@@ -124,7 +124,6 @@ public class Player : MonoBehaviour
 
     public void ChangeAnime(PlayerState nextAnime)
     {
-        Debug.Log("asd");
         if (nextAnime == PlayerState.Death)
         {
             playerAnime.SetTrigger("IsDeath");

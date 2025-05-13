@@ -36,7 +36,6 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
 
     void Start()
     {
-        SetPlayerData();
         // 맵 생성
         rooms = roomGenerator.GenerateDungeon();
         cameraController = Camera.main.GetComponent<CameraController>();
@@ -48,6 +47,7 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
             currentRoom = startRoom;
             cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
             navigator.MovePlayerToRoom(currentRoom, player.gameObject, Vector2Int.zero); // 초기엔 방향 없음
+            SetPlayerData();
         }
         else
         {
