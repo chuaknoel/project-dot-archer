@@ -90,20 +90,12 @@ public class RangeWeaponHandler : WeaponHandler
 
         for (int i = -halfCount; i <= halfCount; i++)
         {
-            angle = i * 10f;
-
-            if (count % 2 == 0)             //짝수 발사일때
-            {
-                if (i == 0)                 //가운데 발사 건너뛰기
-                {                           //
-                    continue;
-                }
-
-                if (i == -halfCount)        //처음 발사체는 가운데 값으로 고정
-                {
-                    angle = 0;
-                }
+            if (count % 2 == 0 && i == -halfCount)    //발사체가 짝수 일때 첫번째 발사체는 생성에서 제외
+            {                                         //발사체 개수가 4개와 5개일때 둘다 haltCount는 2로 고정. for문의 범위가 -2~2로 같아짐
+                continue;                             //그래서 짝수 발사일때는 첫발을 생성제외하여 발사체 갯수를 맞춰준다. 꼭 첫발이 아니여도 상관없다.
             }
+
+            angle = i * 10f;
 
             connectedPool.Get().SetProjectile(this, projectilePivot, Quaternion.Euler(0, 0, angle), targetMask, ownerCollider);
         }
