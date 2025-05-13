@@ -49,11 +49,25 @@ public class Room : MonoBehaviour
         }
 
         // 방 위치 계산
-        Vector3 roomWorldPosition = new Vector3(
-            position.x * bounds.size.x,
-            position.y * bounds.size.y,
-            0f
-        );
+        Vector3 roomWorldPosition;
+
+        //if (roomType == ROOMTYPE.Long)
+        //{
+        //    // 긴 방은 왼쪽 기준이므로, 전체 bounds.size의 절반만큼만 이동
+        //    roomWorldPosition = new Vector3(
+        //        position.x * 9f,  // 1칸당 18씩 이동
+        //        position.y * bounds.size.y,
+        //        0f
+        //    );
+        //}
+        //else
+        {
+            roomWorldPosition = new Vector3(
+                position.x * bounds.size.x,
+                position.y * bounds.size.y,
+                0f
+            );
+        }
 
         // 위치 보정: tilemap의 pivot이 중앙이면 bounds.center를 빼줘야 원점 기준으로 이동됨
         transform.position = roomWorldPosition - bounds.center;
@@ -71,7 +85,8 @@ public class Room : MonoBehaviour
             entryPositions[Vector2Int.right] = rightRoomCenter + new Vector3(1.75f, 0f, 0f);
 
             // 위아래 문: 각 방 기준, 좌표 명확하게 구분
-            entryPositions[new Vector2Int(-1, 1)] = new Vector3(transform.position.x, transform.position.y + bounds.max.y - 0.75f, 0f);           // 왼쪽 위
+
+            entryPositions[new Vector2Int(-1,1)] = new Vector3(transform.position.x, transform.position.y + bounds.max.y - 0.75f, 0f);           // 왼쪽 위
             entryPositions[new Vector2Int(-1, -1)] = new Vector3(transform.position.x, transform.position.y + bounds.min.y + 0.75f, 0f);         // 왼쪽 아래
 
             entryPositions[new Vector2Int(1, 1)] = rightRoomCenter + new Vector3(0, bounds.extents.y, 0f);  // 오른쪽 위
