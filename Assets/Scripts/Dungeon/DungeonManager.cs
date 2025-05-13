@@ -22,6 +22,8 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
 
     public List<GameObject> TestEnemies;
 
+    public SkillManager skillManager;
+
     void Awake()
     {
         if (Instance == null)

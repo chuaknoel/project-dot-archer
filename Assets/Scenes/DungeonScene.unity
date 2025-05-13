@@ -123,6 +123,50 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &45538161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 45538163}
+  - component: {fileID: 45538162}
+  m_Layer: 0
+  m_Name: PermanentUpgradeData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &45538162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45538161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a60d9eded45019c4281a62cd7a192529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &45538163
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45538161}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1698994345}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &64276319
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,7 +186,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &64276320
 RectTransform:
   m_ObjectHideFlags: 0
@@ -244,13 +288,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1698994344}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: RangeUpgrade
-        m_Mode: 2
+      - m_Target: {fileID: 64276324}
+        m_TargetAssemblyTypeName: InGameUpgradeData, Assembly-CSharp
+        m_MethodName: Upgrade
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 64276324}
-          m_ObjectArgumentAssemblyTypeName: InGameUpgradeData, Assembly-CSharp
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -270,12 +314,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackType: 0
   addProjectileCount: 1
-  addProjectileSpeed: 0
-  addBurstCount: 1
+  addProjectileSpeed: 5
+  addBurstCount: 0
   addWeaponDamage: 0
   addAttackCooldown: 0
   addAttackDelay: 0
-  addReflection: 0
+  addReflection: 1
 --- !u!1 &189570118
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,6 +798,58 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &900182124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 900182125}
+  - component: {fileID: 900182126}
+  m_Layer: 0
+  m_Name: RangeUpgradeData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &900182125
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900182124}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1698994345}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &900182126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900182124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebdbd7f0d8a4c724995fa19380066078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackType: 0
+  addProjectileCount: 0
+  addProjectileSpeed: 0
+  addBurstCount: 0
+  addWeaponDamage: 0
+  addAttackCooldown: 0
+  addAttackDelay: 0
+  addReflection: 0
 --- !u!1 &959622475
 GameObject:
   m_ObjectHideFlags: 0
@@ -789,6 +885,7 @@ MonoBehaviour:
   enemyManager: {fileID: 0}
   currentRoom: {fileID: 0}
   inventory: {fileID: 1635126707}
+  upgradeManager: {fileID: 1698994344}
   TestEnemies:
   - {fileID: 1707525583}
 --- !u!4 &959622477
@@ -5810,6 +5907,58 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1142426129}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1399725922
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1399725923}
+  - component: {fileID: 1399725924}
+  m_Layer: 0
+  m_Name: MeleeUpgradeData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1399725923
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399725922}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1698994345}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1399725924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399725922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebdbd7f0d8a4c724995fa19380066078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackType: 0
+  addProjectileCount: 0
+  addProjectileSpeed: 0
+  addBurstCount: 0
+  addWeaponDamage: 0
+  addAttackCooldown: 0
+  addAttackDelay: 0
+  addReflection: 0
 --- !u!1 &1430544903
 GameObject:
   m_ObjectHideFlags: 0
@@ -6028,9 +6177,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21af1496b71b60843ac6ab67e844758e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rangeUpgradeData: {fileID: 0}
-  meleeUpgradeData: {fileID: 0}
-  permanentUpgradeData: {fileID: 0}
+  rangeUpgradeData: {fileID: 900182126}
+  meleeUpgradeData: {fileID: 1399725924}
+  permanentUpgradeData: {fileID: 45538162}
 --- !u!4 &1698994345
 Transform:
   m_ObjectHideFlags: 0
@@ -6043,7 +6192,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 900182125}
+  - {fileID: 1399725923}
+  - {fileID: 45538163}
   m_Father: {fileID: 1180671189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1707525583
@@ -6338,7 +6490,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 9161907693779686750}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 504b01b3bd329cd46b31baec0e68fa59, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

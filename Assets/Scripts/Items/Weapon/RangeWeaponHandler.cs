@@ -11,7 +11,7 @@ public class RangeWeaponHandler : WeaponHandler
     public IObjectPool<Projectile> connectedPool;
 
     [SerializeField] private Projectile projectilePrefab;
-    [SerializeField] private Transform projectilePivot;
+    public Transform projectilePivot;
 
     [SerializeField] private int projectileCount =1;
     [SerializeField] private int burstCount;
@@ -129,7 +129,6 @@ public class RangeWeaponHandler : WeaponHandler
 
     public void ApplyUpgrade(InGameUpgradeData upgradeData)
     {
-        Debug.Log("Àû¿ë‰Î?");
         this.upgradeData = upgradeData;
     }
 

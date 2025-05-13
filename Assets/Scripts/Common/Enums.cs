@@ -16,6 +16,17 @@ namespace Enums
         Attack,
         Jump,
         Death,
+        Action,
+    }
+
+    public enum SkillType
+    {
+        None,
+        Attack,
+        Defence,
+        Buff,
+        Debuff,
+        Dot
     }
 
     // 아이템 카테고리 열거형
