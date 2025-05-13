@@ -1440,6 +1440,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1008263487463160566}
   - component: {fileID: 9017858366413801588}
+  - component: {fileID: 8950623589913719454}
   m_Layer: 0
   m_Name: Stage1_Long
   m_TagString: Untagged
@@ -1481,6 +1482,20 @@ MonoBehaviour:
   roomBounds: {fileID: 8710189807977143920}
   isVisited: 0
   roomType: 0
+--- !u!114 &8950623589913719454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4391144654956510355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c126b2d64bd57e34db83a493eef554bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomPos: {x: 0, y: 0}
+  isCleared: 0
 --- !u!1 &5768321520835558884
 GameObject:
   m_ObjectHideFlags: 0
