@@ -10,6 +10,20 @@ public class EnemyManager : MonoBehaviour
 
     public GameObject[] enemyPrefabs;
 
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Debug.LogWarning("여러 개의 DungeonManager 인스턴스가 존재합니다. 하나만 유지해야 합니다.");
+            Destroy(gameObject); // 혹은 중복 방지 처리
+        }
+    }
+
     public void SpawnEnemies(RoomManager room)
     {
          Vector3 spawnPosition = new Vector3(
