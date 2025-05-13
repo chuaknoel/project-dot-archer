@@ -10,4 +10,12 @@ public class PlayerDeathState : PlayerStates
         base.Init(player);
         state = PlayerState.Death;
     }
+
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        player.ChangeAnime(PlayerState.Death);
+        player.PlalyerDeathParticle.Play();
+        player.WeaponHandler.OwnerDeath();
+    }
 }
