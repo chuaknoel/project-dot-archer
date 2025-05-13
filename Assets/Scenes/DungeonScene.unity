@@ -303,6 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04122d8da0c7aae44937cbe3a8d3f372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stat: {fileID: 0}
   weaponPivot: {fileID: 208325811}
   plalyerDeathParticle: {fileID: 0}
   targetMask:
@@ -878,12 +879,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeEnemies: []
   enemyPrefabs:
-  - {fileID: 2628999518825426194, guid: bbb91ee1018cb3f4182f49b24c6209ef, type: 3}
-  - {fileID: 2410510397216180042, guid: 017cedb869a30374689cdbf54b60c4af, type: 3}
-  - {fileID: 4126301989809614797, guid: ca61382b2d0ef964ea943bd69fa17c16, type: 3}
-  - {fileID: 9042726494757051735, guid: 92d25d6fb276abc43876e26d37de65fb, type: 3}
-  - {fileID: 582702308276759449, guid: 07e0fdd4cbc895f41aa98074831afc97, type: 3}
-  - {fileID: 6102266099826236044, guid: cf94cf4868fbc4445a4d6feaf9eb49b7, type: 3}
+  - {fileID: 2628999518825426194, guid: 421b947c83e846f4f83a9153a43cdb12, type: 3}
+  - {fileID: 2410510397216180042, guid: 48f314e77b675454482b8008894787ca, type: 3}
+  - {fileID: 4126301989809614797, guid: 0f8336265d8bb4840b5400755b118a94, type: 3}
+  - {fileID: 9042726494757051735, guid: 6cd9968515608b748ba9944f2d4dafb8, type: 3}
+  - {fileID: 582702308276759449, guid: a7834378d40b5534dba413c693244a58, type: 3}
+  - {fileID: 6102266099826236044, guid: 0d110982777c2a9478b4c2ad0239a2fb, type: 3}
 --- !u!1 &1590505898
 GameObject:
   m_ObjectHideFlags: 0
