@@ -90,25 +90,19 @@ public class RangeWeaponHandler : WeaponHandler
 
         for (int i = -halfCount; i <= halfCount; i++)
         {
-            if (count % 2 == 0) //짝수 발사일때
+            angle = i * 10f;
+
+            if (count % 2 == 0)             //짝수 발사일때
             {
-                if (count == 0) //가운데 발사 건너뛰기
+                if (i == 0)                 //가운데 발사 건너뛰기
                 {
                     continue;
                 }
 
-                if (i == -halfCount) //처음 발사체
+                if (i == -halfCount)        //처음 발사체는 가운데 값으로 고정
                 {
                     angle = 0;
                 }
-                else
-                {
-                    angle = i * 10f;
-                }
-            }
-            else
-            {
-                angle = i * 10f;
             }
 
             connectedPool.Get().SetProjectile(this, projectilePivot, Quaternion.Euler(0, 0, angle), targetMask, ownerCollider);
