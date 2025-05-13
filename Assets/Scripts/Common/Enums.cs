@@ -18,6 +18,15 @@ namespace Enums
         Death,
     }
 
+    public enum EnemyState
+    {
+        Idle,
+        Move,
+        Attack,
+        Death,
+        Skill
+    }
+
     // 아이템 카테고리 열거형
     // 무기 타입 열거형 - None 추가
     public enum WeaponType

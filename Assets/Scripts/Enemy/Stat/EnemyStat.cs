@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyStat : BaseStat ,IDefenceStat
+public class EnemyStat : BaseStat ,IDefenceStat , IMoveStat
 {
     public float Defence => defence;
-    protected float defence;
+    [SerializeField] protected float defence;
+
+    public float MoveSpeed => moveSpeed;
+    [SerializeField] protected float moveSpeed;
+    
 
     public void TakeDamage(float damage)
     {

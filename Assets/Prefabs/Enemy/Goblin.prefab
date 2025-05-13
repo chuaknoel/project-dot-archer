@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 6831920872464107609}
   - component: {fileID: 7267996606107850323}
   - component: {fileID: 9222517818211460785}
-  - component: {fileID: 2302175328477759711}
   - component: {fileID: 8417512202454428490}
+  - component: {fileID: -4065974773869311100}
   m_Layer: 0
   m_Name: Goblin
   m_TagString: Untagged
@@ -103,23 +103,6 @@ MonoBehaviour:
   skills: []
   target: {fileID: 0}
   goblinStat: {fileID: 0}
---- !u!114 &2302175328477759711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2628999518825426194}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eaec280cf7cf1ed4e941ba4d06340a59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  level: 1
-  maxHealth: 1
-  currentHealth: 1
-  attackDamage: 1
-  moveSpeed: 1
 --- !u!61 &8417512202454428490
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -165,3 +148,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.85062253, y: 0.803854}
   m_EdgeRadius: 0
+--- !u!114 &-4065974773869311100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2628999518825426194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaec280cf7cf1ed4e941ba4d06340a59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 1
+  maxHealth: 1
+  currentHealth: 1
+  defence: 1
+  moveSpeed: 1
+  attackDamage: 1

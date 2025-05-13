@@ -1,3 +1,4 @@
+using Enums;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -10,6 +11,8 @@ public class BaseEnemy : MonoBehaviour
     public SpriteRenderer monsterImage;
     protected Animator monsterAnime;
     protected EnemyControllerManager EnemyController;
+    public EnemyController Controller { get { return controller; } }
+    private EnemyController controller;
 
     public List<EnemySkill> skills = new List<EnemySkill>();
 
@@ -21,16 +24,20 @@ public class BaseEnemy : MonoBehaviour
     {
         Init();
     }
+    private void Update()
+    {
+        controller?.OnUpdate(Time.deltaTime);
+    }
 
-    
     public virtual void Init()
     {
         monsterImage = GetComponent<SpriteRenderer>();
         monsterAnime = GetComponent<Animator>();
-        EnemyController = this.AddComponent<EnemyControllerManager>();
-        EnemyController.Init(this);
+        //EnemyController = this.AddComponent<EnemyControllerManager>();
+        //EnemyController.Init(this);
         rb = GetComponent<Rigidbody2D>();
-        target= GameObject.FindGameObjectWithTag("Player").transform;
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+        ControllerRegister();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -41,5 +48,22 @@ public class BaseEnemy : MonoBehaviour
                 damage.TakeDamage(attack.AttackDamage);
         }
     }
-    
+
+    //public void ChangeAnime(EnemyState nextAnim)
+    //{
+    //    if (nextAnim == EnemyState.Death)
+    //    {
+    //        monsterAnime.SetTrigger("Death");
+    //    }
+    //    else
+    //    {
+    //        monsterAnime.SetInteger("ChangeState", (int)nextAnim);
+    //    }
+
+    //}
+
+    public void ControllerRegister()
+    {
+        controller = new EnemyController(new EnemyMoveState(), this);
+    }
 }

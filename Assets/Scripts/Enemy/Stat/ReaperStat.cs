@@ -2,11 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReaperStat : EnemyStat, IAttackStat, IMoveStat
+public class ReaperStat : EnemyStat, IAttackStat
 {
-    public float MoveSpeed => moveSpeed;
     public float AttackDamage => attackDamage;
-    [SerializeField] private float moveSpeed;
     [SerializeField] private float attackDamage;
 
     public float GetTotalStatDamage()
