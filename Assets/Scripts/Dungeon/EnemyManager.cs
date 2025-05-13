@@ -6,42 +6,49 @@ public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance { get; private set; }
 
-    //public List<Enemy> activeEnemies;
+    public List<BaseEnemy> activeEnemies;
 
-    //public void SpawnEnemies(RoomManager room)
-    //{
-    //    // 방 위치 기반으로 적 생성
-    //    Enemy e = Instantiate(...);
-    //    e.OnDeath += () => OnEnemyDefeated(room, e);
-    //    RegisterEnemy(e);
-    //}
+    public GameObject[] enemyPrefabs;
 
-    //public void OnEnemyDefeated(RoomManager room, Enemy enemy)
-    //{
-    //    UnregisterEnemy(enemy);
+    public void SpawnEnemies(RoomManager room)
+    {
+         Vector3 spawnPosition = new Vector3(
+                    Random.Range(-3, 3),
+                    Random.Range(-3, 3),
+                    0
+                ); // 방의 위치를 기준으로 적 생성
+        // 방 위치 기반으로 적 생성
+        BaseEnemy e = Instantiate(enemyPrefabs[Random.Range(0, 6)], spawnPosition, Quaternion.identity).GetComponent<BaseEnemy>() ;
+        //e.OnDeath += () => OnEnemyDefeated(room, e);
+        RegisterEnemy(e);
+    }
 
-    //    // 해당 방에 남은 적이 없으면
-    //    if (GetEnemiesInRoom(room).Count == 0)
-    //    {
-    //        room.OnAllEnemiesDefeated();
-    //    }
-    //}
+    public void OnEnemyDefeated(RoomManager room, BaseEnemy enemy)
+    {
+        UnregisterEnemy(enemy);
 
-    //public void ClearAllEnemies()
-    //{
-    //    foreach (var enemy in activeEnemies)
-    //    {
-    //        Destroy(enemy.gameObject);
-    //    }
-    //    activeEnemies.Clear();
-    //}
+        // 해당 방에 남은 적이 없으면
+        if (activeEnemies.Count == 0)
+        {
+            room.OnAllEnemiesDefeated();
+        }
+    }
 
-    //public void RegisterEnemy(Enemy enemy)
-    //{
+    public void ClearAllEnemies()
+    {
+        foreach (var enemy in activeEnemies)
+        {
+            Destroy(enemy.gameObject);
+        }
+        activeEnemies.Clear();
+    }
 
-    //}
-    //public void UnregisterEnemy(Enemy enemy)
-    //{
-
-    //}
+    public void RegisterEnemy(BaseEnemy enemy)
+    {
+        activeEnemies.Add(enemy);
+    }
+    public void UnregisterEnemy(BaseEnemy enemy)
+    {
+        activeEnemies.Remove(enemy);
+    }
 }
