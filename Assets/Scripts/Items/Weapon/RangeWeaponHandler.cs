@@ -95,7 +95,7 @@ public class RangeWeaponHandler : WeaponHandler
             if (count % 2 == 0)             //짝수 발사일때
             {
                 if (i == 0)                 //가운데 발사 건너뛰기
-                {
+                {                           //
                     continue;
                 }
 
