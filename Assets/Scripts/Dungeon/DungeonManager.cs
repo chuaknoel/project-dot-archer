@@ -18,6 +18,7 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
     private CameraController cameraController;
 
     public Inventory inventory;
+    public UpgradeManager upgradeManager;
 
     public List<GameObject> TestEnemies;
 
@@ -55,6 +56,14 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
         else
         {
             Debug.LogError("초기 위치(Vector2Int.zero)에 방이 없습니다!");
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            player.GetComponent<IDefenceStat>().TakeDamage(123123);
         }
     }
 

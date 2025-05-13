@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
     public LayerMask targetMask;
 
     public UpgradeManager UpgradeManager { get { return upgradeManager; } }
-    private UpgradeManager upgradeManager = new UpgradeManager();
+    private UpgradeManager upgradeManager;
 
     // Update is called once per frame
     void Update()
@@ -75,7 +75,9 @@ public class Player : MonoBehaviour
         playerAnime ??= GetComponent<Animator>();
         searchTarget ??= GetComponent<SearchTarget>();
         this.inventory = inventory;
-        
+
+        upgradeManager = DungeonManager.Instance.upgradeManager;
+
         SetWeapon();
         ControllerRegister();
     }
@@ -154,6 +156,7 @@ public class Player : MonoBehaviour
     //업그레이들 될 정보를 받아 데이터 정보 갱신
     public void Upgrade(InGameUpgradeData gameUpgradeData)
     {
+        Debug.Log(gameUpgradeData.addAttackCooldown);
         upgradeManager.MergeUpgrade(gameUpgradeData);
         ApplyUpgrade(gameUpgradeData);
     }
@@ -163,6 +166,7 @@ public class Player : MonoBehaviour
     {
         if (gameUpgradeData.attackType == AttackTpye.Range)
         {
+            Debug.Log("업글됌?");
             (weaponHandler as RangeWeaponHandler).ApplyUpgrade(upgradeManager.GetRangeUpgrade());
         }
     }

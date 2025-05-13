@@ -129,6 +129,7 @@ public class RangeWeaponHandler : WeaponHandler
 
     public void ApplyUpgrade(InGameUpgradeData upgradeData)
     {
+        Debug.Log("Àû¿ë‰Î?");
         this.upgradeData = upgradeData;
     }
 

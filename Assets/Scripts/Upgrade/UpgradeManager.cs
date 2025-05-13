@@ -5,8 +5,8 @@ using Enums;
 
 public class UpgradeManager : MonoBehaviour
 {
-    public InGameUpgradeData rangeUpgradeData = new();
-    public InGameUpgradeData meleeUpgradeData = new();
+    public InGameUpgradeData rangeUpgradeData;
+    public InGameUpgradeData meleeUpgradeData;
 
     public PermanentUpgradeData permanentUpgradeData = new();
 
@@ -16,7 +16,7 @@ public class UpgradeManager : MonoBehaviour
         {
             RangeUpgrade(addUpgrade);
         }
-        else if(addUpgrade.attackType == AttackTpye.Melee)
+        else if (addUpgrade.attackType == AttackTpye.Melee)
         {
             MeleeUpgrade(addUpgrade);
         }
