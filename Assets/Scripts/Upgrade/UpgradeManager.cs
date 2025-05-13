@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
-public class InGameUpgradeManager : MonoBehaviour
+public class UpgradeManager : MonoBehaviour
 {
     public InGameUpgradeData rangeUpgradeData = new();
     public InGameUpgradeData meleeUpgradeData = new();
+
+    public PermanentUpgradeData permanentUpgradeData = new();
 
     public void MergeUpgrade(InGameUpgradeData addUpgrade)
     {
@@ -21,26 +24,30 @@ public class InGameUpgradeManager : MonoBehaviour
 
     public void RangeUpgrade(InGameUpgradeData addupgrade)
     {
-        rangeUpgradeData.addProjectile += addupgrade.addProjectile;
+        rangeUpgradeData.addProjectileCount += addupgrade.addProjectileCount;
         rangeUpgradeData.addProjectileSpeed += addupgrade.addProjectileSpeed;
 
-        rangeUpgradeData.addDamage += addupgrade.addDamage;
-        rangeUpgradeData.addAttackSpeed += addupgrade.addAttackSpeed;
+        rangeUpgradeData.addBurstCount += addupgrade.addBurstCount;
+
+        rangeUpgradeData.addWeaponDamage += addupgrade.addWeaponDamage;
+        rangeUpgradeData.addAttackCooldown += addupgrade.addAttackCooldown;
         rangeUpgradeData.addAttackDelay += addupgrade.addAttackDelay;
 
-        rangeUpgradeData.addReflict += addupgrade.addReflict;
+        rangeUpgradeData.addReflection += addupgrade.addReflection;
     }
 
     public void MeleeUpgrade(InGameUpgradeData addupgrade)
     {
-        meleeUpgradeData.addProjectile += addupgrade.addProjectile;
+        meleeUpgradeData.addProjectileCount += addupgrade.addProjectileCount;
         meleeUpgradeData.addProjectileSpeed += addupgrade.addProjectileSpeed;
 
-        meleeUpgradeData.addDamage += addupgrade.addDamage;
-        meleeUpgradeData.addAttackSpeed += addupgrade.addAttackSpeed;
+        meleeUpgradeData.addBurstCount -= addupgrade.addBurstCount;
+
+        meleeUpgradeData.addWeaponDamage += addupgrade.addWeaponDamage;
+        meleeUpgradeData.addAttackCooldown += addupgrade.addAttackCooldown;
         meleeUpgradeData.addAttackDelay += addupgrade.addAttackDelay;
 
-        meleeUpgradeData.addReflict += addupgrade.addReflict;
+        meleeUpgradeData.addReflection += addupgrade.addReflection;
     }
 
     public InGameUpgradeData GetRangeUpgrade()

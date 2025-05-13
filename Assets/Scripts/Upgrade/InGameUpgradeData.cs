@@ -1,19 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class InGameUpgradeData : MonoBehaviour
 {
     public AttackTpye attackType;
 
-    public int addProjectile;
+    public int addProjectileCount;
     public float addProjectileSpeed;
 
-    public int addDamage;
-    public int addAttackSpeed;
-    public int addAttackDelay;
+    public int addBurstCount;
 
-    public int addReflict;
+    public float addWeaponDamage;
+
+    public float addAttackCooldown;
+    public float addAttackDelay;
+
+    public int addReflection;
 
     //업그레이드 카드를 만들고 카드별로 업그레이 될 정보만 수정해서 카드 선택시 Upgrade 함수를 통해 플레이어에게 전달
     public void Upgrade()

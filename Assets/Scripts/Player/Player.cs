@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using Enums;
 
 public class Player : MonoBehaviour
 {
@@ -30,7 +31,8 @@ public class Player : MonoBehaviour
 
     public LayerMask targetMask;
 
-    private InGameUpgradeManager ingameUpgradeManager = new InGameUpgradeManager();
+    public UpgradeManager UpgradeManager { get { return upgradeManager; } }
+    private UpgradeManager upgradeManager = new UpgradeManager();
 
     // Update is called once per frame
     void Update()
@@ -108,7 +110,7 @@ public class Player : MonoBehaviour
             Debug.LogError("무기 인스턴스에 WeaponHandler 컴포넌트가 없습니다!");
             return;
         }
-        weaponHandler.Init(itemComp, stat, targetMask);
+        weaponHandler.Init(itemComp, stat, targetMask, GetComponent<Collider2D>());
     }
 
 
@@ -154,7 +156,7 @@ public class Player : MonoBehaviour
     //업그레이들 될 정보를 받아 데이터 정보 갱신
     public void Upgrade(InGameUpgradeData gameUpgradeData)
     {
-        ingameUpgradeManager.MergeUpgrade(gameUpgradeData);
+        upgradeManager.MergeUpgrade(gameUpgradeData);
         ApplyUpgrade(gameUpgradeData);
     }
 
@@ -163,16 +165,8 @@ public class Player : MonoBehaviour
     {
         if (gameUpgradeData.attackType == AttackTpye.Range)
         {
-            (weaponHandler as RangeWeaponHandler).ApplyUpgrade(ingameUpgradeManager.GetRangeUpgrade());
+            (weaponHandler as RangeWeaponHandler).ApplyUpgrade(upgradeManager.GetRangeUpgrade());
         }
     }
 }
 
-public enum PlayerState
-{
-    Idle,
-    Move,
-    Attack,
-    Jump,
-    Death,
-}

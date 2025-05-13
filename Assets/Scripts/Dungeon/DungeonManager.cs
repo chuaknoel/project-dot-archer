@@ -19,6 +19,8 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
 
     public Inventory inventory;
 
+    public List<GameObject> TestEnemies;
+
     void Awake()
     {
         if (Instance == null)
@@ -46,8 +48,9 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
             cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
             navigator.MovePlayerToRoom(currentRoom, player.gameObject, Vector2Int.zero); // 초기엔 방향 없음
             //currentRoom.GetComponent<RoomManager>().OnPlayerEnter();  // 플레이어가 첫 번째 방에 들어갈 때 적 생성
-
             SetPlayerData();
+
+            player.SearchTarget.SetTarget(TestEnemies);
         }
         else
         {
