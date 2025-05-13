@@ -26,7 +26,7 @@ public class SearchTarget : MonoBehaviour
 
         for (int i = 0; i < targetList.Count; i++)
         {
-            targetDistance = (transform.position - targetList[0].transform.position).magnitude;
+            targetDistance = (transform.position - targetList[i].transform.position).magnitude;
 
             if(targetDistance < nearestDistance)
             {

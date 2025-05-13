@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseStat : MonoBehaviour
+public abstract class BaseStat
 {
     [SerializeField] protected int level;
     public int Level { get { return level; } }

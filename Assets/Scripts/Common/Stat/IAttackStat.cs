@@ -5,4 +5,6 @@ using UnityEngine;
 public interface IAttackStat
 {
     float AttackDamage { get; }
+
+    float GetTotalStatDamage();
 }
