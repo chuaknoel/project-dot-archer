@@ -1,13 +1,17 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
 using Enums;
+using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
-/// ÇÃ·¹ÀÌ¾îÀÇ ÀåÂø ¾ÆÀÌÅÛ(¹«±â¡¤¹æ¾î±¸)À» °ü¸®ÇÕ´Ï´Ù.
-/// - ¹«±â ¡¤ ¹æ¾î±¸ PrefabÀº Inspector¿¡¼­ µå·¡±×&µå·ÓÀ¸·Î µî·Ï  
-/// - ÀÎº¥Åä¸®´Â PrefabÀ» InstantiateÇÏÁö ¾Ê°í, ´Ü¼øÈ÷ ¸ÅÇÎ¸¸ ¼öÇà  
-/// - Player.SetWeapon() °°Àº ¿ÜºÎ ·ÎÁ÷ÀÌ Instantiate ¹× ºÎ¸ð ¼³Á¤À» Ã¥ÀÓÁü  
-/// - ´É·ÂÄ¡ °è»ê, Á¶È¸¿ë GetCurrentWeapon(), UI Åä±Û ±â´ÉÀº ±×´ë·Î À¯Áö  
+/// ÇÃ·¹ÀÌ¾îÀÇ ÀåÂø ¾ÆÀÌÅÛ(¹«±â¡¤¹æ¾î±¸)°ú °ñµå, ÀÎº¥Åä¸® UI¸¦ °ü¸®ÇÕ´Ï´Ù.
+/// - ¹«±â ¡¤ ¹æ¾î±¸ PrefabÀº Inspector¿¡¼­ µå·¡±×&µå·ÓÀ¸·Î µî·Ï
+/// - Inventory´Â PrefabÀ» InstantiateÇÏÁö ¾Ê°í, ´Ü¼øÈ÷ ¸ÅÇÎ¸¸ ¼öÇà
+/// - Player.SetWeapon() °°Àº ¿ÜºÎ ·ÎÁ÷ÀÌ Instantiate ¹× ºÎ¸ð ¼³Á¤À» Ã¥ÀÓÁü
+/// - ´É·ÂÄ¡ °è»ê, Á¶È¸¿ë GetCurrentWeapon(), UI Åä±Û ±â´ÉÀº ±×´ë·Î À¯Áö
+/// - µå·Ó, »óÁ¡ µî¿¡¼­ AddGold()/SpendGold()¸¦ ÅëÇØ °ñµå¸¦ ¾÷µ¥ÀÌÆ®ÇÏ°í ÀúÀå
+/// - ownedItemIds·Î ±¸¸ÅµÈ ¾ÆÀÌÅÛ ÃßÀû, itemSlots·Î UI ¹öÆ° °»½Å
 /// </summary>
 public class Inventory : MonoBehaviour
 {
@@ -37,6 +41,13 @@ public class Inventory : MonoBehaviour
     [Tooltip("ÀÎº¥Åä¸® Ã¢À¸·Î »ç¿ëÇÒ UI ÆÐ³ÎÀ» ¿¬°áÇØÁÖ¼¼¿ä.")]
     [SerializeField] private GameObject inventoryUIPanel;
 
+    [Header("ÀÎº¥Åä¸® ½½·Ô ¹öÆ°µé")]
+    [Tooltip("±¸¸ÅµÈ ¾ÆÀÌÅÛÀ» Ç¥½ÃÇÒ Button ¸®½ºÆ® (Inspector ¿¬°á)")]
+    [SerializeField] private List<Button> itemSlots;
+
+    [Header("ÇÃ·¹ÀÌ¾î °ñµå")]
+    [Tooltip("ÇöÀç º¸À¯ ÁßÀÎ °ñµå")]
+    [SerializeField] private int gold = 0;
 
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
     // 2) ³»ºÎ »óÅÂ ÀúÀå¿ë º¯¼ö ¹× µñ¼Å³Ê¸®
@@ -52,17 +63,24 @@ public class Inventory : MonoBehaviour
 
     // ¹«±â Prefab ÂüÁ¶¸¸ ÀúÀå (Instantiate´Â Player ÂÊ¿¡¼­ Ã³¸®)
     private Dictionary<WeaponType, GameObject> equippedWeaponPrefabs = new Dictionary<WeaponType, GameObject>();
-
-    // ¹æ¾î±¸´Â Inventory¿¡¼­ InstantiateÇÑ Item ÄÄÆ÷³ÍÆ® ÂüÁ¶
-    private Dictionary<ArmorType, Item> equippedArmorInstances = new Dictionary<ArmorType, Item>();
+    // ¹æ¾î±¸ ÀÎ½ºÅÏ½º´Â Player ÂÊ Ã³¸®
 
     // º¸³Ê½º ½ºÅÈ ÇÕ»ê
     private float attackBonus = 0f;
     private float defenseBonus = 0f;
 
-    // UI Åä±Û »óÅÂ
+    // UI ¿­¸² »óÅÂ
     private bool isInventoryOpen = false;
 
+    /// <summary>
+    /// ±¸¸ÅµÈ ¾ÆÀÌÅÛ ID¸¦ ÃßÀûÇÕ´Ï´Ù.
+    /// </summary>
+    private List<string> ownedItemIds = new List<string>();
+
+    /// <summary>
+    /// °ñµå°¡ º¯°æµÉ ¶§ ±¸µ¶ÀÚ¿¡°Ô ¾Ë¸²À» ÁÝ´Ï´Ù.
+    /// </summary>
+    public event Action<int> OnGoldChanged;
 
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
     // 3) Unity »ý¸íÁÖ±â ÄÝ¹é
@@ -70,7 +88,10 @@ public class Inventory : MonoBehaviour
 
     private void Awake()
     {
-        // (1) Inspector¿¡ µå·ÓµÈ PrefabµéÀ» ID¡æPrefab µñ¼Å³Ê¸®¿¡ Ã¤¿ö³Ö±â
+        // (A) ÀúÀåµÈ °ñµå¸¦ ºÒ·¯¿É´Ï´Ù.
+        LoadGold();
+
+        // (B) Inspector¿¡ µå·ÓµÈ PrefabµéÀ» ID¡æPrefab µñ¼Å³Ê¸®¿¡ Ã¤¿ö³Ö±â
         weaponPrefabDict.Clear();
         foreach (var prefab in weaponPrefabs)
         {
@@ -91,41 +112,157 @@ public class Inventory : MonoBehaviour
                 Debug.LogWarning($"[Inventory] Armor Prefab ´©¶ô ¶Ç´Â ItemId ¹Ì¼³Á¤: {prefab.name}");
         }
 
-        // (2) ¸ðµç WeaponType/ArmorType Å° ÃÊ±âÈ­
-        foreach (WeaponType wt in System.Enum.GetValues(typeof(WeaponType)))
+        // (C) ¸ðµç WeaponType/ArmorType Å° ÃÊ±âÈ­
+        foreach (WeaponType wt in Enum.GetValues(typeof(WeaponType)))
             if (wt != WeaponType.None)
                 equippedWeaponPrefabs[wt] = null;
-
-        foreach (ArmorType at in System.Enum.GetValues(typeof(ArmorType)))
+        foreach (ArmorType at in Enum.GetValues(typeof(ArmorType)))
             if (at != ArmorType.None)
-                equippedArmorInstances[at] = null;
+                equippedArmors[at] = null;
     }
 
     private void Start()
     {
-        // Inspector¿¡ ÀÔ·ÂµÈ ID·Î ÃÊ±â ÀåÂø ½ÇÇà
-        //EquipSelectedItems();
+        // ±âÁ¸ ÀåÂø »çÇ× Àç¼³Á¤
+        EquipSelectedItems();
+        // UI °»½Å
+        RefreshUI();
     }
 
+    private void Update()
+    {
+        // I Å°·Î ÀÎº¥Åä¸® Åä±Û
+        if (Input.GetKeyDown(KeyCode.I) && inventoryUIPanel != null)
+        {
+            ToggleInventoryUI();
+        }
+    }
 
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 4) ÃÊ±â ÀåÂø (ID ¡æ ItemData ¡æ ¸ÅÇÎ/Instantiate °»½Å)
+    // 4) °ñµå ÀúÀå/ºÒ·¯¿À±â ¸Þ¼­µå
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+
+    private void LoadGold()
+    {
+        gold = PlayerPrefs.GetInt("PlayerGold", 0);
+    }
+
+    private void SaveGold()
+    {
+        PlayerPrefs.SetInt("PlayerGold", gold);
+        PlayerPrefs.Save();
+    }
+
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // 5) °ñµå Á¶ÀÛ¿ë °ø¿ë ¸Þ¼­µå
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+
+    /// <summary>°ñµå¸¦ Áõ°¡½ÃÅµ´Ï´Ù. (¿¹: ¸ó½ºÅÍ µå¶ø, Äù½ºÆ® º¸»ó)</summary>
+    public void AddGold(int amount)
+    {
+        if (amount <= 0) return;
+        gold += amount;
+        SaveGold();
+        OnGoldChanged?.Invoke(gold);
+    }
+
+    /// <summary>°ñµå¸¦ »ç¿ë(Â÷°¨)ÇÕ´Ï´Ù. »óÁ¡ ±¸¸Å µî.</summary>
+    public bool SpendGold(int amount)
+    {
+        if (amount <= 0) return true;
+        if (gold < amount) return false;
+        gold -= amount;
+        OnGoldChanged?.Invoke(gold);
+        return true;
+    }
+
+    /// <summary>ÇöÀç °ñµå ¼ö·®À» ¹ÝÈ¯ÇÕ´Ï´Ù.</summary>
+    public int GetGold() => gold;
+
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // 6) ±¸¸ÅµÈ ¾ÆÀÌÅÛ °ü¸® ¹× UI °»½Å
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+
+    /// <summary>
+    /// »õ ¾ÆÀÌÅÛ Ãß°¡ ÈÄ ÀÎº¥Åä¸® UI °»½Å.
+    /// </summary>
+    public void AddOwnedItem(string itemId)
+    {
+        if (!ownedItemIds.Contains(itemId))
+        {
+            ownedItemIds.Add(itemId);
+            RefreshUI();
+        }
+    }
+
+    /// <summary>
+    /// ÀÎº¥Åä¸® ½½·Ô UI¸¦ ownedItemIds ±âÁØÀ¸·Î °»½ÅÇÕ´Ï´Ù.
+    /// </summary>
+    private void RefreshUI()
+    {
+        for (int i = 0; i < itemSlots.Count; i++)
+        {
+            var btn = itemSlots[i];
+            var icon = btn.transform.Find("Icon").GetComponent<Image>();
+            var label = btn.transform.Find("Label").GetComponent<Text>();
+
+            if (i < ownedItemIds.Count)
+            {
+                string id = ownedItemIds[i];
+                var data = ItemManager.Instance.GetItemDataById(id);
+                if (data != null)
+                {
+                    icon.sprite = data.ItemIcon;
+                    icon.enabled = true;
+                    label.text = data.ItemName;
+                    btn.onClick.RemoveAllListeners();
+                    btn.onClick.AddListener(() => EquipItemById(id));
+                }
+            }
+            else
+            {
+                icon.enabled = false;
+                label.text = string.Empty;
+                btn.onClick.RemoveAllListeners();
+            }
+        }
+    }
+
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // 7) ÃÊ±â ÀåÂø (ID ¡æ ItemData ¡æ ¸ÅÇÎ/Instantiate °»½Å)
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     public void EquipSelectedItems()
     {
         if (!string.IsNullOrEmpty(equippedWeaponId))
             SetupEquippedWeaponById(equippedWeaponId);
-
         if (!string.IsNullOrEmpty(equippedHelmetId))
             SetupEquippedArmorById(equippedHelmetId, ArmorType.Helmet);
-
         if (!string.IsNullOrEmpty(equippedArmorId))
             SetupEquippedArmorById(equippedArmorId, ArmorType.Armor);
-
         if (!string.IsNullOrEmpty(equippedBootsId))
             SetupEquippedArmorById(equippedBootsId, ArmorType.Boots);
     }
+
+    public void EquipItemById(string itemId)
+    {
+        // ¹«±â ÀåÂø
+        if (weaponPrefabDict.ContainsKey(itemId))
+            SetupEquippedWeaponById(itemId);
+        // ¹æ¾î±¸ ÀåÂø
+        else if (armorPrefabDict.ContainsKey(itemId))
+            SetupEquippedArmorById(itemId, DetermineArmorType(itemId));
+    }
+
+    private ArmorType DetermineArmorType(string itemId)
+    {
+        var data = ItemManager.Instance.GetItemDataById(itemId);
+        return data != null ? data.ArmorType : ArmorType.None;
+    }
+
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // 8) º¸³Ê½º ½ºÅÈ Àû¿ë + Prefab ¸ÅÇÎ/Instantiate
+    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     private void SetupEquippedWeaponById(string weaponId)
     {
@@ -145,22 +282,15 @@ public class Inventory : MonoBehaviour
             Debug.LogError($"[Inventory] ¹æ¾î±¸ µ¥ÀÌÅÍ ¾øÀ½: {armorId}");
     }
 
-
-    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 5) º¸³Ê½º ½ºÅÈ Àû¿ë + Prefab ¸ÅÇÎ/Instantiate
-    //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-
     private void UpdateEquippedWeapon(ItemData item)
     {
-        // (1) ±âÁ¸ ÀåÂø ¹«±â º¸³Ê½º Á¦°Å
+        // ÀÌÀü ÀåÂø ¹«±â º¸³Ê½º Á¦°Å
         if (equippedWeapons.TryGetValue(item.WeaponType, out var prev) && prev != null)
             attackBonus -= prev.AttackBonus;
-
-        // (2) »õ ¹«±â µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
+        // »õ ¹«±â µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
         equippedWeapons[item.WeaponType] = item;
         attackBonus += item.AttackBonus;
-
-        // (3) ¹«±â PrefabÀº InstantiateÇÏÁö ¾Ê°í ¸ÅÇÎ¸¸
+        // Prefab ¸ÅÇÎ
         if (weaponPrefabDict.TryGetValue(item.ItemId, out var prefab))
             equippedWeaponPrefabs[item.WeaponType] = prefab;
         else
@@ -169,32 +299,26 @@ public class Inventory : MonoBehaviour
 
     private void UpdateEquippedArmor(ItemData item, ArmorType type)
     {
-        // (1) ±âÁ¸ ÀåÂø ¹æ¾î±¸ º¸³Ê½º Á¦°Å
+        // ÀÌÀü ÀåÂø ¹æ¾î±¸ º¸³Ê½º Á¦°Å
         if (equippedArmors.TryGetValue(type, out var prev) && prev != null)
             defenseBonus -= prev.DefenseBonus;
-
-        // (2) »õ ¹æ¾î±¸ µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
+        // »õ ¹æ¾î±¸ µ¥ÀÌÅÍ ÀúÀå ¹× º¸³Ê½º Ãß°¡
         equippedArmors[type] = item;
         defenseBonus += item.DefenseBonus;
-
-        // (3) ¹æ¾î±¸´Â Inventory¿¡¼­ Instantiate
+        // InstantiateÇÏ¿© ÃÊ±âÈ­ (Player ÂÊÀ¸·Î ¿Å°Üµµ ¹«¹æ)
         if (armorPrefabDict.TryGetValue(item.ItemId, out var prefab))
         {
             var obj = Instantiate(prefab, transform);
             obj.name = $"Armor_{item.ItemId}";
             var comp = obj.GetComponent<Item>() ?? obj.AddComponent<Item>();
             comp.Initialize(item);
-            equippedArmorInstances[type] = comp;
         }
         else
-        {
             Debug.LogWarning($"[Inventory] ¸ÅÇÎµÈ Armor Prefab ¾øÀ½: {item.ItemId}");
-        }
     }
 
-
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // 6) Á¶È¸¿ë ¸Þ¼­µå ¹× UI Åä±Û
+    // 9) Á¶È¸¿ë ¸Þ¼­µå ¹× UI Åä±Û
     //¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
 
     /// <summary>
@@ -203,7 +327,6 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public Item GetCurrentWeapon()
     {
-        // ³»ºÎ¿¡ ¸ÅÇÎµÈ Prefab(GameObject)¿¡¼­ Item ÄÄÆ÷³ÍÆ®¸¦ ²¨³»¼­ ¹ÝÈ¯
         var prefab = GetCurrentWeaponPrefab();
         return prefab != null ? prefab.GetComponent<Item>() : null;
     }
@@ -224,7 +347,9 @@ public class Inventory : MonoBehaviour
     /// <summary>ÃÑ ¹æ¾î·Â º¸³Ê½º ¹ÝÈ¯</summary>
     public float GetTotalDefenseBonus() => defenseBonus;
 
-    /// <summary>ÀÎº¥Åä¸® UI ÆÐ³Î È°¼ºÈ­/ºñÈ°¼ºÈ­ Åä±Û</summary>
+    /// <summary>
+    /// ÀÎº¥Åä¸® UI ÆÐ³Î È°¼ºÈ­/ºñÈ°¼ºÈ­ Åä±Û (I Å°·Î)
+    /// </summary>
     public void ToggleInventoryUI()
     {
         if (inventoryUIPanel == null)
@@ -234,6 +359,8 @@ public class Inventory : MonoBehaviour
         }
         isInventoryOpen = !isInventoryOpen;
         inventoryUIPanel.SetActive(isInventoryOpen);
+        if (isInventoryOpen)
+            RefreshUI();
     }
 
     /// <summary>µð¹ö±×¿ë: ÀåÂø ÇöÈ² ¹× º¸³Ê½º ½ºÅÈ Ãâ·Â</summary>
@@ -241,9 +368,9 @@ public class Inventory : MonoBehaviour
     {
         Debug.Log("=== ÀåÂø ¾ÆÀÌÅÛ ÇöÈ² ===");
         foreach (var kv in equippedWeapons)
-            Debug.Log($"¹«±â [{kv.Key}]: {(kv.Value != null ? kv.Value.ItemName : "¾øÀ½")}");
+            Debug.Log($"¹«±â [{kv.Key}]: {(kv.Value != null ? kv.Value.ItemName : "¾øÀ½")} ");
         foreach (var kv in equippedArmors)
-            Debug.Log($"¹æ¾î±¸ [{kv.Key}]: {(kv.Value != null ? kv.Value.ItemName : "¾øÀ½")}");
+            Debug.Log($"¹æ¾î±¸ [{kv.Key}]: {(kv.Value != null ? kv.Value.ItemName : "¾øÀ½")} ");
         Debug.Log($"°ø°Ý·Â º¸³Ê½º: +{attackBonus}, ¹æ¾î·Â º¸³Ê½º: +{defenseBonus}");
     }
 }
