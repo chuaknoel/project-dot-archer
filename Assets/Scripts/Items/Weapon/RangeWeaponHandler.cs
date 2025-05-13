@@ -13,9 +13,12 @@ public class RangeWeaponHandler : WeaponHandler
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private Transform projectilePivot;
 
-    [SerializeField] int projectileCount =1;
-    [SerializeField] int burstCount;
-    [SerializeField] float burstDealy;
+    [SerializeField] private int projectileCount =1;
+    [SerializeField] private int burstCount;
+    [SerializeField] private float burstDelay;
+
+    [SerializeField] private float spread;
+    [SerializeField] private float angle; 
 
     public InGameUpgradeData UpgradeData { get { return upgradeData; } }
     private InGameUpgradeData upgradeData= new();
@@ -83,8 +86,8 @@ public class RangeWeaponHandler : WeaponHandler
     public override void AttackAction()
     {
         base.AttackAction();
-
         MultiProjectile();
+        BurstProjectile();
     }
 
     public void MultiProjectile()
@@ -100,9 +103,27 @@ public class RangeWeaponHandler : WeaponHandler
                 continue;                             //그래서 짝수 발사일때는 첫발을 생성제외하여 발사체 갯수를 맞춰준다. 꼭 첫발이 아니여도 상관없다.
             }
 
-            angle = i * 10f;
+            spread = Random.Range(0, 0.5f);           //발사체에 랜덤 확산값을 주어 공격 마다 살짝씩 랜덤한 값을 준다.
+
+            angle = (i * this.angle) + spread;
 
             connectedPool.Get().SetProjectile(this, projectilePivot, Quaternion.Euler(0, 0, angle), targetMask, ownerCollider);
+        }
+    }
+
+    public void BurstProjectile()
+    {
+        StartCoroutine(eBurstProjectile());
+    }
+
+    private IEnumerator eBurstProjectile()
+    {
+        yield return new WaitForSeconds(burstDelay); ;
+
+        for (int i = 0; i < burstCount; i++)
+        {
+            MultiProjectile();
+            yield return new WaitForSeconds(burstDelay);
         }
     }
 
@@ -118,6 +139,6 @@ public class RangeWeaponHandler : WeaponHandler
 
     public override float GetWeaponCooldown()
     {
-        return weapon.ItemData.attackDelay - UpgradeData.addAttackCooldown;
+        return weapon.ItemData.attackCooldown - UpgradeData.addAttackCooldown;
     }
 }

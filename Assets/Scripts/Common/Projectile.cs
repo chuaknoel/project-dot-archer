@@ -98,7 +98,7 @@ public class Projectile : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log($"{collision.contacts[0].normal} : {direction}");
+                    //Debug.Log($"{collision.contacts[0].normal} : {direction}");
                     direction = Vector2.Reflect(direction, collision.contacts[0].normal);   //현재 방향을 입사각으로 충돌체로부터 반사각을 구하여 튕겨나갈 방향 변경
                 }
                 float RotZ = Mathf.Atan2(direction.y,direction.x) * Mathf.Rad2Deg;          //새로운 방향으로 로테이션을 시키기 위해 아크 탄젠트로 회전각 구하기
