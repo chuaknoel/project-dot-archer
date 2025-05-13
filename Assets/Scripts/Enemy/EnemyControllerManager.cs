@@ -4,26 +4,26 @@ using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyControllerManager : MonoBehaviour
 {
     private BaseEnemy ownerEnemy;
     private BaseStat ownerStat;
     private MoveController moveController;
-    private RangeAttackController rangeAttackController;
+    private SkillController skillController;
 
     private void Update()
     {
-        if (ownerStat is IMoveStat moveStat)
+        if (skillController.canMove && ownerStat is IMoveStat moveStat )
         {
-            if (rangeAttackController.canMove)
             moveController.MoveToPlayer(ownerEnemy.target, moveStat);
         }
 
-        if (ownerStat is IAttackRangeStat range && ownerStat is IAttackStat attack)
+        if (skillController.canUse)
         {
-            if (rangeAttackController.isAttacking)
-                rangeAttackController.RangeAttack(attack.AttackDamage, range, ownerEnemy);
+            skillController.UseSkill(ownerEnemy);
         }
+
+
     }
 
     public void Init(BaseEnemy ownerEnemy)
@@ -31,7 +31,9 @@ public class EnemyController : MonoBehaviour
         this.ownerEnemy = ownerEnemy;
         ownerStat = ownerEnemy.GetComponent<BaseStat>();
         moveController = this.AddComponent<MoveController>();
-        rangeAttackController = this.AddComponent<RangeAttackController>();
+        skillController = this.AddComponent<SkillController>();
+        skillController.AddSkill(ownerEnemy);
+
     }
 
 }

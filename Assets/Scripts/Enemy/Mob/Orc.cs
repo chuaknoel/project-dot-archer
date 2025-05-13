@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Orc : BaseEnemy 
 {
-    public List<EnemySkill> skills;
     public OrcStat orcStat;
     public override void Init()
     {
