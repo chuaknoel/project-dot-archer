@@ -6,7 +6,7 @@ public class BossEffect : MonoBehaviour
 {
     private int count;
     public GameObject smalleffect;
-
+    public float effecDamage;
     private void OnEnable()
     {
         IgnoreCollision();
@@ -19,7 +19,7 @@ public class BossEffect : MonoBehaviour
         Collider2D playerCollider = GameObject.Find("Player").GetComponent<Collider2D>();
         Physics2D.IgnoreCollision(playerCollider, myCollider);
 
-        Collider2D bossCollider = GameObject.Find("Boss").GetComponent<Collider2D>(); ;
+        Collider2D bossCollider = GameObject.FindGameObjectWithTag("Boss").GetComponent<Collider2D>(); ;
         Physics2D.IgnoreCollision(bossCollider, myCollider);
 
         GameObject[] effectsCollider = GameObject.FindGameObjectsWithTag("BossEffect");
@@ -36,9 +36,9 @@ public class BossEffect : MonoBehaviour
             count++;
             // 벽에 두번 부딪히면
             if (count == 2) 
-            {
+            {             
                 // 작은 이펙트 세개 생성
-                BossSkill.ThreeShot(this.transform, smalleffect);
+                BossSkillController.ThreeShot(this.transform, smalleffect);
                 // 삭제
                 Destroy(gameObject); 
             }

@@ -10,20 +10,27 @@ public class EnemyControllerManager : MonoBehaviour
     private BaseStat ownerStat;
     private MoveController moveController;
     private SkillController skillController;
-
+    private ISkillController skillInterface;
+    public float dis = 3f;
     private void Update()
     {
-        if (skillController.canMove && ownerStat is IMoveStat moveStat )
+        if (Distance())
         {
-            moveController.MoveToPlayer(ownerEnemy.target, moveStat);
-        }
+            if (skillController.canUse)
+            {
+                skillInterface.UseSkill(ownerEnemy);
+             
+            }
 
-        if (skillController.canUse)
+        }
+        else
         {
-            skillController.UseSkill(ownerEnemy);
+            if (skillController.canMove && ownerStat is IMoveStat moveStat)
+            {
+                moveController.MoveToPlayer(ownerEnemy.target, moveStat);
+            }
         }
-
-
+       
     }
 
     public void Init(BaseEnemy ownerEnemy)
@@ -32,8 +39,13 @@ public class EnemyControllerManager : MonoBehaviour
         ownerStat = ownerEnemy.GetComponent<BaseStat>();
         moveController = this.AddComponent<MoveController>();
         skillController = this.AddComponent<SkillController>();
+        skillInterface = GetComponent<ISkillController>(); ;
         skillController.AddSkill(ownerEnemy);
 
     }
-
+    bool Distance()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        return Vector2.Distance(transform.position, player.transform.position) <= dis ? true : false;
+    }
 }

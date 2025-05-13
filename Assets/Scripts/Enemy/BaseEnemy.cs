@@ -14,7 +14,6 @@ public class BaseEnemy : MonoBehaviour
 
     public List<EnemySkill> skills = new List<EnemySkill>();
 
-
     protected Rigidbody2D rb;
     public Transform target;
 
@@ -23,7 +22,6 @@ public class BaseEnemy : MonoBehaviour
         Init();
     }
 
-    
     public virtual void Init()
     {
         monsterImage = GetComponentInChildren<SpriteRenderer>();

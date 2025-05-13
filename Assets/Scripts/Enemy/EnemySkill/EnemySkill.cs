@@ -10,8 +10,6 @@ public class EnemySkill : MonoBehaviour
     public float currentCooldown;
     public GameObject effect;
 
-
-
     // Update is called once per frame
     public bool CanUse()
     {           
