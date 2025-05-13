@@ -8,6 +8,7 @@ public class EnemyManager : MonoBehaviour
 
     //public List<Enemy> activeEnemies;
 
+<<<<<<< HEAD
     //// Àû ÇÁ¸®ÆÕ (Inspector¿¡¼­ ¼³Á¤)
     //public GameObject enemyPrefab;
 
@@ -59,5 +60,42 @@ public class EnemyManager : MonoBehaviour
     //        Destroy(enemy.gameObject);
     //    }
     //    activeEnemies.Clear();
+=======
+    //public void SpawnEnemies(RoomManager room)
+    //{
+    //    // ¹æ À§Ä¡ ±â¹İÀ¸·Î Àû »ı¼º
+    //    Enemy e = Instantiate(...);
+    //    e.OnDeath += () => OnEnemyDefeated(room, e);
+    //    RegisterEnemy(e);
+    //}
+
+    //public void OnEnemyDefeated(RoomManager room, Enemy enemy)
+    //{
+    //    UnregisterEnemy(enemy);
+
+    //    // ÇØ´ç ¹æ¿¡ ³²Àº ÀûÀÌ ¾øÀ¸¸é
+    //    if (GetEnemiesInRoom(room).Count == 0)
+    //    {
+    //        room.OnAllEnemiesDefeated();
+    //    }
+    //}
+
+    //public void ClearAllEnemies()
+    //{
+    //    foreach (var enemy in activeEnemies)
+    //    {
+    //        Destroy(enemy.gameObject);
+    //    }
+    //    activeEnemies.Clear();
+    //}
+
+    //public void RegisterEnemy(Enemy enemy)
+    //{
+
+    //}
+    //public void UnregisterEnemy(Enemy enemy)
+    //{
+
+>>>>>>> parent of 142ca4f (Init : í”„ë¦¬í© ìƒì„± ë° ì• ë„ˆë¯¸ ë§¤ë‹ˆì €)
     //}
 }
