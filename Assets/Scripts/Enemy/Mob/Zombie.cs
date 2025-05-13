@@ -14,6 +14,6 @@ public class Zombie : BaseEnemy
         
         ThrowStone stoneskill = GetComponent<ThrowStone>();
         skills.Add(stoneskill);
-
+        
     }
 }

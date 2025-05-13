@@ -11,6 +11,7 @@ public class BaseEnemy : MonoBehaviour
     protected Animator monsterAnime;
     protected EnemyControllerManager EnemyController;
     protected SkillController skillController;
+    protected DieController dieController;
 
     public List<EnemySkill> skills = new List<EnemySkill>();
 
@@ -29,7 +30,8 @@ public class BaseEnemy : MonoBehaviour
         monsterImage = GetComponentInChildren<SpriteRenderer>();
         monsterAnime = GetComponent<Animator>();
         EnemyController = this.AddComponent<EnemyControllerManager>();
-        skillController = this.AddComponent<SkillController>(); 
+        skillController = this.AddComponent<SkillController>();
+        //dieController = this.AddComponent<DieController>();
         EnemyController.Init(this);
         rb = GetComponent<Rigidbody2D>();
         target= GameObject.FindGameObjectWithTag("Player").transform;
