@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using Enums;
 
 public class Player : MonoBehaviour
 {
@@ -10,10 +11,10 @@ public class Player : MonoBehaviour
     private Inventory inventory;
 
     public PlayerStat stat;
-    
+
     public PlayerController Controller { get { return controller; } }
     private PlayerController controller;
-   
+
     private SpriteRenderer characterImage;
     private Animator playerAnime;
 
@@ -28,6 +29,9 @@ public class Player : MonoBehaviour
     [SerializeField] private ParticleSystem plalyerDeathParticle;
 
     public LayerMask targetMask;
+
+    public UpgradeManager UpgradeManager { get { return upgradeManager; } }
+    private UpgradeManager upgradeManager = new UpgradeManager();
 
     // Update is called once per frame
     void Update()
@@ -48,9 +52,8 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            stat.TakeDamage(123123123123f);
+            stat.GetComponent<IDefenceStat>().TakeDamage(123123);
         }
-
     }
 
     private void FixedUpdate()
@@ -65,24 +68,50 @@ public class Player : MonoBehaviour
 
     public void Init(PlayerData playerData, Inventory inventory)
     {
-        stat ??= new PlayerStat(this, playerData);
+        stat ??= GetComponent<PlayerStat>();
+        stat.Init(this, playerData);
 
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();
         searchTarget ??= GetComponent<SearchTarget>();
         this.inventory = inventory;
-        
+
         SetWeapon();
         ControllerRegister();
     }
 
-    private void SetWeapon()
+    public void SetWeapon()
     {
-        //구현코드
-        inventory.GetCurrentWeapon().transform.SetParent(weaponPivot, false);
-        weaponHandler = inventory.GetCurrentWeapon().GetComponent<WeaponHandler>();
-        weaponHandler?.Init(inventory.GetCurrentWeapon(), stat, targetMask);
+        // 1) Inventory에서 무기 프리팹(GameObject) 가져오기
+        GameObject prefab = inventory.GetCurrentWeaponPrefab();
+        if (prefab == null)
+        {
+            Debug.LogWarning("장착할 무기 Prefab이 없습니다.");
+            return;
+        }
+
+        // 2) 씬에 인스턴스 생성 (프리팹 에셋을 건드리지 않기 위해 반드시 Instantiate)
+        GameObject instance = Instantiate(prefab, weaponPivot);
+        instance.name = prefab.name;  // 이름 복사
+
+        // 3) Item 컴포넌트 확인 (필요시)
+        Item itemComp = instance.GetComponent<Item>();
+        if (itemComp == null)
+        {
+            Debug.LogError("무기 인스턴스에 Item 컴포넌트가 없습니다!");
+            return;
+        }
+
+        // 4) WeaponHandler 컴포넌트 할당 및 초기화
+        weaponHandler = instance.GetComponent<WeaponHandler>();
+        if (weaponHandler == null)
+        {
+            Debug.LogError("무기 인스턴스에 WeaponHandler 컴포넌트가 없습니다!");
+            return;
+        }
+        weaponHandler.Init(itemComp, stat, targetMask, GetComponent<Collider2D>());
     }
+
 
     public void ControllerRegister()
     {
@@ -111,7 +140,6 @@ public class Player : MonoBehaviour
         characterImage.flipX = isLeft;
     }
 
-
     public bool IsAttackable(PlayerState curstate)
     {
         switch (curstate)
@@ -123,13 +151,20 @@ public class Player : MonoBehaviour
             default: return false;
         }
     }
-}
 
-public enum PlayerState
-{
-    Idle,
-    Move,
-    Attack,
-    Jump,
-    Death,
+    //업그레이들 될 정보를 받아 데이터 정보 갱신
+    public void Upgrade(InGameUpgradeData gameUpgradeData)
+    {
+        upgradeManager.MergeUpgrade(gameUpgradeData);
+        ApplyUpgrade(gameUpgradeData);
+    }
+
+    //업그레이드 적용
+    public void ApplyUpgrade(InGameUpgradeData gameUpgradeData)
+    {
+        if (gameUpgradeData.attackType == AttackTpye.Range)
+        {
+            (weaponHandler as RangeWeaponHandler).ApplyUpgrade(upgradeManager.GetRangeUpgrade());
+        }
+    }
 }

@@ -8,5 +8,9 @@ public class ReaperStat : EnemyStat, IAttackStat, IMoveStat
     public float AttackDamage => attackDamage;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float attackDamage;
-    
+
+    public float GetTotalStatDamage()
+    {
+        return attackDamage;
+    }
 }
