@@ -10,6 +10,7 @@ public class EnemyControllerManager : MonoBehaviour
     private BaseStat ownerStat;
     private MoveController moveController;
     private SkillController skillController;
+    private DieController dieController;
 
     private void Update()
     {
@@ -23,6 +24,10 @@ public class EnemyControllerManager : MonoBehaviour
             skillController.UseSkill(ownerEnemy);
         }
 
+        if (dieController.isDie)
+        {
+            dieController.Die(ownerEnemy);
+        }
 
     }
 
@@ -33,6 +38,7 @@ public class EnemyControllerManager : MonoBehaviour
         moveController = this.AddComponent<MoveController>();
         skillController = this.AddComponent<SkillController>();
         skillController.AddSkill(ownerEnemy);
+        dieController = this.AddComponent<DieController>();
 
     }
 

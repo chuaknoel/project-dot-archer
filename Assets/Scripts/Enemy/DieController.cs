@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class DieController : MonoBehaviour
 {
-    
-
     public float blinkDuration = 1f;
     public float blinkInterval = 0.1f;
-
     public bool isDie = false;
 
 
+
+    
     
 
-    public void Die(SpriteRenderer owner)
+    public void Die(BaseEnemy owner)
     {
-        if (isDie) return;
+        if (!isDie) return;
         isDie = true;
-        StartCoroutine(Blink(owner));
+        StartCoroutine(Blink(owner.monsterImage));
     }
 
     private IEnumerator Blink(SpriteRenderer owner)

@@ -7,11 +7,9 @@ using UnityEngine;
 
 public class BaseEnemy : MonoBehaviour
 {
-    protected SpriteRenderer monsterImage;
+    public SpriteRenderer monsterImage;
     protected Animator monsterAnime;
     protected EnemyControllerManager EnemyController;
-    protected SkillController skillController;
-    protected DieController dieController;
 
     public List<EnemySkill> skills = new List<EnemySkill>();
 
@@ -27,11 +25,9 @@ public class BaseEnemy : MonoBehaviour
     
     public virtual void Init()
     {
-        monsterImage = GetComponentInChildren<SpriteRenderer>();
+        monsterImage = GetComponent<SpriteRenderer>();
         monsterAnime = GetComponent<Animator>();
         EnemyController = this.AddComponent<EnemyControllerManager>();
-        skillController = this.AddComponent<SkillController>();
-        //dieController = this.AddComponent<DieController>();
         EnemyController.Init(this);
         rb = GetComponent<Rigidbody2D>();
         target= GameObject.FindGameObjectWithTag("Player").transform;

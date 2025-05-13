@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 402479124}
   - component: {fileID: 402479123}
   - component: {fileID: 402479128}
+  - component: {fileID: 402479129}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -414,6 +415,24 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   targetList: []
+--- !u!114 &402479129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 402479122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62a0009d92307cc418b6fe8c065fea8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 0
+  maxHealth: 0
+  currentHealth: 0
+  attackDamage: 0
+  defence: 0
+  moveSpeed: 0
 --- !u!1 &414628834
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,7 +666,7 @@ GameObject:
   - component: {fileID: 1013221300}
   - component: {fileID: 1013221301}
   m_Layer: 0
-  m_Name: MainRenerer
+  m_Name: MainRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
