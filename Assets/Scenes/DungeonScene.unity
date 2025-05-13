@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2596117e890ba6f4e822fe71ee185050, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorPrefab: {fileID: 1686511602942617908, guid: 39ee8a0242ccbb143b33fe7a59e89551, type: 3}
+  doorPrefab: {fileID: 1686511602942617908, guid: 0bd868dca755b184f8f1bd5fe20370f8, type: 3}
 --- !u!1 &208325810
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,9 +261,8 @@ GameObject:
   - component: {fileID: 402479126}
   - component: {fileID: 402479125}
   - component: {fileID: 402479124}
-  - component: {fileID: 402479128}
-  - component: {fileID: 402479129}
   - component: {fileID: 402479123}
+  - component: {fileID: 402479128}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -304,8 +303,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04122d8da0c7aae44937cbe3a8d3f372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stat: {fileID: 0}
   weaponPivot: {fileID: 208325811}
+  plalyerDeathParticle: {fileID: 0}
   targetMask:
     serializedVersion: 2
     m_Bits: 128
@@ -399,24 +398,6 @@ Transform:
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &402479128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 402479122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62a0009d92307cc418b6fe8c065fea8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  level: 1
-  maxHealth: 100
-  currentHealth: 100
-  attackDamage: 10
-  defence: 10
-  moveSpeed: 5
---- !u!114 &402479129
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -599,7 +580,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1887450498}
   m_Father: {fileID: 1180671189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &959622475
@@ -633,9 +615,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomGenerator: {fileID: 293030891}
   navigator: {fileID: 1333247119}
-  player: {fileID: 0}
-  enemyManager: {fileID: 0}
+  player: {fileID: 402479124}
+  enemyManager: {fileID: 1524375207}
   currentRoom: {fileID: 0}
+  inventory: {fileID: 1887450499}
+  TestEnemies: []
 --- !u!4 &959622477
 Transform:
   m_ObjectHideFlags: 0
@@ -996,8 +980,59 @@ MonoBehaviour:
   - type: 1
     prefab: {fileID: 4391144654956510355, guid: 38d65f1946b6bdb4ca9deca204c7cbf0, type: 3}
   - type: 2
-    prefab: {fileID: 3297075146880289798, guid: b502453aa35fc6745961042755769431, type: 3}
+    prefab: {fileID: 3297075146880289798, guid: fe53faf1fe8766e4b980e81cace9abf3, type: 3}
   roomSize: {x: 10, y: 8}
+--- !u!1 &1887450497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1887450498}
+  - component: {fileID: 1887450499}
+  m_Layer: 0
+  m_Name: Inventory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1887450498
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887450497}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 666372969}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1887450499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887450497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee1d64b16b51968438448dec456a141e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  equippedWeaponId: bow_common
+  equippedHelmetId: helmet_common
+  equippedArmorId: armor_common
+  equippedBootsId: boots_common
+  weaponPrefabs: []
+  armorPrefabs: []
+  inventoryUIPanel: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

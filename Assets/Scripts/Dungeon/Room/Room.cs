@@ -85,7 +85,8 @@ public class Room : MonoBehaviour
             entryPositions[Vector2Int.right] = rightRoomCenter + new Vector3(1.75f, 0f, 0f);
 
             // 위아래 문: 각 방 기준, 좌표 명확하게 구분
-            entryPositions[new Vector2Int(-1, 1)] = new Vector3(transform.position.x, transform.position.y + bounds.max.y - 0.75f, 0f);           // 왼쪽 위
+
+            entryPositions[new Vector2Int(-1,1)] = new Vector3(transform.position.x, transform.position.y + bounds.max.y - 0.75f, 0f);           // 왼쪽 위
             entryPositions[new Vector2Int(-1, -1)] = new Vector3(transform.position.x, transform.position.y + bounds.min.y + 0.75f, 0f);         // 왼쪽 아래
 
             entryPositions[new Vector2Int(1, 1)] = rightRoomCenter + new Vector3(0, bounds.extents.y, 0f);  // 오른쪽 위

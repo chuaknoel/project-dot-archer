@@ -7,15 +7,14 @@ using Enums;
 
 public class Player : MonoBehaviour
 {
-
     public Inventory Inventory { get { return inventory; } }
     private Inventory inventory;
 
     public PlayerStat stat;
-    
+
     public PlayerController Controller { get { return controller; } }
     private PlayerController controller;
-   
+
     private SpriteRenderer characterImage;
     private Animator playerAnime;
 
@@ -76,7 +75,7 @@ public class Player : MonoBehaviour
         playerAnime ??= GetComponent<Animator>();
         searchTarget ??= GetComponent<SearchTarget>();
         this.inventory = inventory;
-        
+
         SetWeapon();
         ControllerRegister();
     }
@@ -169,4 +168,3 @@ public class Player : MonoBehaviour
         }
     }
 }
-

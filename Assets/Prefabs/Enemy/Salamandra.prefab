@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6062052968812853924}
   - component: {fileID: 3385369500377217018}
   - component: {fileID: 1618457837498767012}
-  - component: {fileID: 9187158512739593423}
   - component: {fileID: 7392340686178672240}
   m_Layer: 0
   m_Name: Salamandra
@@ -101,23 +100,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skills: []
   target: {fileID: 0}
-  salamandraStat: {fileID: 0}
---- !u!114 &9187158512739593423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582702308276759449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 728fdb6c97399f6448a5a745842c22d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  level: 1
-  maxHealth: 1
-  currentHealth: 1
-  attackDamage: 1
 --- !u!114 &7392340686178672240
 MonoBehaviour:
   m_ObjectHideFlags: 0

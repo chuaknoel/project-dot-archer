@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6421709521614241619}
   - component: {fileID: 8759630257636094880}
-  - component: {fileID: 2624310619123477155}
   - component: {fileID: 7161795180647208378}
   m_Layer: 0
   m_Name: Nependes
@@ -86,22 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2624310619123477155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2410510397216180042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c51fc19b870d664da9910a36fee371b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  level: 1
-  maxHealth: 1
-  currentHealth: 1
-  attackDamage: 1
 --- !u!114 &7161795180647208378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,4 +99,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skills: []
   target: {fileID: 0}
-  nependesStat: {fileID: 0}
