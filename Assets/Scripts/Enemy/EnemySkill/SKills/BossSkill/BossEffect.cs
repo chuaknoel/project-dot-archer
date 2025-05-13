@@ -43,9 +43,9 @@ public class BossEffect : MonoBehaviour, IDefenceStat
             // 벽에 두번 부딪히면
             if (count == 2)
             {
-                BossSkillController bossSkillController = GameObject.FindGameObjectWithTag("Boss").GetComponent<BossSkillController>();
+                BossEffectController bossEffectController = GameObject.FindGameObjectWithTag("Boss").GetComponent<BossEffectController>();
                 // 작은 이펙트 세개 생성
-                bossSkillController.ThreeShot(this.transform, smalleffect);
+                bossEffectController.ThreeShot(this.transform, smalleffect);
                 // 삭제
                 Destroy(gameObject);
             }
@@ -53,12 +53,11 @@ public class BossEffect : MonoBehaviour, IDefenceStat
         }
         else if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            // collision.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+            GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
             // 플레이어 피격
             col.gameObject.GetComponent<IDefenceStat>()?.TakeDamage(10f);
-          //  stat.GetComponent<IDefenceStat>()?.TakeDamage(10f);
-            Debug.Log(col.gameObject.GetComponent<Player>().stat.CurrentHealth);
+
             // 삭제
             Destroy(gameObject);
         }

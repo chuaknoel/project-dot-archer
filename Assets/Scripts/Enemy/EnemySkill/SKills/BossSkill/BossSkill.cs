@@ -5,12 +5,11 @@ using UnityEngine;
 
 public class BossSkill : EnemySkill
 {
-    public void Initialize(string name, int damage, float cooldown, GameObject effect)
+    public void Initialize(string name, int damage, float cooldown)
     {
         this.skillName = name;
         this.damage = damage;
         this.cooldown = cooldown;
-        this.effect = effect;
     }
     // Update is called once per frame
     public override bool CanUse()
