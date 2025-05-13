@@ -11,7 +11,6 @@ public abstract class State<T> where T : MonoBehaviour
     public virtual void OnEnter() 
     {
         elapsedTime = 0;
-        Debug.Log(this.GetType().Name + " Enter");
     }
     public virtual void OnExit() { }
     public virtual void OnUpdate(float deltaTime) 

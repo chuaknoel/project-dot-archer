@@ -10,9 +10,9 @@ public abstract class BaseController<T> where T: MonoBehaviour
 
     protected State<T> previousState;
 
-    public BaseController(State<T> initState, T owner)
+    public BaseController(State<T> initState, T ower)
     {
-        RegisterState(initState , owner);
+        RegisterState(initState , ower);
 
         currentState = initState;
         currentState.OnEnter();
