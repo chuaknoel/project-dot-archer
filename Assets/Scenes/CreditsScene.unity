@@ -1550,7 +1550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creditContent: {fileID: 2023525936}
-  scrollDuration: 30
+  scrollDuration: 35
   endY: 700
 --- !u!4 &1356697779
 Transform:
@@ -2163,8 +2163,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC18C\uD1B5\uACFC \uB2A5\uB825\uC774 \uC644\uBCBD\uD55C \uD638\uD761\uC744
-    \uC774\uB904\uB0B4, \uCC9C\uB9C8\uC2E0\uACF5\uC744 \uB9CC\uB4E0 \uACE0\uC218"
+  m_Text: "\uC131\uC7A5\uC18D\uB3C4\uAC00 \uC815\uD30C \uC544\uB2CC \uB9C8\uAD50.
+    \uCC9C\uB9C8\uC2E0\uACF5\uC744 \uB9CC\uB4E0 \uACE0\uC218"
 --- !u!222 &2097166287
 CanvasRenderer:
   m_ObjectHideFlags: 0
