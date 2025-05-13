@@ -15,9 +15,12 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
 
     private Player player;
 
-    public PlayerStat(Player player, PlayerData playerData)
+    private PlayerData playerData;
+
+    public void Init(Player player, PlayerData playerData)
     {
         this.player = player;
+        this.playerData = playerData;
         attackDamage = playerData.statData.attackStat.attackDamage;
         moveSpeed = playerData.statData.moveStat.moveSpeed;
         currentHealth = 100;
