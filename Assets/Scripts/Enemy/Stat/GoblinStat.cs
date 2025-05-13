@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class GoblinStat : BaseStat ,  IAttackStat, IMoveStat
 {
-    public float MoveSpeed => moveSpeed;
+    [SerializeField] private float attackDamage;
     public float AttackDamage => attackDamage;
 
+    private float buffDamage;
     public float BuffDamage => buffDamage;
 
-    public float BuffSpeed => buffSpeed;
-
-    private float buffDamage;
-    private float buffSpeed;
 
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float attackDamage;
+    public float MoveSpeed => moveSpeed;
+
+    private float buffSpeed;
+    public float BuffSpeed => buffSpeed;
 
     public void AddDamage(float addDamage) // 1.5배면 addDamage = 0.5
     {
@@ -24,7 +24,7 @@ public class GoblinStat : BaseStat ,  IAttackStat, IMoveStat
 
     public float GetTotalDamage()
     {
-        return ((1 + buffDamage) * attackDamage);
+        return (1 + buffDamage) * attackDamage;
     }
 
     public void AddSpeed(float addSpeed) // 1.5배면 addSpeed = 0.5

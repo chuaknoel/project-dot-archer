@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Berserk : EnemySkill
 {
-    private float activeTime = 3f;
+    [SerializeField] private float activeTime = 3f;
     private float currentActiveTime = 0f;
-    private float value = 0.5f;
+    [SerializeField] private float value = 0.5f;
     // Start is called before the first frame update
     void Start()
     {

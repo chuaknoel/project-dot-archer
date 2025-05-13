@@ -5,18 +5,18 @@ using UnityEngine;
 
 public class ZombieStat : EnemyStat, IMoveStat, IAttackStat
 {
-    public float MoveSpeed => moveSpeed;
+    [SerializeField] private float attackDamage;
     public float AttackDamage => attackDamage;
 
+    private float buffDamage;
     public float BuffDamage => buffDamage;
 
-    public float BuffSpeed => buffSpeed;
-
-    private float buffDamage;
-    private float buffSpeed;
 
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float attackDamage;
+    public float MoveSpeed => moveSpeed;
+
+    private float buffSpeed;
+    public float BuffSpeed => buffSpeed;
 
     public void AddDamage(float addDamage) // 1.5¹è¸é addDamage = 0.5
     {
