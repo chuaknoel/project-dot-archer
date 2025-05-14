@@ -1,421 +1,376 @@
+using Enums;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
+/// <summary>
+/// 플레이어의 장착 아이템(무기·방어구)과 골드, 인벤토리 UI를 관리합니다.
+/// - 무기 · 방어구 Prefab은 Inspector에서 드래그&드롭으로 등록
+/// - Inventory는 Prefab을 Instantiate하지 않고, 단순히 매핑만 수행
+/// - Player.SetWeapon() 같은 외부 로직이 Instantiate 및 부모 설정을 책임짐
+/// - 능력치 계산, 조회용 GetCurrentWeapon(), UI 토글 기능은 그대로 유지
+/// - 드롭, 상점 등에서 AddGold()/SpendGold()를 통해 골드를 업데이트하고 저장
+/// - ownedItemIds로 구매된 아이템 추적, itemSlots로 UI 버튼 갱신
+/// </summary>
 public class Inventory : MonoBehaviour
 {
-    [SerializeField] private List<Item> items = new List<Item>();
-    [SerializeField] private int maxSlots = 20;
+    //────────────────────────────────────────────────────────────────────────
+    // 1) Inspector 설정 필드
+    //────────────────────────────────────────────────────────────────────────
 
-    // 장착된 아이템 관리 (카테고리 별)
-    private Dictionary<ItemCategory, Item> equippedItems = new Dictionary<ItemCategory, Item>();
+    [Header("장착할 아이템 ID (Inspector에 입력)")]
+    [Tooltip("장착할 무기 ID (예: bow_common)")]
+    [SerializeField] private string equippedWeaponId = "bow_common";
+    [Tooltip("장착할 투구 ID (예: helmet_common)")]
+    [SerializeField] private string equippedHelmetId = "helmet_common";
+    [Tooltip("장착할 갑옷 ID (예: armor_common)")]
+    [SerializeField] private string equippedArmorId = "armor_common";
+    [Tooltip("장착할 신발 ID (예: boots_common)")]
+    [SerializeField] private string equippedBootsId = "boots_common";
 
-    // 세부 장비 슬롯 (타입 별 관리를 위함)
-    private Dictionary<WeaponType, Item> equippedWeapons = new Dictionary<WeaponType, Item>();
-    private Dictionary<ArmorType, Item> equippedArmors = new Dictionary<ArmorType, Item>();
+    [Header("무기 Prefab 리스트 (Inspector 등록)")]
+    [Tooltip("모든 무기 Prefab을 드래그&드롭하고, 각 Prefab의 ItemId를 설정하세요.")]
+    [SerializeField] private List<GameObject> weaponPrefabs;
 
-    // UI 관련 변수
-    [SerializeField] private GameObject inventoryUI;
-    [SerializeField] private GameObject equipmentUI;
+    [Header("방어구 Prefab 리스트 (Inspector 등록)")]
+    [Tooltip("모든 방어구 Prefab을 드래그&드롭하고, 각 Prefab의 ItemId를 설정하세요.")]
+    [SerializeField] private List<GameObject> armorPrefabs;
 
-    // 스탯 보너스
+    [Header("인벤토리 UI 패널")]
+    [Tooltip("인벤토리 창으로 사용할 UI 패널을 연결해주세요.")]
+    [SerializeField] private GameObject inventoryUIPanel;
+
+    [Header("인벤토리 슬롯 버튼들")]
+    [Tooltip("구매된 아이템을 표시할 Button 리스트 (Inspector 연결)")]
+    [SerializeField] private List<Button> itemSlots;
+
+    [Header("플레이어 골드")]
+    [Tooltip("현재 보유 중인 골드")]
+    [SerializeField] private int gold = 0;
+
+    //────────────────────────────────────────────────────────────────────────
+    // 2) 내부 상태 저장용 변수 및 딕셔너리
+    //────────────────────────────────────────────────────────────────────────
+
+    // ID → Prefab 매핑
+    private Dictionary<string, GameObject> weaponPrefabDict = new Dictionary<string, GameObject>();
+    private Dictionary<string, GameObject> armorPrefabDict = new Dictionary<string, GameObject>();
+
+    // 장착된 데이터(ItemData)
+    private Dictionary<WeaponType, ItemData> equippedWeapons = new Dictionary<WeaponType, ItemData>();
+    private Dictionary<ArmorType, ItemData> equippedArmors = new Dictionary<ArmorType, ItemData>();
+
+    // 무기 Prefab 참조만 저장 (Instantiate는 Player 쪽에서 처리)
+    private Dictionary<WeaponType, GameObject> equippedWeaponPrefabs = new Dictionary<WeaponType, GameObject>();
+    // 방어구 인스턴스는 Player 쪽 처리
+
+    // 보너스 스탯 합산
     private float attackBonus = 0f;
     private float defenseBonus = 0f;
 
-    // 초기화
+    // UI 열림 상태
+    private bool isInventoryOpen = false;
+
+    /// <summary>
+    /// 구매된 아이템 ID를 추적합니다.
+    /// </summary>
+    private List<string> ownedItemIds = new List<string>();
+
+    /// <summary>
+    /// 골드가 변경될 때 구독자에게 알림을 줍니다.
+    /// </summary>
+    public event Action<int> OnGoldChanged;
+
+    //────────────────────────────────────────────────────────────────────────
+    // 3) Unity 생명주기 콜백
+    //────────────────────────────────────────────────────────────────────────
+
     private void Awake()
     {
-        // 장비 딕셔너리 초기화
-        equippedItems[ItemCategory.Weapon] = null;
-        equippedItems[ItemCategory.Armor] = null;
+        // (A) 저장된 골드를 불러옵니다.
+        LoadGold();
 
-        // 무기 타입 딕셔너리 초기화
-        foreach (WeaponType weaponType in System.Enum.GetValues(typeof(WeaponType)))
+        // (B) Inspector에 드롭된 Prefab들을 ID→Prefab 딕셔너리에 채워넣기
+        weaponPrefabDict.Clear();
+        foreach (var prefab in weaponPrefabs)
         {
-            if (weaponType != WeaponType.None)
-                equippedWeapons[weaponType] = null;
+            var it = prefab.GetComponent<Item>();
+            if (it != null && !string.IsNullOrEmpty(it.ItemId))
+                weaponPrefabDict[it.ItemId] = prefab;
+            else
+                Debug.LogWarning($"[Inventory] Weapon Prefab 누락 또는 ItemId 미설정: {prefab.name}");
         }
 
-        // 방어구 타입 딕셔너리 초기화
-        foreach (ArmorType armorType in System.Enum.GetValues(typeof(ArmorType)))
+        armorPrefabDict.Clear();
+        foreach (var prefab in armorPrefabs)
         {
-            if (armorType != ArmorType.None)
-                equippedArmors[armorType] = null;
+            var it = prefab.GetComponent<Item>();
+            if (it != null && !string.IsNullOrEmpty(it.ItemId))
+                armorPrefabDict[it.ItemId] = prefab;
+            else
+                Debug.LogWarning($"[Inventory] Armor Prefab 누락 또는 ItemId 미설정: {prefab.name}");
         }
+
+        // (C) 모든 WeaponType/ArmorType 키 초기화
+        foreach (WeaponType wt in Enum.GetValues(typeof(WeaponType)))
+            if (wt != WeaponType.None)
+                equippedWeaponPrefabs[wt] = null;
+        foreach (ArmorType at in Enum.GetValues(typeof(ArmorType)))
+            if (at != ArmorType.None)
+                equippedArmors[at] = null;
     }
 
     private void Start()
     {
-        // UI 초기 상태 설정
-        if (inventoryUI != null)
-            inventoryUI.SetActive(false);
-
-        if (equipmentUI != null)
-            equipmentUI.SetActive(false);
+        // 기존 장착 사항 재설정
+        EquipSelectedItems();
+        // UI 갱신
+        RefreshUI();
     }
 
-    // 아이템 추가
-    public bool AddItem(Item item)
+    private void Update()
     {
-        if (items.Count >= maxSlots)
+        // I 키로 인벤토리 토글
+        if (Input.GetKeyDown(KeyCode.I) && inventoryUIPanel != null)
         {
-            Debug.Log("인벤토리가 가득 찼습니다!");
-            return false;
+            ToggleInventoryUI();
         }
+    }
 
-        items.Add(item);
-        UpdateUI();
+    //────────────────────────────────────────────────────────────────────────
+    // 4) 골드 저장/불러오기 메서드
+    //────────────────────────────────────────────────────────────────────────
+
+    private void LoadGold()
+    {
+        gold = PlayerPrefs.GetInt("PlayerGold", 0);
+    }
+
+    private void SaveGold()
+    {
+        PlayerPrefs.SetInt("PlayerGold", gold);
+        PlayerPrefs.Save();
+    }
+
+    //────────────────────────────────────────────────────────────────────────
+    // 5) 골드 조작용 공용 메서드
+    //────────────────────────────────────────────────────────────────────────
+
+    /// <summary>골드를 증가시킵니다. (예: 몬스터 드랍, 퀘스트 보상)</summary>
+    public void AddGold(int amount)
+    {
+        if (amount <= 0) return;
+        gold += amount;
+        SaveGold();
+        OnGoldChanged?.Invoke(gold);
+    }
+
+    /// <summary>골드를 사용(차감)합니다. 상점 구매 등.</summary>
+    public bool SpendGold(int amount)
+    {
+        if (amount <= 0) return true;
+        if (gold < amount) return false;
+        gold -= amount;
+        OnGoldChanged?.Invoke(gold);
         return true;
     }
 
-    // 아이템 제거
-    public void RemoveItem(Item item)
+    /// <summary>현재 골드 수량을 반환합니다.</summary>
+    public int GetGold() => gold;
+
+    //────────────────────────────────────────────────────────────────────────
+    // 6) 구매된 아이템 관리 및 UI 갱신
+    //────────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// 새 아이템 추가 후 인벤토리 UI 갱신.
+    /// </summary>
+    public void AddOwnedItem(string itemId)
     {
-        if (items.Contains(item))
+        if (!ownedItemIds.Contains(itemId))
         {
-            items.Remove(item);
-
-            // 장착된 아이템인 경우 해제
-            if (item.IsEquipped)
-                UnequipItem(item);
-
-            UpdateUI();
+            ownedItemIds.Add(itemId);
+            RefreshUI();
         }
     }
 
-    // UI 업데이트
-    private void UpdateUI()
+    /// <summary>
+    /// 인벤토리 슬롯 UI를 ownedItemIds 기준으로 갱신합니다.
+    /// </summary>
+    private void RefreshUI()
     {
-        // 인벤토리 UI 업데이트 로직
-        UpdateInventoryUI();
-
-        // 장비 UI 업데이트
-        UpdateEquipmentUI();
-    }
-
-    // 인벤토리 UI 업데이트
-    private void UpdateInventoryUI()
-    {
-        // 실제 구현은 프로젝트에 맞게 작성 필요
-        // 인벤토리 슬롯 UI에 아이템 표시
-        // 장착된 아이템은 특별한 표시를 추가
-    }
-
-    // 장비 UI 업데이트
-    private void UpdateEquipmentUI()
-    {
-        // 장비 슬롯에 현재 장착된 아이템 표시
-        // 각 장비 타입별 슬롯에 해당 아이템 표시
-    }
-
-    // 인벤토리 UI 토글
-    public void ToggleInventoryUI()
-    {
-        if (inventoryUI != null)
+        for (int i = 0; i < itemSlots.Count; i++)
         {
-            bool newState = !inventoryUI.activeSelf;
-            inventoryUI.SetActive(newState);
+            var btn = itemSlots[i];
+            var icon = btn.transform.Find("Icon").GetComponent<Image>();
+            var label = btn.transform.Find("Label").GetComponent<Text>();
 
-            // 인벤토리를 열 때 항상 업데이트
-            if (newState)
-                UpdateInventoryUI();
-        }
-    }
-
-    // 장비 UI 토글
-    public void ToggleEquipmentUI()
-    {
-        if (equipmentUI != null)
-        {
-            bool newState = !equipmentUI.activeSelf;
-            equipmentUI.SetActive(newState);
-
-            // 장비 창을 열 때 항상 업데이트
-            if (newState)
-                UpdateEquipmentUI();
-        }
-    }
-
-    // 통합 UI 토글 (둘 다 표시/숨김)
-    public void ToggleAllUI()
-    {
-        bool newState = !inventoryUI.activeSelf;
-
-        if (inventoryUI != null)
-            inventoryUI.SetActive(newState);
-
-        if (equipmentUI != null)
-            equipmentUI.SetActive(newState);
-
-        if (newState)
-        {
-            UpdateInventoryUI();
-            UpdateEquipmentUI();
-        }
-    }
-
-    // 아이템 사용 (인덱스 기반)
-    public void UseItem(int index)
-    {
-        if (index >= 0 && index < items.Count)
-        {
-            Item item = items[index];
-            ApplyItemEffect(item);
-        }
-    }
-
-    // 아이템 효과 적용
-    public void ApplyItemEffect(Item item)
-    {
-        ItemCategory category = item.ItemData.ItemCategory;
-
-        // 장비 아이템일 경우 장착
-        if (category == ItemCategory.Weapon || category == ItemCategory.Armor)
-        {
-            EquipItem(item);
-        }
-    }
-
-    // 장비 장착 - 수정된 버전
-    public void EquipItem(Item item)
-    {
-        ItemCategory category = item.ItemData.ItemCategory;
-
-        // 일반 카테고리 관리
-        if (equippedItems[category] != null)
-        {
-            UnequipItem(equippedItems[category]);
-        }
-
-        // 세부 타입별 관리
-        if (category == ItemCategory.Weapon)
-        {
-            WeaponType weaponType = item.ItemData.WeaponType;
-            if (equippedWeapons[weaponType] != null)
+            if (i < ownedItemIds.Count)
             {
-                UnequipItem(equippedWeapons[weaponType]);
+                string id = ownedItemIds[i];
+                var data = ItemManager.Instance.GetItemDataById(id);
+                if (data != null)
+                {
+                    icon.sprite = data.ItemIcon;
+                    icon.enabled = true;
+                    label.text = data.ItemName;
+                    btn.onClick.RemoveAllListeners();
+                    btn.onClick.AddListener(() => EquipItemById(id));
+                }
             }
-
-            // 새 무기 장착
-            equippedWeapons[weaponType] = item;
-            attackBonus += item.ItemData.AttackBonus;
-            Debug.Log($"무기 장착: {item.ItemData.ItemName}, 공격력 보너스: +{item.ItemData.AttackBonus}");
-        }
-        else if (category == ItemCategory.Armor)
-        {
-            ArmorType armorType = item.ItemData.ArmorType;
-            if (equippedArmors[armorType] != null)
+            else
             {
-                UnequipItem(equippedArmors[armorType]);
-            }
-
-            // 새 방어구 장착
-            equippedArmors[armorType] = item;
-            defenseBonus += item.ItemData.DefenseBonus;
-            Debug.Log($"방어구 장착: {item.ItemData.ItemName}, 방어력 보너스: +{item.ItemData.DefenseBonus}");
-        }
-
-        // 공통 처리
-        equippedItems[category] = item;
-        item.SetEquipped(true);
-
-        // UI 업데이트
-        UpdateUI();
-    }
-
-    // 장비 해제 - 직접 아이템 전달 버전
-    public void UnequipItem(Item item)
-    {
-        if (item == null) return;
-
-        ItemCategory category = item.ItemData.ItemCategory;
-
-        // 일반 카테고리에서 제거
-        if (equippedItems[category] == item)
-        {
-            equippedItems[category] = null;
-        }
-
-        // 세부 타입별 관리에서 제거
-        if (category == ItemCategory.Weapon)
-        {
-            WeaponType weaponType = item.ItemData.WeaponType;
-            if (equippedWeapons[weaponType] == item)
-            {
-                equippedWeapons[weaponType] = null;
-                attackBonus -= item.ItemData.AttackBonus;
-                Debug.Log($"무기 해제: {item.ItemData.ItemName}");
-            }
-        }
-        else if (category == ItemCategory.Armor)
-        {
-            ArmorType armorType = item.ItemData.ArmorType;
-            if (equippedArmors[armorType] == item)
-            {
-                equippedArmors[armorType] = null;
-                defenseBonus -= item.ItemData.DefenseBonus;
-                Debug.Log($"방어구 해제: {item.ItemData.ItemName}");
-            }
-        }
-
-        // 아이템 장착 상태 변경
-        item.SetEquipped(false);
-
-        // UI 업데이트
-        UpdateUI();
-    }
-
-    // 장비 해제 - 카테고리 기반 버전
-    public void UnequipItem(ItemCategory category)
-    {
-        Item equippedItem = equippedItems[category];
-        if (equippedItem != null)
-        {
-            UnequipItem(equippedItem);
-        }
-    }
-
-    // 특정 무기 타입 장착 해제
-    public void UnequipWeaponByType(WeaponType type)
-    {
-        Item equippedWeapon = equippedWeapons[type];
-        if (equippedWeapon != null)
-        {
-            UnequipItem(equippedWeapon);
-        }
-    }
-
-    // 특정 방어구 타입 장착 해제
-    public void UnequipArmorByType(ArmorType type)
-    {
-        Item equippedArmor = equippedArmors[type];
-        if (equippedArmor != null)
-        {
-            UnequipItem(equippedArmor);
-        }
-    }
-
-    // 모든 장비 해제
-    public void UnequipAllItems()
-    {
-        // 무기 장비 해제
-        foreach (WeaponType type in equippedWeapons.Keys)
-        {
-            if (equippedWeapons[type] != null)
-            {
-                UnequipItem(equippedWeapons[type]);
-            }
-        }
-
-        // 방어구 장비 해제
-        foreach (ArmorType type in equippedArmors.Keys)
-        {
-            if (equippedArmors[type] != null)
-            {
-                UnequipItem(equippedArmors[type]);
+                icon.enabled = false;
+                label.text = string.Empty;
+                btn.onClick.RemoveAllListeners();
             }
         }
     }
 
-    // 특정 아이템 찾기
-    public Item FindItem(string itemName)
-    {
-        foreach (Item item in items)
-        {
-            if (item.ItemData.ItemName == itemName)
-            {
-                return item;
-            }
-        }
+    //────────────────────────────────────────────────────────────────────────
+    // 7) 초기 장착 (ID → ItemData → 매핑/Instantiate 갱신)
+    //────────────────────────────────────────────────────────────────────────
 
+    public void EquipSelectedItems()
+    {
+        if (!string.IsNullOrEmpty(equippedWeaponId))
+            SetupEquippedWeaponById(equippedWeaponId);
+        if (!string.IsNullOrEmpty(equippedHelmetId))
+            SetupEquippedArmorById(equippedHelmetId, ArmorType.Helmet);
+        if (!string.IsNullOrEmpty(equippedArmorId))
+            SetupEquippedArmorById(equippedArmorId, ArmorType.Armor);
+        if (!string.IsNullOrEmpty(equippedBootsId))
+            SetupEquippedArmorById(equippedBootsId, ArmorType.Boots);
+    }
+
+    public void EquipItemById(string itemId)
+    {
+        // 무기 장착
+        if (weaponPrefabDict.ContainsKey(itemId))
+            SetupEquippedWeaponById(itemId);
+        // 방어구 장착
+        else if (armorPrefabDict.ContainsKey(itemId))
+            SetupEquippedArmorById(itemId, DetermineArmorType(itemId));
+    }
+
+    private ArmorType DetermineArmorType(string itemId)
+    {
+        var data = ItemManager.Instance.GetItemDataById(itemId);
+        return data != null ? data.ArmorType : ArmorType.None;
+    }
+
+    //────────────────────────────────────────────────────────────────────────
+    // 8) 보너스 스탯 적용 + Prefab 매핑/Instantiate
+    //────────────────────────────────────────────────────────────────────────
+
+    private void SetupEquippedWeaponById(string weaponId)
+    {
+        var data = ItemManager.Instance.GetItemDataById(weaponId);
+        if (data != null)
+            UpdateEquippedWeapon(data);
+        else
+            Debug.LogError($"[Inventory] 무기 데이터 없음: {weaponId}");
+    }
+
+    private void SetupEquippedArmorById(string armorId, ArmorType type)
+    {
+        var data = ItemManager.Instance.GetItemDataById(armorId);
+        if (data != null)
+            UpdateEquippedArmor(data, type);
+        else
+            Debug.LogError($"[Inventory] 방어구 데이터 없음: {armorId}");
+    }
+
+    private void UpdateEquippedWeapon(ItemData item)
+    {
+        // 이전 장착 무기 보너스 제거
+        if (equippedWeapons.TryGetValue(item.WeaponType, out var prev) && prev != null)
+            attackBonus -= prev.AttackBonus;
+        // 새 무기 데이터 저장 및 보너스 추가
+        equippedWeapons[item.WeaponType] = item;
+        attackBonus += item.AttackBonus;
+        // Prefab 매핑
+        if (weaponPrefabDict.TryGetValue(item.ItemId, out var prefab))
+            equippedWeaponPrefabs[item.WeaponType] = prefab;
+        else
+            Debug.LogWarning($"[Inventory] 매핑된 Weapon Prefab 없음: {item.ItemId}");
+    }
+
+    private void UpdateEquippedArmor(ItemData item, ArmorType type)
+    {
+        // 이전 장착 방어구 보너스 제거
+        if (equippedArmors.TryGetValue(type, out var prev) && prev != null)
+            defenseBonus -= prev.DefenseBonus;
+        // 새 방어구 데이터 저장 및 보너스 추가
+        equippedArmors[type] = item;
+        defenseBonus += item.DefenseBonus;
+        // Instantiate하여 초기화 (Player 쪽으로 옮겨도 무방)
+        if (armorPrefabDict.TryGetValue(item.ItemId, out var prefab))
+        {
+            var obj = Instantiate(prefab, transform);
+            obj.name = $"Armor_{item.ItemId}";
+            var comp = obj.GetComponent<Item>() ?? obj.AddComponent<Item>();
+            comp.Initialize(item);
+        }
+        else
+            Debug.LogWarning($"[Inventory] 매핑된 Armor Prefab 없음: {item.ItemId}");
+    }
+
+    //────────────────────────────────────────────────────────────────────────
+    // 9) 조회용 메서드 및 UI 토글
+    //────────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// 레거시 호출 지원: Player.SetWeapon() 등에서 사용하는 메서드.
+    /// 현재 장착된 무기 Item 컴포넌트를 반환합니다.
+    /// </summary>
+    public Item GetCurrentWeapon()
+    {
+        var prefab = GetCurrentWeaponPrefab();
+        return prefab != null ? prefab.GetComponent<Item>() : null;
+    }
+
+    /// <summary>
+    /// 현재 장착된 무기 Prefab(GameObject)을 우선순위 Bow→Sword→Scythe로 반환합니다.
+    /// </summary>
+    public GameObject GetCurrentWeaponPrefab()
+    {
+        if (equippedWeaponPrefabs.TryGetValue(WeaponType.Bow, out var bow) && bow != null) return bow;
+        if (equippedWeaponPrefabs.TryGetValue(WeaponType.Sword, out var sword) && sword != null) return sword;
+        if (equippedWeaponPrefabs.TryGetValue(WeaponType.Scythe, out var scythe) && scythe != null) return scythe;
         return null;
     }
 
-    // 장착된 아이템만 가져오기
-    public List<Item> GetEquippedItems()
-    {
-        List<Item> equipped = new List<Item>();
+    /// <summary>총 공격력 보너스 반환</summary>
+    public float GetTotalAttackBonus() => attackBonus;
+    /// <summary>총 방어력 보너스 반환</summary>
+    public float GetTotalDefenseBonus() => defenseBonus;
 
-        // 무기 추가
-        foreach (Item weapon in equippedWeapons.Values)
+    /// <summary>
+    /// 인벤토리 UI 패널 활성화/비활성화 토글 (I 키로)
+    /// </summary>
+    public void ToggleInventoryUI()
+    {
+        if (inventoryUIPanel == null)
         {
-            if (weapon != null)
-                equipped.Add(weapon);
+            Debug.LogWarning("[Inventory] inventoryUIPanel 미연결");
+            return;
         }
-
-        // 방어구 추가
-        foreach (Item armor in equippedArmors.Values)
-        {
-            if (armor != null)
-                equipped.Add(armor);
-        }
-
-        return equipped;
+        isInventoryOpen = !isInventoryOpen;
+        inventoryUIPanel.SetActive(isInventoryOpen);
+        if (isInventoryOpen)
+            RefreshUI();
     }
 
-    public Item GetCurrentWeapon()
+    /// <summary>디버그용: 장착 현황 및 보너스 스탯 출력</summary>
+    public void PrintEquippedItems()
     {
-        // 장착된 무기 반환 (활, 검, 낫 중 하나)
-        Item weapon = GetEquippedWeapon(WeaponType.Bow);
-        if (weapon != null) return weapon;
-
-        weapon = GetEquippedWeapon(WeaponType.Sword);
-        if (weapon != null) return weapon;
-
-        weapon = GetEquippedWeapon(WeaponType.Scythe);
-        return weapon;
-    }
-
-
-    // 특정 타입의 장착된 무기 가져오기
-    public Item GetEquippedWeapon(WeaponType type)
-    {
-        return equippedWeapons[type];
-    }
-
-    // 특정 타입의 장착된 방어구 가져오기
-    public Item GetEquippedArmor(ArmorType type)
-    {
-        return equippedArmors[type];
-    }
-
-    // 총 장비 수 구하기
-    public int GetEquippedItemCount()
-    {
-        int count = 0;
-
-        foreach (Item weapon in equippedWeapons.Values)
-        {
-            if (weapon != null)
-                count++;
-        }
-
-        foreach (Item armor in equippedArmors.Values)
-        {
-            if (armor != null)
-                count++;
-        }
-
-        return count;
-    }
-
-    // 총 공격력 보너스 계산 (Player에서 호출)
-    public float GetTotalAttackBonus()
-    {
-        return attackBonus;
-    }
-
-    // 총 방어력 보너스 계산 (Player에서 호출)
-    public float GetTotalDefenseBonus()
-    {
-        return defenseBonus;
-    }
-
-    // 장비 효과 문자열 얻기 (UI 표시용)
-    public string GetEquipmentEffectText()
-    {
-        string text = "장비 효과:\n";
-        text += $"공격력 보너스: +{attackBonus}\n";
-        text += $"방어력 보너스: +{defenseBonus}\n";
-        return text;
+        Debug.Log("=== 장착 아이템 현황 ===");
+        foreach (var kv in equippedWeapons)
+            Debug.Log($"무기 [{kv.Key}]: {(kv.Value != null ? kv.Value.ItemName : "없음")} ");
+        foreach (var kv in equippedArmors)
+            Debug.Log($"방어구 [{kv.Key}]: {(kv.Value != null ? kv.Value.ItemName : "없음")} ");
+        Debug.Log($"공격력 보너스: +{attackBonus}, 방어력 보너스: +{defenseBonus}");
     }
 }
