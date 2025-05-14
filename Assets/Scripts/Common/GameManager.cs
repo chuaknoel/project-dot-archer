@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-
     public ItemManager itemManager;
     public Inventory inventory;
     public UpgradeManager upgradeManager;
