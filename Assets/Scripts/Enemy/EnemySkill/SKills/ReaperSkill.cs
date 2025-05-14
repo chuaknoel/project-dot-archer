@@ -9,9 +9,9 @@ public class ReaperSkill : EnemySkill
     public int Count = 3;
     public float fireRange = 3f;
 
-    void Start()
+    public override void Init()
     {
-        currentCooldown = cooldown;
+        base.Init();
     }
     void Update()
     {
@@ -19,23 +19,19 @@ public class ReaperSkill : EnemySkill
     }
     public override void UseSkill(BaseEnemy owner)
     {
-        if (CanUse())
+        for (int i = 0; i < Count; i++)
         {
+            Vector3 randomPosition = new Vector3(
+                Random.Range(-fireRange, fireRange),
+                Random.Range(-fireRange, fireRange),
+                0
+            );
+            GameObject dark = Instantiate(darkPrefab, owner.target.position + randomPosition, Quaternion.identity);
 
-            for (int i = 0; i < Count; i++)
-            {
-                Vector3 randomPosition = new Vector3(
-                    Random.Range(-fireRange, fireRange),
-                    Random.Range(-fireRange, fireRange),
-                    0
-                );
-                GameObject dark = Instantiate(darkPrefab, owner.target.position + randomPosition, Quaternion.identity);
-
-                StartCoroutine(SendDarkToPlayer(dark, owner.target));
-            }
-
-            base.UseSkill(owner);
+            StartCoroutine(SendDarkToPlayer(dark, owner.target));
         }
+
+        currentCooldown = 0f;
     }
 
     IEnumerator SendDarkToPlayer(GameObject dark, Transform target)

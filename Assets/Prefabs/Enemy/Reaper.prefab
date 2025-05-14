@@ -100,10 +100,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fb81f5922969b428a6f937a003ca9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 16
   monsterImage: {fileID: 0}
+  enemyStat: {fileID: 0}
   skills: []
+  currentSkill: {fileID: 0}
+  skillPrefab: {fileID: 2707637706891812450, guid: fedc5cc59ccf4884c8556e1a581cac09, type: 3}
   target: {fileID: 0}
-  reaperStat: {fileID: 0}
 --- !u!114 &7885560134210866563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,6 +146,7 @@ MonoBehaviour:
   currentHealth: 1
   defence: 1
   moveSpeed: 1
+  attackDelay: 0
   attackDamage: 1
 --- !u!61 &5452599077378880604
 BoxCollider2D:

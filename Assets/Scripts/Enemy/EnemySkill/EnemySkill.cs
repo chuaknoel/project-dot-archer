@@ -11,8 +11,10 @@ public class EnemySkill : MonoBehaviour
     public GameObject effect;
 
 
-
-    // Update is called once per frame
+    public virtual void Init()
+    {
+        currentCooldown = 0;
+    }
     public bool CanUse()
     {           
         return currentCooldown > cooldown;

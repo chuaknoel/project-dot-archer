@@ -100,10 +100,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a045b38a4ebaf404b99bef07a88ddd71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 16
   monsterImage: {fileID: 0}
+  enemyStat: {fileID: 0}
   skills: []
+  currentSkill: {fileID: 0}
+  skillPrefab: {fileID: 4991731398719020084, guid: 7763faaa5c22bf34ea36012b50a056b9, type: 3}
   target: {fileID: 0}
-  zombieStat: {fileID: 0}
 --- !u!114 &5303301792311256230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,6 +146,7 @@ MonoBehaviour:
   currentHealth: 1
   defence: 1
   moveSpeed: 1
+  attackDelay: 1
   attackDamage: 1
 --- !u!61 &-7387111192787804190
 BoxCollider2D:

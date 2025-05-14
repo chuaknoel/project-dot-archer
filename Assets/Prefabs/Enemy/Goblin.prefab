@@ -99,10 +99,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d5622499d6ed574ab8fbca2d2828c36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 16
   monsterImage: {fileID: 0}
+  enemyStat: {fileID: 0}
   skills: []
+  currentSkill: {fileID: 0}
+  skillPrefab: {fileID: 70070558029922947, guid: eb56dba7eb8d70e4782ea202c440d830, type: 3}
   target: {fileID: 0}
-  goblinStat: {fileID: 0}
 --- !u!61 &8417512202454428490
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -165,4 +170,5 @@ MonoBehaviour:
   currentHealth: 1
   defence: 1
   moveSpeed: 1
+  attackDelay: 0
   attackDamage: 1
