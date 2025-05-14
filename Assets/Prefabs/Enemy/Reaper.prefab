@@ -102,9 +102,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterImage: {fileID: 0}
   skills: []
-  EnemyMeleeAttack: {fileID: 0}
-  enemyStat: {fileID: 0}
   target: {fileID: 0}
+  reaperStat: {fileID: 0}
 --- !u!114 &7885560134210866563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +141,6 @@ MonoBehaviour:
   currentHealth: 1
   defence: 1
   moveSpeed: 1
-  attackDelay: 1
   attackDamage: 1
 --- !u!61 &5452599077378880604
 BoxCollider2D:

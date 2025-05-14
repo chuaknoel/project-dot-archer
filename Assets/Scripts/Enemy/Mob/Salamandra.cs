@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class Salamandra : BaseEnemy
 {
+    public SalamandraStat salamandraStat;
 
     public override void Init()
     {
         base.Init();
+        salamandraStat = GetComponent<SalamandraStat>();
+
+        RandomFlame randomFlame = GetComponent<RandomFlame>();
+        skills.Add(randomFlame);
+
 
     }
 }

@@ -10,8 +10,6 @@ public class EnemyStat : BaseStat ,IDefenceStat , IMoveStat
     public float MoveSpeed => moveSpeed;
     [SerializeField] protected float moveSpeed;
     
-    public float AttackDelay => attackDelay;
-    [SerializeField] protected float attackDelay;
 
     public void TakeDamage(float damage)
     {
@@ -25,7 +23,5 @@ public class EnemyStat : BaseStat ,IDefenceStat , IMoveStat
             Death();
         }
     }
-    
-
 }
     

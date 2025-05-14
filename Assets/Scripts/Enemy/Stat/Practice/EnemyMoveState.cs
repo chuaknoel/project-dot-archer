@@ -6,10 +6,6 @@ using UnityEngine;
 public class EnemyMoveState : EnemyStates
 {
 
-    private float detectionDistance = 1f;
-    
-    private bool isAvoiding = false;
-
     public override void Init(BaseEnemy enemy)
     {
         base.Init(enemy);
@@ -25,57 +21,12 @@ public class EnemyMoveState : EnemyStates
     public override void OnUpdate(float deltaTime)
     {
         base.OnUpdate(deltaTime);
-        
-
-        if (enemy.currentSkill.CanUse())
-        {
-            enemy.UseSkill();
-        }
+        enemy.Controller.MoveToPlayer(enemy.target, 1f);
     }
+
 
     public override void OnFixedUpdate()
     {
-        MoveToPlayer(enemy.target);
-    }
-
-    public void MoveToPlayer(Transform target)
-    {
-        if (!isAvoiding)
-        {
-            if (target == null) return;
-
-            Vector3 moveDir = (target.position - enemy.transform.position).normalized;
-            enemy.transform.localScale = new Vector3(target.position.x < enemy.transform.position.x ? -1 : 1, 1, 1);
-
-            RaycastHit2D hit = Physics2D.Raycast(enemy.transform.position, moveDir, detectionDistance, obstacleLayer);
-            Debug.DrawRay(enemy.transform.position, moveDir * detectionDistance, Color.red);
-
-            if (hit.collider != null && hit.collider.gameObject.layer == LayerMask.NameToLayer("Water"))
-            {
-                AvoidObstacle(enemy.transform.position);
-            }
-            else
-            {
-                enemy.transform.position += moveDir * enemy.enemyStat.MoveSpeed * Time.deltaTime;
-            }
-
-        }
-    }
-
-    public void AvoidObstacle(Vector3 originalDir)
-    {
-        isAvoiding = true;
-
-        Vector3 avoidDir = Vector2.Perpendicular(originalDir).normalized;
-
-        float timer = 0f;
-        while (timer < 0.8f)
-        {
-            enemy.transform.position += avoidDir * enemy.enemyStat.MoveSpeed * Time.deltaTime;
-            timer += Time.deltaTime;
-            return;
-        }
-
-        isAvoiding = false;
+        
     }
 }
