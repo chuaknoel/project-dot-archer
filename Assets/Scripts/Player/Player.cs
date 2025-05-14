@@ -117,6 +117,7 @@ public class Player : MonoBehaviour
             Debug.LogError("무기 인스턴스에 WeaponHandler 컴포넌트가 없습니다!");
             return;
         }
+
         weaponHandler.Init(itemComp, stat, targetMask, GetComponent<Collider2D>());
     }
 

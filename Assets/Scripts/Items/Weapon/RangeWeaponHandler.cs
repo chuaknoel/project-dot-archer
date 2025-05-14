@@ -33,7 +33,6 @@ public class RangeWeaponHandler : WeaponHandler
     public void SetProjectile()
     {
         projectileManager = ProjectileManager.Instance;
-
         //발사체 프리팹 정보를 이용하여 오브젝트 풀에 등록
         projectileManager.RegisterPoolObject(projectilePrefab.name,
 
