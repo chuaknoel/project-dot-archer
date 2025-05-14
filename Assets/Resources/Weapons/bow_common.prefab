@@ -5071,7 +5071,9 @@ MonoBehaviour:
   projectilePivot: {fileID: 926813264509975057}
   projectileCount: 1
   burstCount: 0
-  burstDealy: 0.5
+  burstDelay: 0.125
+  spread: 0
+  angle: 10
 --- !u!95 &5848583132804544257
 Animator:
   serializedVersion: 5

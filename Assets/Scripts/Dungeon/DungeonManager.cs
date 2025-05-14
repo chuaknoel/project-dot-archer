@@ -18,7 +18,11 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
     private CameraController cameraController;
 
     public Inventory inventory;
+    public UpgradeManager upgradeManager;
 
+    public List<GameObject> TestEnemies;
+
+    public SkillManager skillManager;
     void Awake()
     {
         if (Instance == null)
@@ -34,8 +38,6 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
 
     void Start()
     {
-        SetPlayerData();
-
         // 맵 생성
         rooms = roomGenerator.GenerateDungeon();
         cameraController = Camera.main.GetComponent<CameraController>();
@@ -48,10 +50,19 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
             currentRoom = startRoom;
             cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
             navigator.MovePlayerToRoom(currentRoom, player.gameObject, Vector2Int.zero); // 초기엔 방향 없음
+            SetPlayerData();
         }
         else
         {
             Debug.LogError("초기 위치(Vector2Int.zero)에 방이 없습니다!");
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            player.GetComponent<IDefenceStat>().TakeDamage(123123);
         }
     }
 

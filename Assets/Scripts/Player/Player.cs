@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     public PlayerController Controller { get { return controller; } }
     private PlayerController controller;
 
+    public SkillExecutor SkillExecutor { get { return skillExecutor; } }
+    private SkillExecutor skillExecutor;
+   
     private SpriteRenderer characterImage;
     private Animator playerAnime;
 
@@ -31,7 +34,7 @@ public class Player : MonoBehaviour
     public LayerMask targetMask;
 
     public UpgradeManager UpgradeManager { get { return upgradeManager; } }
-    private UpgradeManager upgradeManager = new UpgradeManager();
+    private UpgradeManager upgradeManager;
 
     // Update is called once per frame
     void Update()
@@ -42,6 +45,7 @@ public class Player : MonoBehaviour
         }
 
         controller?.OnUpdate(Time.deltaTime);
+        skillExecutor?.OnUpdate(Time.deltaTime);
 
         // UI 매니저 생기면 옮겨주세요!
         // 인벤토리 UI 토글 (I 키)
@@ -52,9 +56,8 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            stat.TakeDamage(123123123123f);
+            stat.GetComponent<IDefenceStat>().TakeDamage(123123);
         }
-
     }
 
     private void FixedUpdate()
@@ -69,15 +72,20 @@ public class Player : MonoBehaviour
 
     public void Init(PlayerData playerData, Inventory inventory)
     {
-        stat ??= new PlayerStat(this, playerData);
+        stat ??= GetComponent<PlayerStat>();
+        stat.Init(this, playerData);
 
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();
         searchTarget ??= GetComponent<SearchTarget>();
         this.inventory = inventory;
 
+        upgradeManager = DungeonManager.Instance.upgradeManager;
+
         SetWeapon();
+
         ControllerRegister();
+        skillExecutor = new SkillExecutor(this, DungeonManager.Instance.skillManager.skillList);
     }
 
     public void SetWeapon()
@@ -112,7 +120,6 @@ public class Player : MonoBehaviour
         weaponHandler.Init(itemComp, stat, targetMask, GetComponent<Collider2D>());
     }
 
-
     public void ControllerRegister()
     {
         controller = new PlayerController(new PlayerIdleState(), this);
@@ -120,6 +127,12 @@ public class Player : MonoBehaviour
         controller.RegisterState(new PlayerMoveState(), this);
         controller.RegisterState(new PlayerJumpState(), this);
         controller.RegisterState(new PlayerDeathState(), this);
+        controller.RegisterState(new PlayerSkillState(), this);
+    }
+
+    private void SkillRegister(Skill<Player> skill)
+    {
+        skillExecutor.RegisterSkill(skill);
     }
 
     public void ChangeAnime(PlayerState nextAnime)
@@ -133,7 +146,6 @@ public class Player : MonoBehaviour
             playerAnime.SetInteger("ChangeState", (int)nextAnime);
         }
     }
-
 
     public void LookRotate(bool isLeft)
     {

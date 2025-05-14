@@ -1,26 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class BossEnemy : MonoBehaviour
+public class BossEnemy : BaseEnemy
 {
-    public bool angryMode;
-    public List<BossSkill> skills = new List<BossSkill>();
+    public int bossIndex;
+    public BossStat bossStat;
 
-    private void Start()
+
+    public override void Init()
     {
-        SettingSkills();
-        UseSkill(SelectSkill());
+        monsterImage = GetComponentInChildren<SpriteRenderer>();
+        monsterAnime = GetComponent<Animator>();
+        AddController();
+        rb = GetComponent<Rigidbody2D>();
+        target = GameObject.FindGameObjectWithTag("Player").gameObject.transform;
+
+        bossStat = GetComponent<BossStat>();
+
     }
-    public void SettingSkills()
+    protected override void AddController()
     {
-        GameObject effect01 = Resources.Load<GameObject>("Effects/BossEffect01");
-        GameObject effect02 = Resources.Load<GameObject>("Effects/BossEffect02");
-        GameObject effect03 = Resources.Load<GameObject>("Effects/BossEffect03");
-
-        skills.Add(new BossSkill("BossSkill01", 10, 3, effect01));
-        skills.Add(new BossSkill("BossSkill02", 10, 3, effect02));
-        skills.Add(new BossSkill("BossSkill03", 10, 3, effect03));
+        EnemyController = this.AddComponent<BossControllerManager>(); 
+        EnemyController.Init(this);
     }
     //protected override void Damaged(int damage)
     //{
@@ -30,21 +33,5 @@ public class BossEnemy : MonoBehaviour
     //{
 
     //***}
-    string SelectSkill()
-    {
-        string[] skillNames = { "BossSkill01", "BossSkill02", "BossSkill03" };
-        int index = Random.Range(0, skillNames.Length);
-        return skillNames[index];
-    }
-    void UseSkill(string skillName)
-    {
-        // 
-        var skill = skills.Find(s => s.skillName == skillName);
-        if (skill.CanUse())
-        {
-            skill.currentCooldown += Time.deltaTime;
-            // ?
-            skill.ExecuteEffect(transform, skill.effect);
-        }
-    }
+   
 }
