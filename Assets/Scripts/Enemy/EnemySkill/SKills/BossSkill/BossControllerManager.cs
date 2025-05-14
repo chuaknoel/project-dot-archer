@@ -117,4 +117,5 @@ public class BossControllerManager : EnemyControllerManager
         effectController = this.AddComponent<BossEffectController>();
         bossSkillController = this.AddComponent<BossSkillController>();
     }
+
 }
