@@ -5,8 +5,6 @@ using UnityEngine;
 public class BossEffectController : MonoBehaviour
 {
     GameObject circleEffect;
-    GameObject rangedAttackEffect01;
-    GameObject rangedAttackEffect02;
 
     List<GameObject> rangedAttackEffectList= new List<GameObject>();
     public float effectPower = 5f;
@@ -14,10 +12,10 @@ public class BossEffectController : MonoBehaviour
     private void OnEnable()
     {
         circleEffect = Resources.Load<GameObject>("Effects/BossEffect");
-        rangedAttackEffect01 = Resources.Load<GameObject>("Effects/BossRangedAttackEffect01");
-        rangedAttackEffect02 = Resources.Load<GameObject>("Effects/BossRangedAttackEffect02");
-        rangedAttackEffectList.Add(rangedAttackEffect01);
-        rangedAttackEffectList.Add(rangedAttackEffect02);
+        rangedAttackEffectList.AddRange(new[] {
+        Resources.Load<GameObject>("Effects/BossRangedAttackEffect01"),
+        Resources.Load<GameObject>("Effects/BossRangedAttackEffect02")
+});
     }
 
     // ¿Ã∆Â∆Æ πﬂªÁ

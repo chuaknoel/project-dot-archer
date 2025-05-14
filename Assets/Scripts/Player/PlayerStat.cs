@@ -37,7 +37,7 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
     public float GetTotalStatDamage()
     {
         // 인벤토리에서 계산된 총 데미지 사용
-        return attackDamage + player.Inventory.GetTotalAttackBonus() + player.UpgradeManager.permanentUpgradeData.GetAttackDamage() + player.WeaponHandler.GetAttackDamage();
+        return attackDamage + player.Inventory.GetTotalAttackBonus() + player.UpgradeManager.permanentUpgradeData.GetAttackDamage();
     }
 
     public float GetToTalDefence()
