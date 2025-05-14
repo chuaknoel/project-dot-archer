@@ -55,7 +55,7 @@ public class Room : MonoBehaviour
             occupiedPositions.Add(position);
             occupiedPositions.Add(position + Vector2Int.right);
 
-            Debug.Log($"{occupiedPositions}");
+            Debug.Log("OccupiedPositions: " + string.Join(", ", occupiedPositions)); 
 
             name = $"Room_Long_{position.x}_{position.y}_to_{position.x + 1}_{position.y}";
 
@@ -72,7 +72,7 @@ public class Room : MonoBehaviour
             occupiedPositions.Add(position);
             occupiedPositions.Add(position + Vector2Int.right);
 
-            Debug.Log($"{occupiedPositions}");
+            Debug.Log("OccupiedPositions: " + string.Join(", ", occupiedPositions));
 
             Vector2 mid1 = (position + position + Vector2Int.right) / 2f;
             Vector2 mid2 = (position + position + Vector2Int.right) / 2f;
@@ -103,8 +103,6 @@ public class Room : MonoBehaviour
 
         // 입구 위치 설정
         entryPositions.Clear();
-
-        //Vector2 roomSize = (roomType == ROOMTYPE.Long) ? new Vector2(36f, 10f) : new Vector2(18f, 10f);
         Vector2 roomSize = new Vector2(18f, 10f);
         foreach (Vector2 occPos in occupiedPositions)
         {
@@ -133,6 +131,7 @@ public class Room : MonoBehaviour
             if (entry.direction == opposite)
                 return entry.position;
         }
+        Debug.Log("None entry position");
         return GetCenterPosition();
     }
 

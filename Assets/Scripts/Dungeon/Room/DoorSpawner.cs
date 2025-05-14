@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
+
 
 public class DoorSpawner : MonoBehaviour
 {
@@ -13,6 +15,7 @@ public class DoorSpawner : MonoBehaviour
         Vector2Int.right
     };
 
+
     public void SpawnDoors(List<Room> rooms)
     {
         HashSet<(Vector2, Vector2)> processedPairs = new();
@@ -23,7 +26,7 @@ public class DoorSpawner : MonoBehaviour
             if (processedRooms.Contains(room)) continue;
             processedRooms.Add(room);
 
-            foreach (var roomPos in room.GetAllOccupiedPositions())
+            foreach (Vector2 roomPos in room.occupiedPositions)
             {
                 foreach (var dir in directions)
                 {
@@ -37,9 +40,12 @@ public class DoorSpawner : MonoBehaviour
                     Vector2 b = Vector2.Max(roomPos, neighborPos);
                     if (!processedPairs.Add((a, b))) continue;
 
-                    // ¹® »ý¼º
-                    CreateDoor(room, roomPos, -dir, dir);
-                    CreateDoor(neighborRoom, roomPos, dir, -dir);
+
+                    Debug.Log($"Room : {room}, {room.occupiedPositions}, {-dir},{dir}");
+                    Debug.Log($"{neighborRoom}, {room.occupiedPositions}, {dir}, {-dir}");
+                    
+                    CreateDoor(room, -dir, dir);
+                    CreateDoor(neighborRoom,  dir, -dir);
                 }
             }
         }
@@ -50,7 +56,7 @@ public class DoorSpawner : MonoBehaviour
         return rooms.Find(r => r.IsOccupyingPosition(pos));
     }
 
-    private void CreateDoor(Room room, Vector2 roomPos, Vector2Int fromDir, Vector2Int toDir)
+    private void CreateDoor(Room room, Vector2Int fromDir, Vector2Int toDir)
     {
         Vector3 spawnPos = room.GetEntryPositionFrom(fromDir);
         GameObject door = Instantiate(doorPrefab, spawnPos, Quaternion.identity, room.transform);

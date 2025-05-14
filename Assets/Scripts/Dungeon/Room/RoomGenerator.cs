@@ -5,8 +5,8 @@ using System.Linq;
 
 public class RoomGenerator : MonoBehaviour
 {
-    [SerializeField] private int maxRooms = 10;
-    [SerializeField] private int longRoomIndex = 5;
+    [SerializeField] private int maxRooms = 5;
+    [SerializeField] private int longRoomIndex = 0;
     private bool hasPlacedLongRoom = false;
 
     private Vector2Int[] directions = new Vector2Int[]

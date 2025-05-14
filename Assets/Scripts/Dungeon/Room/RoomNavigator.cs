@@ -7,18 +7,7 @@ public class RoomNavigator : MonoBehaviour
     [SerializeField] private RoomGenerator roomGenerator;
 
     public EnemyManager enemyManager;
-
-    /// 방향에 따라 연결된 방으로 플레이어를 이동
-    public void MovePlayerToRoom(Room room, GameObject player, Vector2Int fromDirection)
-    {
-        Vector3 entry = room.GetEntryPositionFrom(fromDirection);
-        Vector3 offset = ((Vector2)fromDirection).normalized * 1.5f;
-        Vector3 targetPos = entry + offset;
-
-        StartCoroutine(MovePlayerWithCollisionPause(player, targetPos));
-        room.isVisited = true;
-    }
-
+    
     /// 타겟 위치에 있는 방으로 플레이어를 이동
     /// 방향 정보가 없는 경우 기본 중심으로 이동
     public void MovePlayerToRoomByPosition(Vector2 targetPosition, GameObject player)
@@ -33,6 +22,17 @@ public class RoomNavigator : MonoBehaviour
         {
             Debug.LogWarning("이동하려는 방이 존재하지 않습니다: " + targetPosition);
         }
+    }
+
+    /// 방향에 따라 연결된 방으로 플레이어를 이동
+    public void MovePlayerToRoom(Room room, GameObject player, Vector2Int fromDirection)
+    {
+        Vector3 entry = room.GetEntryPositionFrom(fromDirection);
+        Vector3 offset = ((Vector2)fromDirection).normalized * 1.5f;
+        Vector3 targetPos = entry + offset;
+
+        StartCoroutine(MovePlayerWithCollisionPause(player, targetPos));
+        room.isVisited = true;
     }
 
     /// 플레이어의 현재 위치에서 타겟 방까지의 방향을 유추
@@ -66,9 +66,5 @@ public class RoomNavigator : MonoBehaviour
         {
             playerCollider.enabled = true;
         }
-
-        // 여기서 현재 방 정보를 가져와서 적 스폰
-        Room currentRoom = DungeonManager.Instance.currentRoom;
-        currentRoom.GetComponent<RoomManager>().OnPlayerEnter();
     }
 }

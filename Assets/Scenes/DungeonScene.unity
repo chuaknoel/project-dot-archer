@@ -419,8 +419,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66ca86ff2fd7c5946884ac94c885cd91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRooms: 10
-  longRoomIndex: 5
+  maxRooms: 7
+  longRoomIndex: 0
   roomFactory: {fileID: 1720869361}
   doorSpawner: {fileID: 246888877}
 --- !u!1 &519420028
@@ -5764,6 +5764,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomGenerator: {fileID: 293030891}
+  enemyManager: {fileID: 0}
 --- !u!4 &1333247120
 Transform:
   m_ObjectHideFlags: 0
