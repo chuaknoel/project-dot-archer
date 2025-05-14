@@ -6414,7 +6414,8 @@ MonoBehaviour:
   - type: 2
     prefab: {fileID: 3297075146880289798, guid: fe53faf1fe8766e4b980e81cace9abf3, type: 3}
   - type: 1
-    prefab: {fileID: 4391144654956510355, guid: 75b7e554123774141a7d896e4e593e75, type: 3}
+    prefab: {fileID: 4391144654956510355, guid: 38d65f1946b6bdb4ca9deca204c7cbf0, type: 3}
+  roomSize: {x: 10, y: 8}
 --- !u!50 &1476430683942102477
 Rigidbody2D:
   serializedVersion: 4
