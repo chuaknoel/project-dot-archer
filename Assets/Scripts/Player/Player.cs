@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     private Inventory inventory;
 
     public PlayerStat stat;
-    
+
     public PlayerController Controller { get { return controller; } }
     private PlayerController controller;
 
@@ -180,4 +180,3 @@ public class Player : MonoBehaviour
         }
     }
 }
-

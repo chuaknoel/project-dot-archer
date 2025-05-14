@@ -8,24 +8,23 @@ public class SkillController : MonoBehaviour
     public bool canMove = true;
     public bool canUse = true;
 
-    private List<EnemySkill> skills = new List<EnemySkill>();
+    public List<EnemySkill> skills = new List<EnemySkill>();
 
     
     public void AddSkill(BaseEnemy owner)
     {
         skills.AddRange(owner.GetComponents<EnemySkill>());
     }
-    
 
 
-    public void UseSkill(BaseEnemy owner)
+    public virtual void UseSkill(BaseEnemy owner)
     {
         if (!canUse || skills.Count == 0 || skills == null) return;
         StartCoroutine(RunSkill(owner));
 
     }
 
-    private IEnumerator RunSkill(BaseEnemy owner)
+    protected virtual IEnumerator RunSkill(BaseEnemy owner)
     {
         canUse = false;
 
