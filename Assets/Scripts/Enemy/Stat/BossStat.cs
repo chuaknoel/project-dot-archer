@@ -6,11 +6,26 @@ public class BossStat : EnemyStat, IAttackStat, IMoveStat
 {
     public float MoveSpeed => moveSpeed;
     public float AttackDamage => attackDamage;
+    public float GetTotalStatDamage => GetTotalStatDamage;
+
     [SerializeField] private float moveSpeed;
     [SerializeField] private float attackDamage;
 
-    public float GetTotalStatDamage()
+
+    public override void TakeDamage(float damage)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("ÇÇ°Ý");
+       base.TakeDamage(damage);
+        Debug.Log(currentHealth);
+    }
+    protected override void UpdateHp()
+    {
+        BossHpBarController hpBarController = GetComponent<BossHpBarController>();
+        hpBarController.UpdateHP(CurrentHealth, MaxHealth);
+    }
+
+    float IAttackStat.GetTotalStatDamage()
+    {
+        return attackDamage;
     }
 }
