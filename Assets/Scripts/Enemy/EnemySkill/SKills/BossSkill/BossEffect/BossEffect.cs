@@ -39,9 +39,15 @@ public class BossEffect : MonoBehaviour, IDefenceStat
     {
         if (col.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
-            BossEffectController bossEffectController = GameObject.FindGameObjectWithTag("Boss").GetComponent<BossEffectController>();
-            // 작은 이펙트 세개 생성
-            bossEffectController.ThreeShot(this.transform, smalleffect);
+            GameObject boss = GameObject.FindGameObjectWithTag("Boss");
+         
+            if(boss != null)
+            {
+                BossEffectController bossEffectController = GameObject.FindGameObjectWithTag("Boss").GetComponent<BossEffectController>();
+                // 작은 이펙트 세개 생성
+                bossEffectController.ThreeShot(this.transform, smalleffect);
+            }
+           
             // 삭제
             Destroy(gameObject);
         }

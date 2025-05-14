@@ -7,12 +7,6 @@ public class BossRangedAttackEffect : MonoBehaviour
 {
    public bool attackAble;
 
-    // Update is called once per frame
-    void Update()
-    {
-        GameObject boss = GameObject.FindGameObjectWithTag("Boss");
-        this.transform.SetParent(boss.transform);
-    }
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.CompareTag("Player"))

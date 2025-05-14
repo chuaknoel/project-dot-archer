@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 7175789127057965702}
   - component: {fileID: 2621650994454439631}
   - component: {fileID: 3920950549536687417}
+  - component: {fileID: 6247869312629661253}
   - component: {fileID: 325971183378201745}
   m_Layer: 7
   m_Name: Boss02
@@ -174,6 +175,23 @@ MonoBehaviour:
   currentHealth: 100
   moveSpeed: 3
   attackDamage: 10
+--- !u!114 &6247869312629661253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4614255483548421653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 379a5d8e057b32d4eb976429bac49b92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpBar: {fileID: 0}
+  hpSlider: {fileID: 0}
+  heightOffset: 1.5
+  x: 77.6
+  y: 32.2
 --- !u!61 &325971183378201745
 BoxCollider2D:
   m_ObjectHideFlags: 0
