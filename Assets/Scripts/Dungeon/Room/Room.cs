@@ -3,20 +3,35 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using Enums;
 
+[System.Serializable]
+public struct EntryInfo
+{
+    public Vector2 direction;
+    public Vector3 position;
+
+    public EntryInfo(Vector2 dir, Vector3 pos)
+    {
+        direction = dir;
+        position = pos;
+    }
+}
+
 public class Room : MonoBehaviour
 {
-    public Vector2Int position; // 기준 좌표 (긴방은 왼쪽 기준)
-    public List<Vector2Int> occupiedPositions = new(); // 이 방이 차지하는 모든 좌표
+    public Vector2 position; // 기준 좌표 (긴방은 왼쪽 기준)
+    public List<Vector2> occupiedPositions = new();
 
     public Tilemap tilemap;
     [SerializeField] private TilemapRenderer roomBounds;
 
     public bool isVisited = false;
+    public bool isBossRoom = false;
+
     public ROOMTYPE roomType;
 
-    private Dictionary<Vector2Int, Vector3> entryPositions = new();
+    [SerializeField] private List<EntryInfo> entryPositions = new();
 
-    public void Init(Vector2Int pos, ROOMTYPE type)
+    public void Init(Vector2 pivot, ROOMTYPE type, Vector2 pos)
     {
         position = pos;
         roomType = type;
@@ -33,35 +48,49 @@ public class Room : MonoBehaviour
         }
 
         Bounds bounds = tilemap.localBounds;
-        Vector3 roomSize = bounds.size;
+        Vector3 roomWorldPosition;
 
         if (roomType == ROOMTYPE.Long)
         {
-            // 긴방은 position이 왼쪽 기준
             occupiedPositions.Add(position);
             occupiedPositions.Add(position + Vector2Int.right);
+
+            Debug.Log($"{occupiedPositions}");
+
             name = $"Room_Long_{position.x}_{position.y}_to_{position.x + 1}_{position.y}";
+
+            Vector2 mid = (position + position + Vector2Int.right) / 2f;
+
+            roomWorldPosition = new Vector3(
+                mid.x * bounds.extents.x,
+                mid.y * bounds.size.y,
+                0f
+            );
+        }
+        else if (roomType == ROOMTYPE.Boss)
+        {
+            occupiedPositions.Add(position);
+            occupiedPositions.Add(position + Vector2Int.right);
+
+            Debug.Log($"{occupiedPositions}");
+
+            Vector2 mid1 = (position + position + Vector2Int.right) / 2f;
+            Vector2 mid2 = (position + position + Vector2Int.right) / 2f;
+            Vector2 mid = (mid1 + mid2) / 2f;
+
+            name = $"Room_Boss_{position.x}_{position.y}";
+
+            roomWorldPosition = new Vector3(
+                mid.x * bounds.extents.x,
+                mid.y * bounds.extents.y,
+                0f
+            );
         }
         else
         {
             occupiedPositions.Add(position);
             name = $"Room_{position.x}_{position.y}";
-        }
 
-        // 방 위치 계산
-        Vector3 roomWorldPosition;
-
-        //if (roomType == ROOMTYPE.Long)
-        //{
-        //    // 긴 방은 왼쪽 기준이므로, 전체 bounds.size의 절반만큼만 이동
-        //    roomWorldPosition = new Vector3(
-        //        position.x * 9f,  // 1칸당 18씩 이동
-        //        position.y * bounds.size.y,
-        //        0f
-        //    );
-        //}
-        //else
-        {
             roomWorldPosition = new Vector3(
                 position.x * bounds.size.x,
                 position.y * bounds.size.y,
@@ -69,55 +98,46 @@ public class Room : MonoBehaviour
             );
         }
 
-        // 위치 보정: tilemap의 pivot이 중앙이면 bounds.center를 빼줘야 원점 기준으로 이동됨
+        // 위치 보정
         transform.position = roomWorldPosition - bounds.center;
 
-        Vector3 center = transform.position + bounds.center;
+        // 입구 위치 설정
         entryPositions.Clear();
 
-        if (roomType == ROOMTYPE.Long)
+        //Vector2 roomSize = (roomType == ROOMTYPE.Long) ? new Vector2(36f, 10f) : new Vector2(18f, 10f);
+        Vector2 roomSize = new Vector2(18f, 10f);
+        foreach (Vector2 occPos in occupiedPositions)
         {
-            Vector3 leftRoomCenter = transform.position;
-            Vector3 rightRoomCenter = transform.position + Vector3.right * (bounds.size.x / 2);
+            Vector3 worldCenter = GetWorldCenterOfTile(occPos, roomSize);
 
-            // 좌우 문
-            entryPositions[Vector2Int.left] = leftRoomCenter + new Vector3(-8.75f, 0f, 0f);
-            entryPositions[Vector2Int.right] = rightRoomCenter + new Vector3(1.75f, 0f, 0f);
-
-            // 위아래 문: 각 방 기준, 좌표 명확하게 구분
-
-            entryPositions[new Vector2Int(-1,1)] = new Vector3(transform.position.x, transform.position.y + bounds.max.y - 0.75f, 0f);           // 왼쪽 위
-            entryPositions[new Vector2Int(-1, -1)] = new Vector3(transform.position.x, transform.position.y + bounds.min.y + 0.75f, 0f);         // 왼쪽 아래
-
-            entryPositions[new Vector2Int(1, 1)] = rightRoomCenter + new Vector3(0, bounds.extents.y, 0f);  // 오른쪽 위
-            entryPositions[new Vector2Int(1, -1)] = rightRoomCenter + new Vector3(0, -bounds.extents.y, 0f); // 오른쪽 아래
-        }
-        else
-        {
-            entryPositions[Vector2Int.left] = new Vector3(transform.position.x + bounds.min.x + 1.25f, center.y, 0f);
-            entryPositions[Vector2Int.right] = new Vector3(transform.position.x + bounds.max.x - 1.25f, center.y, 0f);
-            entryPositions[Vector2Int.up] = new Vector3(center.x, transform.position.y + bounds.max.y - 0.75f, 0f);
-            entryPositions[Vector2Int.down] = new Vector3(center.x, transform.position.y + bounds.min.y + 0.75f, 0f);
+            entryPositions.Add(new EntryInfo(Vector2Int.left, worldCenter + new Vector3(-roomSize.x / 2f + 1.25f, 0f, 0f)));
+            entryPositions.Add(new EntryInfo(Vector2Int.right, worldCenter + new Vector3(roomSize.x / 2f - 1.25f, 0f, 0f)));
+            entryPositions.Add(new EntryInfo(Vector2Int.up, worldCenter + new Vector3(0f, roomSize.y / 2f - 0.75f, 0f)));
+            entryPositions.Add(new EntryInfo(Vector2Int.down, worldCenter + new Vector3(0f, -roomSize.y / 2f + 0.75f, 0f)));
         }
     }
 
     public Vector3 GetCenterPosition()
     {
+        Bounds bounds = tilemap.localBounds;
         if (roomType == ROOMTYPE.Long)
-        {
-            Bounds bounds = tilemap.localBounds;
             return transform.position + new Vector3(bounds.size.x / 2f, 0f, 0f);
-        }
         return transform.position;
     }
 
     public Vector3 GetEntryPositionFrom(Vector2Int fromDirection)
     {
         Vector2Int opposite = -fromDirection;
-        return entryPositions.ContainsKey(opposite) ? entryPositions[opposite] : GetCenterPosition();
+        foreach (var entry in entryPositions)
+        {
+            if (entry.direction == opposite)
+                return entry.position;
+        }
+        return GetCenterPosition();
     }
 
-    public bool IsOccupyingPosition(Vector2Int pos)
+
+    public bool IsOccupyingPosition(Vector2 pos)
     {
         return occupiedPositions.Contains(pos);
     }
@@ -125,5 +145,17 @@ public class Room : MonoBehaviour
     public TilemapRenderer GetRoomBounds()
     {
         return roomBounds;
+    }
+
+    public static Vector3 GetWorldCenterOfTile(Vector2 gridPos, Vector2 roomSize)
+    {
+        float worldX = gridPos.x * roomSize.x;
+        float worldY = gridPos.y * roomSize.y;
+        return new Vector3(worldX, worldY, 0f);
+    }
+
+    public List<Vector2> GetAllOccupiedPositions()
+    {
+        return occupiedPositions;
     }
 }

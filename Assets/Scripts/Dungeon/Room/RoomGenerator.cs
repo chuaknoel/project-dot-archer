@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Enums;
+using System.Linq;
 
 public class RoomGenerator : MonoBehaviour
 {
@@ -16,79 +17,94 @@ public class RoomGenerator : MonoBehaviour
         Vector2Int.right
     };
 
-    private Dictionary<Vector2Int, Room> rooms = new();
-    public Dictionary<Vector2Int, Room> Rooms => rooms;
+    private List<Room> rooms = new();
+    public List<Room> Rooms => rooms;
 
     [SerializeField] private RoomFactory roomFactory;
     [SerializeField] private DoorSpawner doorSpawner;
 
-    public Dictionary<Vector2Int, Room> GenerateDungeon()
+    public List<Room> GenerateDungeon()
     {
         rooms.Clear();
         Vector2Int currentPos = Vector2Int.zero;
         Room startRoom = roomFactory.CreateRoom(currentPos, ROOMTYPE.Normal);
-        rooms.Add(currentPos, startRoom);
+        rooms.Add(startRoom);
 
-        Queue<Vector2Int> frontier = new();
-        frontier.Enqueue(currentPos);
+        Queue<Room> frontier = new();
+        frontier.Enqueue(startRoom);
 
         int roomCount = 1;
 
         while (roomCount < maxRooms && frontier.Count > 0)
         {
-            Vector2Int parentPos = frontier.Dequeue();
+            Room parentRoom = frontier.Dequeue();
+            Vector2 parentPos = parentRoom.position;
             ShuffleDirections();
 
             foreach (var dir in directions)
             {
                 if (roomCount >= maxRooms) break;
 
-                Vector2Int newPos = parentPos + dir;
-                if (rooms.ContainsKey(newPos)) continue;
+                Vector2 newPos = parentPos + dir;
+                if (IsOccupied(newPos)) continue;
 
-                // === 긴방 배치 조건 ===
+                // === 긴방 배치 ===
                 if (!hasPlacedLongRoom && roomCount == longRoomIndex)
                 {
-                    Vector2Int left = newPos + Vector2Int.left;
-                    Vector2Int right = newPos + Vector2Int.right;
+                    Vector2 left = newPos + Vector2Int.left;
+                    Vector2 right = newPos + Vector2Int.right;
 
-                    bool leftEmpty = !rooms.ContainsKey(left);
-                    bool rightEmpty = !rooms.ContainsKey(right);
+                    bool leftEmpty = !IsOccupied(left);
+                    bool rightEmpty = !IsOccupied(right);
 
                     if ((leftEmpty && rightEmpty) || leftEmpty)
                     {
-                        // 왼쪽 기준 긴방 생성
-                        Room longRoom = roomFactory.CreateRoom(left, ROOMTYPE.Long);
-                        rooms.Add(left, longRoom);
-                        rooms.Add(newPos, longRoom);
-
-                        // 입구는 newPos이므로, 다음 frontier는 left
-                        frontier.Enqueue(left);
+                        Room longRoom = roomFactory.CreateLongRoom(left, newPos, ROOMTYPE.Long);
+                        rooms.Add(longRoom);
                         roomCount++;
                         hasPlacedLongRoom = true;
+                        frontier.Enqueue(longRoom);
                         break;
                     }
                     else if (rightEmpty)
                     {
-                        Room longRoom = roomFactory.CreateRoom(newPos, ROOMTYPE.Long);
-                        rooms.Add(newPos, longRoom);
-                        rooms.Add(right, longRoom);
-
-                        // 입구는 newPos → 다음 frontier는 right
-                        frontier.Enqueue(right);
+                        Room longRoom = roomFactory.CreateLongRoom(newPos, right, ROOMTYPE.Long);
+                        rooms.Add(longRoom);
                         roomCount++;
                         hasPlacedLongRoom = true;
+                        frontier.Enqueue(longRoom);
                         break;
                     }
+
+                    // 양쪽 다 불가능한 경우 continue;
+                    continue;
                 }
 
-                // === 일반방 또는 보스방 ===
                 ROOMTYPE type = (roomCount == maxRooms - 1) ? ROOMTYPE.Boss : ROOMTYPE.Normal;
-                Room room = roomFactory.CreateRoom(newPos, type);
-                rooms.Add(newPos, room);
-                frontier.Enqueue(newPos);
-                roomCount++;
-                break;
+
+                // === 보스방 생성 ===
+                if (type == ROOMTYPE.Boss)
+                {
+                    if (TryPlaceBossRoom(newPos, rooms.SelectMany(r => r.GetAllOccupiedPositions()).ToList(), out Vector2 center, out List<Vector2> bossOccupied))
+                    {
+                        Room bossRoom = roomFactory.CreateRoom(center, ROOMTYPE.Boss);
+                        rooms.Add(bossRoom);
+                        roomCount++;
+                        break; // 보스방 한 번만 생성
+                    }
+                    else
+                    {
+                        continue; // 다른 방향으로 시도
+                    }
+                }
+                else
+                {
+                    Room room = roomFactory.CreateRoom(newPos, type);
+                    rooms.Add(room);
+                    frontier.Enqueue(room);
+                    roomCount++;
+                }
+                break; // 한 방향에만 생성
             }
         }
 
@@ -103,5 +119,42 @@ public class RoomGenerator : MonoBehaviour
             int rnd = Random.Range(0, directions.Length);
             (directions[i], directions[rnd]) = (directions[rnd], directions[i]);
         }
+    }
+
+    private bool IsOccupied(Vector2 pos)
+    {
+        foreach (var room in rooms)
+        {
+            if (room.IsOccupyingPosition(pos)) return true;
+        }
+        return false;
+    }
+
+    private bool TryPlaceBossRoom(Vector2 basePos, List<Vector2> occupiedPositions, out Vector2 centerPos, out List<Vector2> occupied)
+    {
+        Vector2[][] patterns = new Vector2[][]
+        {
+            new Vector2[] { new Vector2(0, 0), new Vector2(-1, 0), new Vector2(-1, 1), new Vector2(0, 1) },
+            new Vector2[] { new Vector2(0, 0), new Vector2(-1, 0), new Vector2(-1, -1), new Vector2(0, -1) },
+            new Vector2[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) },
+            new Vector2[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, -1), new Vector2(0, -1) },
+        };
+
+        foreach (var pattern in patterns)
+        {
+            List<Vector2> candidates = pattern.Select(offset => basePos + offset).ToList();
+            if (candidates.All(pos => !occupiedPositions.Contains(pos)))
+            {
+                occupied = candidates;
+                float avgX = candidates.Average(pos => pos.x);
+                float avgY = candidates.Average(pos => pos.y);
+                centerPos = new Vector2(avgX, avgY);
+                return true;
+            }
+        }
+
+        centerPos = Vector2.zero;
+        occupied = null;
+        return false;
     }
 }

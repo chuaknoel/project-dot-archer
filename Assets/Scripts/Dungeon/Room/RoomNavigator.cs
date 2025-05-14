@@ -6,6 +6,8 @@ public class RoomNavigator : MonoBehaviour
 {
     [SerializeField] private RoomGenerator roomGenerator;
 
+    public EnemyManager enemyManager;
+
     /// 방향에 따라 연결된 방으로 플레이어를 이동
     public void MovePlayerToRoom(Room room, GameObject player, Vector2Int fromDirection)
     {
@@ -19,9 +21,10 @@ public class RoomNavigator : MonoBehaviour
 
     /// 타겟 위치에 있는 방으로 플레이어를 이동
     /// 방향 정보가 없는 경우 기본 중심으로 이동
-    public void MovePlayerToRoomByPosition(Vector2Int targetPosition, GameObject player)
+    public void MovePlayerToRoomByPosition(Vector2 targetPosition, GameObject player)
     {
-        if (roomGenerator.Rooms.TryGetValue(targetPosition, out Room targetRoom))
+        Room targetRoom = roomGenerator.Rooms.Find(r => r.IsOccupyingPosition(targetPosition));
+        if (targetRoom != null)
         {
             Vector2Int fromDirection = GetDirectionToRoom(player.transform.position, targetRoom);
             MovePlayerToRoom(targetRoom, player, fromDirection);
@@ -63,5 +66,9 @@ public class RoomNavigator : MonoBehaviour
         {
             playerCollider.enabled = true;
         }
+
+        // 여기서 현재 방 정보를 가져와서 적 스폰
+        Room currentRoom = DungeonManager.Instance.currentRoom;
+        currentRoom.GetComponent<RoomManager>().OnPlayerEnter();
     }
 }

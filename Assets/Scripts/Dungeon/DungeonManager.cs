@@ -10,16 +10,14 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
     public RoomGenerator roomGenerator;
     public RoomNavigator navigator;
     public Player player;
-    public EnemyManager enemyManager;
 
-    public Dictionary<Vector2Int, Room> rooms;
+    private List<Room> rooms = new();
+    public List<Room> Rooms => rooms;
     public Room currentRoom;
 
     private CameraController cameraController;
 
     public Inventory inventory;
-
-    public List<GameObject> TestEnemies;
 
     void Awake()
     {
@@ -37,13 +35,15 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
     void Start()
     {
         SetPlayerData();
+
         // 맵 생성
         rooms = roomGenerator.GenerateDungeon();
         cameraController = Camera.main.GetComponent<CameraController>();
         inventory.EquipSelectedItems(); //게임매니저 생기면 그떄 조절
 
         // 시작 위치 설정
-        if (rooms.TryGetValue(Vector2Int.zero, out Room startRoom))
+        Room startRoom = FindRoomAtPosition(Vector2Int.zero);
+        if (startRoom != null)
         {
             currentRoom = startRoom;
             cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
@@ -58,21 +58,24 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
     /// 이동 시도 후 유효한 경우 true 반환
     public bool TryMove(Vector2Int direction, out Room newRoom)
     {
-        Vector2Int nextPos = currentRoom.position + direction;
-        
-        if (rooms.TryGetValue(nextPos, out newRoom))
+        Vector2 nextPos = currentRoom.position + direction;
+
+        newRoom = FindRoomAtPosition(nextPos);
+        if (newRoom != null)
         {
             currentRoom = newRoom;
             cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
-            newRoom.GetComponent<RoomManager>().OnPlayerEnter();  // 방 이동 시 적 생성
             return true;
         }
-        else
-        {
-            Debug.Log("다음 방이 존재하지 않습니다.");
-        }
 
+        Debug.Log("다음 방이 존재하지 않습니다.");
         return false;
+    }
+
+    /// 좌표에 해당하는 방을 리스트에서 직접 찾는 메서드
+    public Room FindRoomAtPosition(Vector2 position)
+    {
+        return rooms.Find(r => r.IsOccupyingPosition(position));
     }
 
     public void SetPlayerData()
@@ -81,9 +84,8 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
             (
                 playerName: "sdf",
                 statData: new StatData(new AttackStatData(), new MoveStatData(5f))
-
             );
 
-        player.Init(testData,inventory);
+        player.Init(testData, inventory);
     }
 }

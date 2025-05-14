@@ -1812,10 +1812,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
   occupiedPositions: []
-  tilemap: {fileID: 0}
-  roomBounds: {fileID: 0}
+  tilemap: {fileID: 1403427084560627525}
+  roomBounds: {fileID: 5761678177001069102}
   isVisited: 0
-  roomType: 0
+  roomType: 2
+  entryPositions: []
 --- !u!114 &4302645743595068016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7972,6 +7973,7 @@ GameObject:
   - component: {fileID: 2473802065353273558}
   - component: {fileID: 5211835919619340613}
   - component: {fileID: 5761678177001069102}
+  - component: {fileID: 406307555820981713}
   m_Layer: 8
   m_Name: Collision
   m_TagString: Untagged
@@ -9725,3 +9727,39 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!19719996 &406307555820981713
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8652194799391419693}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0
+  m_UseDelaunayMesh: 0

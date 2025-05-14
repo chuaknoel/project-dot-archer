@@ -13,41 +13,44 @@ public class DoorSpawner : MonoBehaviour
         Vector2Int.right
     };
 
-    public void SpawnDoors(Dictionary<Vector2Int, Room> rooms)
+    public void SpawnDoors(List<Room> rooms)
     {
-        HashSet<(Vector2Int, Vector2Int)> processedPairs = new();
-
+        HashSet<(Vector2, Vector2)> processedPairs = new();
         HashSet<Room> processedRooms = new();
 
-        foreach (var room in new HashSet<Room>(rooms.Values))
+        foreach (var room in rooms)
         {
             if (processedRooms.Contains(room)) continue;
             processedRooms.Add(room);
 
-            foreach (var roomPos in room.occupiedPositions)
+            foreach (var roomPos in room.GetAllOccupiedPositions())
             {
                 foreach (var dir in directions)
                 {
-                    Vector2Int neighborPos = roomPos + dir;
-                    if (!rooms.ContainsKey(neighborPos)) continue;
+                    Vector2 neighborPos = roomPos + dir;
 
-                    Room neighborRoom = rooms[neighborPos];
-                    if (room == neighborRoom) continue; // 같은 긴방 내부 연결 무시
+                    Room neighborRoom = FindRoomAtPosition(rooms, neighborPos);
+                    if (neighborRoom == null || room == neighborRoom) continue;
 
-                    // 쌍 중복 방지: 항상 (작은좌표, 큰좌표)로 정렬
-                    Vector2Int a = Vector2Int.Min(roomPos, neighborPos);
-                    Vector2Int b = Vector2Int.Max(roomPos, neighborPos);
+                    // 쌍 중복 방지
+                    Vector2 a = Vector2.Min(roomPos, neighborPos);
+                    Vector2 b = Vector2.Max(roomPos, neighborPos);
                     if (!processedPairs.Add((a, b))) continue;
 
                     // 문 생성
-                    CreateDoor(room, -dir, dir);
-                    CreateDoor(neighborRoom, dir, -dir);
+                    CreateDoor(room, roomPos, -dir, dir);
+                    CreateDoor(neighborRoom, roomPos, dir, -dir);
                 }
             }
         }
     }
 
-    private void CreateDoor(Room room, Vector2Int fromDir, Vector2Int toDir)
+    private Room FindRoomAtPosition(List<Room> rooms, Vector2 pos)
+    {
+        return rooms.Find(r => r.IsOccupyingPosition(pos));
+    }
+
+    private void CreateDoor(Room room, Vector2 roomPos, Vector2Int fromDir, Vector2Int toDir)
     {
         Vector3 spawnPos = room.GetEntryPositionFrom(fromDir);
         GameObject door = Instantiate(doorPrefab, spawnPos, Quaternion.identity, room.transform);

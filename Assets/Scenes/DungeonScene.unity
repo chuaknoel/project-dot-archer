@@ -616,10 +616,8 @@ MonoBehaviour:
   roomGenerator: {fileID: 293030891}
   navigator: {fileID: 1333247119}
   player: {fileID: 402479124}
-  enemyManager: {fileID: 1524375207}
   currentRoom: {fileID: 0}
   inventory: {fileID: 1887450499}
-  TestEnemies: []
 --- !u!4 &959622477
 Transform:
   m_ObjectHideFlags: 0
@@ -817,6 +815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomGenerator: {fileID: 293030891}
+  enemyManager: {fileID: 1524375207}
 --- !u!4 &1333247120
 Transform:
   m_ObjectHideFlags: 0
