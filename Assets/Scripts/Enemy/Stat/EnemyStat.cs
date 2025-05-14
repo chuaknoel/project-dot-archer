@@ -17,6 +17,7 @@ public class EnemyStat : BaseStat ,IDefenceStat
     {
         if (IsDeath) return;
 
+      //  float applyDamage = Mathf.Clamp(damage - Defence, 0, damage-damage);
         float applyDamage = Mathf.Clamp(damage - Defence, 0, damage);
         currentHealth -= applyDamage;
 
@@ -46,7 +47,9 @@ public class EnemyStat : BaseStat ,IDefenceStat
         animator.SetBool("isDamaged", false);
     }
     public override void Death()
-    {
+    {        // 코인 증가
+        Inventory inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
+        inventory.AddGold(1);
         Destroy(hpBarController.hpBar);
         Destroy(this.gameObject);
     }

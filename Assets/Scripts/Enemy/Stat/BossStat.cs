@@ -45,7 +45,6 @@ public class BossStat : EnemyStat, IAttackStat, IMoveStat
     }
     public override void Death()
     {
-        Destroy(hpBarController.hpBar);
-        Destroy(this.gameObject);
+        base.Death();
     }
 }
