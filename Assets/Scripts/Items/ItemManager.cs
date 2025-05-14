@@ -1,48 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class ItemManager : MonoBehaviour
 {
-    // 싱글톤 인스턴스
-    private static ItemManager instance;
-    public static ItemManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<ItemManager>();
-                if (instance == null)
-                {
-                    GameObject obj = new GameObject("ItemManager");
-                    instance = obj.AddComponent<ItemManager>();
-                }
-            }
-            return instance;
-        }
-    }
-
     // 아이템 데이터 딕셔너리
     private Dictionary<string, ItemData> itemDataDict = new Dictionary<string, ItemData>();
 
     // 아이템 스프라이트 (리소스 폴더에서 로드)
     private Dictionary<string, Sprite> itemSprites = new Dictionary<string, Sprite>();
 
-    private void Awake()
-    {
-        // 싱글톤 설정
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
 
+    public void Init()
+    {
         // 아이템 스프라이트 로드
         LoadItemSprites();
 
@@ -197,8 +168,8 @@ public class ItemManager : MonoBehaviour
         bow1.price = 100;
         // 공격 관련 값 추가
         bow1.attackRange = 6.0f;
-        bow1.attackDelay = 0.5f;
-        bow1.attackCooldown = 1.0f;
+        bow1.attackDelay = .5f;
+        bow1.attackCooldown = 3.0f;
 
         if (itemSprites.TryGetValue("bow_common", out Sprite sprite))
         {

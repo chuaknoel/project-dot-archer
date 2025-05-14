@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class RoomTracker : MonoBehaviour
 {
-    public DungeonManager dungeonManager;
+    public RoomManager roomManager;
     public float checkCooldown = 0.2f;
 
     private bool isChecking = true;
 
     void Update()
     {
-        if (isChecking)
+        if (isChecking)      //To EV : 문에 트리거를 만들어서 트리거 체크를 하면 업데이트가 필요 없지 않을까요? 나중에 다시 얘기해봐요!
         {
             CheckAndMove();
         }
     }
+
     void CheckAndMove()
     {
-        Room current = dungeonManager.currentRoom;
-        GameObject player = GameObject.FindWithTag("Player");
+        Room current = roomManager.currentRoom;
 
-        if (current == null || player == null || current.tilemap == null) return;
+        if (current == null || DungeonManager.Instance.player == null || current.tilemap == null) return;
 
-        Vector3 pos = player.transform.position;
+        Vector3 pos = DungeonManager.Instance.player.transform.position;
         Bounds bounds = current.tilemap.localBounds;
         Vector3 worldCenter = current.transform.position + bounds.center;
         Bounds worldBounds = new Bounds(worldCenter, bounds.size);
@@ -39,10 +39,10 @@ public class RoomTracker : MonoBehaviour
         // 만약 경계를 넘었다면 다른 방으로 이동 시도
         if (dir != Vector2Int.zero)
         {
-            if (dungeonManager.TryMove(dir, out Room nextRoom))
+            if (roomManager.TryMove(dir, out Room nextRoom))
             {
                 isChecking = false;
-                dungeonManager.navigator.MovePlayerToRoom(nextRoom, player, dir);
+                roomManager.navigator.MovePlayerToRoom(nextRoom, DungeonManager.Instance.player.gameObject, dir);
                 StartCoroutine(ResetCheckCooldown());
             }
         }
@@ -56,9 +56,9 @@ public class RoomTracker : MonoBehaviour
 
     public void TryMoveToNextRoom(Vector2Int direction)
     {
-        if (dungeonManager.TryMove(direction, out Room nextRoom))
+        if (roomManager.TryMove(direction, out Room nextRoom))
         {
-            dungeonManager.navigator.MovePlayerToRoom(nextRoom, GameObject.FindWithTag("Player"), direction);
+            roomManager.navigator.MovePlayerToRoom(nextRoom, DungeonManager.Instance.player.gameObject , direction);
         }
     }
 

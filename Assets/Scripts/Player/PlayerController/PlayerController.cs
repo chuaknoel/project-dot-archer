@@ -23,7 +23,12 @@ public class PlayerController : BaseController<Player>
     public override void OnUpdate(float deltaTime)
     {
         GetInputDir();
-        lookAction?.Invoke();
+
+        if (CheckRotateState())     //대기와 이동중일 떄만 rotate 시키는 임시 방어 매서드
+        {
+            lookAction?.Invoke();
+        }
+
         base.OnUpdate(deltaTime);
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -95,5 +100,32 @@ public class PlayerController : BaseController<Player>
 
         player.LookRotate(isLeft);
         return (angle , isLeft);
+    }
+
+    // 스킬이나 다른 액션 스테이트에서 자신이 전이될 수 있는지는 확인하는 매서드
+    // 스킬 사용이나 기타 행동들이 전이되면 안되는 상황에서 전이되는 것을 방지
+    public bool IsActionAbleSate()
+    {
+        switch (currentState.GetType().Name)
+        {
+            case nameof(PlayerMoveState):
+            case nameof(PlayerIdleState):
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    //스킬 사용 중 애니메이션을 실행해야되는데 무기 방향이 고정되어 애니메이션이 제대로 작동하지 않아서 임시로 막아둔 매서드
+    public bool CheckRotateState()
+    {
+        switch (currentState.GetType().Name)
+        {
+            case nameof(PlayerMoveState):
+            case nameof(PlayerIdleState):
+                return true;
+            default:
+                return false;
+        }
     }
 }

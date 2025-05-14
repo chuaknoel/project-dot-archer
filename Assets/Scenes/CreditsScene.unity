@@ -730,7 +730,7 @@ AudioSource:
   m_GameObject: {fileID: 644301926}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: -4438778574497276740, guid: 1f7771585b4135f4698eacb9f0d9570c, type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 50987911a135dc547a879e3ee2c88cca, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -1550,7 +1550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creditContent: {fileID: 2023525936}
-  scrollDuration: 35
+  scrollDuration: 30
   endY: 700
 --- !u!4 &1356697779
 Transform:
@@ -2163,8 +2163,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC131\uC7A5\uC18D\uB3C4\uAC00 \uC815\uD30C \uC544\uB2CC \uB9C8\uAD50.
-    \uCC9C\uB9C8\uC2E0\uACF5\uC744 \uB9CC\uB4E0 \uACE0\uC218"
+  m_Text: "\uC131\uC7A5\uC18D\uB3C4\uAC00 \uC815\uD30C\uC544\uB2CC \uB9C8\uAD50\uC218\uC900.
+    \uAD50\uC218 \uC9C0\uB9DD \uB300\uD559\uC6D0\uC0DD"
 --- !u!222 &2097166287
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -4,19 +4,12 @@ using UnityEngine;
 
 public class NependesStat : EnemyStat , IAttackStat
 {
-    [SerializeField] private float attackDamage;
     public float AttackDamage => attackDamage;
 
-    private float buffDamage;
-    public float BuffDamage => buffDamage;
+    [SerializeField] private float attackDamage;
 
-    public void AddDamage(float addDamage) // 1.5¹è¸é addDamage = 0.5
+    public float GetTotalStatDamage()
     {
-        buffDamage = addDamage;
-    }
-
-    public float GetTotalDamage()
-    {
-        return (1 + buffDamage) * attackDamage;
+        return attackDamage;
     }
 }

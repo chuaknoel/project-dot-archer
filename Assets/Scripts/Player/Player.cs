@@ -3,17 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using Enums;
 
 public class Player : MonoBehaviour
 {
-
     public Inventory Inventory { get { return inventory; } }
     private Inventory inventory;
 
     public PlayerStat stat;
-    
+
     public PlayerController Controller { get { return controller; } }
     private PlayerController controller;
+
+    public SkillExecutor SkillExecutor { get { return skillExecutor; } }
+    private SkillExecutor skillExecutor;
    
     private SpriteRenderer characterImage;
     private Animator playerAnime;
@@ -30,7 +33,8 @@ public class Player : MonoBehaviour
 
     public LayerMask targetMask;
 
-    private InGameUpgradeManager ingameUpgradeManager = new InGameUpgradeManager();
+    public UpgradeManager UpgradeManager { get { return upgradeManager; } }
+    private UpgradeManager upgradeManager;
 
     // Update is called once per frame
     void Update()
@@ -41,6 +45,7 @@ public class Player : MonoBehaviour
         }
 
         controller?.OnUpdate(Time.deltaTime);
+        skillExecutor?.OnUpdate(Time.deltaTime);
 
         // UI 매니저 생기면 옮겨주세요!
         // 인벤토리 UI 토글 (I 키)
@@ -51,9 +56,8 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            stat.TakeDamage(123123123123f);
+            stat.GetComponent<IDefenceStat>().TakeDamage(123123);
         }
-
     }
 
     private void FixedUpdate()
@@ -68,15 +72,20 @@ public class Player : MonoBehaviour
 
     public void Init(PlayerData playerData, Inventory inventory)
     {
-        stat ??= new PlayerStat(this, playerData);
+        stat ??= GetComponent<PlayerStat>();
+        stat.Init(this, playerData);
 
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();
         searchTarget ??= GetComponent<SearchTarget>();
         this.inventory = inventory;
-        
+
+        upgradeManager = GameManager.Instance.upgradeManager;
+
         SetWeapon();
+
         ControllerRegister();
+        skillExecutor = new SkillExecutor(this, DungeonManager.Instance.skillManager.skillList);
     }
 
     public void SetWeapon()
@@ -95,6 +104,7 @@ public class Player : MonoBehaviour
 
         // 3) Item 컴포넌트 확인 (필요시)
         Item itemComp = instance.GetComponent<Item>();
+        itemComp.LoadItemData();
         if (itemComp == null)
         {
             Debug.LogError("무기 인스턴스에 Item 컴포넌트가 없습니다!");
@@ -108,9 +118,8 @@ public class Player : MonoBehaviour
             Debug.LogError("무기 인스턴스에 WeaponHandler 컴포넌트가 없습니다!");
             return;
         }
-        weaponHandler.Init(itemComp, stat, targetMask);
+        weaponHandler.Init(itemComp, stat, targetMask, GetComponent<Collider2D>());
     }
-
 
     public void ControllerRegister()
     {
@@ -119,6 +128,12 @@ public class Player : MonoBehaviour
         controller.RegisterState(new PlayerMoveState(), this);
         controller.RegisterState(new PlayerJumpState(), this);
         controller.RegisterState(new PlayerDeathState(), this);
+        controller.RegisterState(new PlayerSkillState(), this);
+    }
+
+    private void SkillRegister(Skill<Player> skill)
+    {
+        skillExecutor.RegisterSkill(skill);
     }
 
     public void ChangeAnime(PlayerState nextAnime)
@@ -132,7 +147,6 @@ public class Player : MonoBehaviour
             playerAnime.SetInteger("ChangeState", (int)nextAnime);
         }
     }
-
 
     public void LookRotate(bool isLeft)
     {
@@ -154,7 +168,7 @@ public class Player : MonoBehaviour
     //업그레이들 될 정보를 받아 데이터 정보 갱신
     public void Upgrade(InGameUpgradeData gameUpgradeData)
     {
-        ingameUpgradeManager.MergeUpgrade(gameUpgradeData);
+        upgradeManager.MergeUpgrade(gameUpgradeData);
         ApplyUpgrade(gameUpgradeData);
     }
 
@@ -163,16 +177,7 @@ public class Player : MonoBehaviour
     {
         if (gameUpgradeData.attackType == AttackTpye.Range)
         {
-            (weaponHandler as RangeWeaponHandler).ApplyUpgrade(ingameUpgradeManager.GetRangeUpgrade());
+            (weaponHandler as RangeWeaponHandler).ApplyUpgrade(upgradeManager.GetRangeUpgrade());
         }
     }
-}
-
-public enum PlayerState
-{
-    Idle,
-    Move,
-    Attack,
-    Jump,
-    Death,
 }

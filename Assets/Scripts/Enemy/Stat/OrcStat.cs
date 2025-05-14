@@ -4,36 +4,13 @@ using UnityEngine;
 
 public class OrcStat : EnemyStat,IAttackStat, IMoveStat
 {
-    [SerializeField] private float attackDamage;
-    public float AttackDamage => attackDamage;
-
-    private float buffDamage;
-    public float BuffDamage => buffDamage;
-
-
-    [SerializeField] private float moveSpeed;
     public float MoveSpeed => moveSpeed;
+    public float AttackDamage => attackDamage;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float attackDamage;
 
-    private float buffSpeed;
-    public float BuffSpeed => buffSpeed;
-
-    public void AddDamage(float addDamage) // 1.5배면 addDamage = 0.5
+    public float GetTotalStatDamage()
     {
-        buffDamage = addDamage;
-    }
-
-    public float GetTotalDamage()
-    {
-        return ((1 + buffDamage) * attackDamage);
-    }
-
-    public void AddSpeed(float addSpeed) // 1.5배면 addSpeed = 0.5
-    {
-        buffSpeed = addSpeed;
-    }
-
-    public float GetTotalSpeed()
-    {
-        return (1 + buffSpeed) * moveSpeed;
+        return attackDamage;
     }
 }
