@@ -38,7 +38,7 @@
       "attackCooldown": 0.0
     },
     "inventoryItems": [],
-    "gold": 500
+    "gold": 1
   },
   "upgradeData": {
     "attackDamage": 0.0,
