@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -65,6 +66,11 @@ public class ShopManager : MonoBehaviour
     {
         itemsForSale.Clear();
         itemsForSale = itemManager.GetItemsByRarity((ItemRarity)(currentStage));
+        for (int i = 0; i < itemsForSale.Count; i++)
+        {
+
+        }
+
     }
 
     public void OpenShop()
@@ -77,34 +83,60 @@ public class ShopManager : MonoBehaviour
     {
         for (int i = 0; i < itemsForSale.Count; i++)
         {
-            //if (i == itemsForSale.Count / 2) //줄바꿈
-            //{
-            //    shopItem.transform.localPosition = Vector3.down * 2;
-            //}
+            GameObject gameObject = Instantiate(shopItem, itemTransform);
+            Debug.Log("prefab" + i);
+            gameObject.transform.localScale = Vector3.one;
+            gameObject.transform.localPosition = Vector3.right;
 
-            if (i < itemsForSale.Count / 2)
+            if(i < itemsForSale.Count / 2)
             {
-                shopItem = Instantiate(weaponPrefabDict[itemsForSale[i].itemId], itemTransform);
-                Debug.Log("무기생성" + i);
-                shopItem.transform.localScale = Vector3.one;
+                itemsForSale[i].itemIcon = Resources.Load<Sprite>("Weapons/" + itemsForSale[i].ItemId);
             }
             else
             {
-                shopItem = Instantiate(armorPrefabDict[itemsForSale[i].itemId], itemTransform);
-                Debug.Log("아머생성" + i);
-                shopItem.transform.localScale = Vector3.one;
+                itemsForSale[i].itemIcon = Resources.Load<Sprite>("Armors/" + itemsForSale[i].ItemId);
             }
-            shopItem.transform.localPosition = Vector3.right;
+            if (itemsForSale[i].itemIcon == null)
+            {
+                Debug.LogWarning("itemicon null");
+            }
+            SpriteRenderer icon = gameObject.transform.Find("Sprite").GetComponent<SpriteRenderer>();
+            icon.sprite = itemsForSale[i].itemIcon;
+            if (icon == null)
+            {
+                Debug.LogWarning("Image 컴포넌트 없음!");
+            }
+            else if (icon.sprite == null)
+            {
+                Debug.LogWarning("Image는 있지만 sprite가 비어 있음!");
+            }
+            else
+            {
+                Debug.Log("정상적으로 sprite 있음: " + icon.sprite.name);
+            }
+            TMP_Text price = gameObject.transform.Find("Price").GetComponent<TMP_Text>();
+            price.text = itemsForSale[i].price.ToString();
+            TMP_Text name = gameObject.transform.Find("Name").GetComponent<TMP_Text>();
+            name.text = itemsForSale[i].itemName;
+            TMP_Text description = gameObject.transform.Find("Description").GetComponent<TMP_Text>();
+            description.text = itemsForSale[i].ItemDescription;
+
+
+
+            //gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = itemsForSale[i].ItemIcon;
+            //gameObject.transform.GetChild(1).GetComponent<TMP_Text>().text = itemsForSale[i].price.ToString();
+            //gameObject.transform.GetChild(2).GetComponent<TMP_Text>().text = itemsForSale[i].itemName;
+            //gameObject.transform.GetChild(3).GetComponent<TMP_Text>().text = itemsForSale[i].ItemDescription;
+
 
             int index = i;
-            shopItem.AddComponent<Button>().onClick.AddListener(() => BuyItem(index));
+            gameObject.GetComponent<Button>().onClick.AddListener(() => BuyItem(index));
 
+            //sprite = itemsForSale[i].ItemIcon;
             //float price = itemsForSale[i].price;
             //string name = itemsForSale[i].itemName;
             //string description = itemsForSale[i].ItemDescription;
         }
-
-
     }
 
     public void BuyItem(int index) //클릭한 아이템
