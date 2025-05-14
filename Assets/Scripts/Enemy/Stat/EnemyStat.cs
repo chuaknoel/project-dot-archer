@@ -6,8 +6,8 @@ public class EnemyStat : BaseStat ,IDefenceStat
 {
     public float Defence => defence;
     protected float defence;
-    Animator animator;
-
+    protected Animator animator;
+    HpBarController hpBarController;
     void Start()
     {
          animator =transform.GetChild(0).GetComponent<Animator>();
@@ -16,17 +16,15 @@ public class EnemyStat : BaseStat ,IDefenceStat
     public virtual void TakeDamage(float damage)
     {
         if (IsDeath) return;
-        Debug.Log("피격2");
-        float applyDamage = Mathf.Clamp(damage - Defence, 0, damage - damage);
+
+        float applyDamage = Mathf.Clamp(damage - Defence, 0, damage);
         currentHealth -= applyDamage;
-        Debug.Log(currentHealth);
-        
+
         // HP Bar 업데이트
         UpdateHp();
-      
-        animator.SetBool("isDamaged",true);
-        Invoke("EndDamaged", 1f);
-         
+        // 피격 애니메이션 재생
+        PlayAnimation();
+
         if (IsDeath)
         {
             Death();
@@ -34,24 +32,23 @@ public class EnemyStat : BaseStat ,IDefenceStat
     }
     protected virtual void UpdateHp()
     {
-        HpBarController hpBarController = GetComponent<HpBarController>();
+        hpBarController = GetComponent<HpBarController>();
         hpBarController.UpdateHP(CurrentHealth, MaxHealth);
+    }
+    protected virtual void PlayAnimation()
+    {
+        animator.SetBool("isDamaged", true);
+        Invoke("EndDamaged", 0.15f);
+
     }
     void EndDamaged()
     {
         animator.SetBool("isDamaged", false);
     }
-    //public override void TakeDamage(float damage)
-    //{
-    //    if (IsDeath) return;
-
-    //    float applyDamage = Mathf.Clamp(damage - Defence, 0, damage - damage);
-    //    currentHealth -= applyDamage;
-
-    //    if (IsDeath)
-    //    {
-    //        Death();
-    //    }
-    //}
+    public override void Death()
+    {
+        Destroy(hpBarController.hpBar);
+        Destroy(this.gameObject);
+    }
 }
     

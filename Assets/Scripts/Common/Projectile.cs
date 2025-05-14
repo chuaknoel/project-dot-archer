@@ -74,12 +74,8 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("targetMask 값: " + targetMask.value);
-        Debug.Log("충돌한 레이어 인덱스: " + collision.gameObject.layer);
-        Debug.Log("충돌한 레이어 이름: " + LayerMask.LayerToName(collision.gameObject.layer));
         if ((targetMask & (1 << collision.gameObject.layer)) != 0) //타겟에 충돌시 데미지를 주고 사라짐
         {
-            Debug.Log("C충돌허남ㅇㄴ");
             if (collision.gameObject.TryGetComponent<IDefenceStat>(out IDefenceStat target))
             {
                 target.TakeDamage(rangeWeaponHandler.GetAttackDamage());

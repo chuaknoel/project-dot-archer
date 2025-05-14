@@ -9,6 +9,7 @@ public class BossHpBarController : HpBarController
     {
        
     }
+
     // HpBar »ý¼º
     protected override void CreateHpBar()
     {

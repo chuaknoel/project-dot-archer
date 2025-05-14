@@ -11,21 +11,41 @@ public class BossStat : EnemyStat, IAttackStat, IMoveStat
     [SerializeField] private float moveSpeed;
     [SerializeField] private float attackDamage;
 
-
+    BossHpBarController hpBarController;
     public override void TakeDamage(float damage)
     {
-        Debug.Log("피격");
-       base.TakeDamage(damage);
-        Debug.Log(currentHealth);
+        if (IsDeath) return;
+        float applyDamage = Mathf.Clamp(damage - Defence, 0, damage);
+        currentHealth -= applyDamage;
+
+        // HP Bar 업데이트
+        UpdateHp();
+        // 피격 애니메이션 재생
+        PlayAnimation();
+
+        if (IsDeath)
+        {
+            Death();
+        }
     }
     protected override void UpdateHp()
     {
-        BossHpBarController hpBarController = GetComponent<BossHpBarController>();
+        hpBarController = GetComponent<BossHpBarController>();
         hpBarController.UpdateHP(CurrentHealth, MaxHealth);
     }
+    protected override void PlayAnimation()
+    {
+        animator.SetBool("isDamaged", true);
+        Invoke("EndDamaged", 0.15f);
 
-    float IAttackStat.GetTotalStatDamage()
+    }
+     float IAttackStat.GetTotalStatDamage()
     {
         return attackDamage;
+    }
+    public override void Death()
+    {
+        Destroy(hpBarController.hpBar);
+        Destroy(this.gameObject);
     }
 }
