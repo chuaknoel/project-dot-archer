@@ -24,6 +24,8 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private List<ItemData> itemsForSale = new List<ItemData>();
     [SerializeField] private Transform itemTransform;
     [SerializeField] private GameObject shopItem;
+    private List<Sprite> itemicons = new List<Sprite>();
+    
 
     [SerializeField] private int currentStage; //던전매니저에?
     public int CurrentStage => currentStage;
@@ -31,7 +33,6 @@ public class ShopManager : MonoBehaviour
     public Inventory inventory;
 
     public ItemManager itemManager;
-    private Sprite sprite;
 
     private void Awake()
     {
@@ -66,10 +67,6 @@ public class ShopManager : MonoBehaviour
     {
         itemsForSale.Clear();
         itemsForSale = itemManager.GetItemsByRarity((ItemRarity)(currentStage));
-        for (int i = 0; i < itemsForSale.Count; i++)
-        {
-
-        }
 
     }
 
@@ -88,20 +85,20 @@ public class ShopManager : MonoBehaviour
             gameObject.transform.localScale = Vector3.one;
             gameObject.transform.localPosition = Vector3.right;
 
-            if(i < itemsForSale.Count / 2)
+            if (i < itemsForSale.Count / 2)
             {
-                itemsForSale[i].itemIcon = Resources.Load<Sprite>("Weapons/" + itemsForSale[i].ItemId);
+                itemicons.Add(Resources.Load<Sprite>(itemsForSale[i].ItemId));
             }
             else
             {
-                itemsForSale[i].itemIcon = Resources.Load<Sprite>("Armors/" + itemsForSale[i].ItemId);
+                itemicons.Add (Resources.Load<Sprite>(itemsForSale[i].ItemId));
             }
-            if (itemsForSale[i].itemIcon == null)
+            if (itemicons[i] == null)
             {
                 Debug.LogWarning("itemicon null");
             }
             SpriteRenderer icon = gameObject.transform.Find("Sprite").GetComponent<SpriteRenderer>();
-            icon.sprite = itemsForSale[i].itemIcon;
+            icon.sprite = itemicons[i];
             if (icon == null)
             {
                 Debug.LogWarning("Image 컴포넌트 없음!");
@@ -112,13 +109,13 @@ public class ShopManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("정상적으로 sprite 있음: " + icon.sprite.name);
+                Debug.Log("정상적으로 sprite 있음: " + icon.name);
             }
             TMP_Text price = gameObject.transform.Find("Price").GetComponent<TMP_Text>();
             price.text = itemsForSale[i].price.ToString();
-            TMP_Text name = gameObject.transform.Find("Name").GetComponent<TMP_Text>();
+            Text name = gameObject.transform.Find("Name").GetComponent<Text>();
             name.text = itemsForSale[i].itemName;
-            TMP_Text description = gameObject.transform.Find("Description").GetComponent<TMP_Text>();
+            Text description = gameObject.transform.Find("Description").GetComponent<Text>();
             description.text = itemsForSale[i].ItemDescription;
 
 
@@ -130,7 +127,7 @@ public class ShopManager : MonoBehaviour
 
 
             int index = i;
-            gameObject.GetComponent<Button>().onClick.AddListener(() => BuyItem(index));
+            gameObject.transform.GetComponent<Button>().onClick.AddListener(() => BuyItem(index));
 
             //sprite = itemsForSale[i].ItemIcon;
             //float price = itemsForSale[i].price;
@@ -149,7 +146,6 @@ public class ShopManager : MonoBehaviour
         else
         {
             Debug.Log("nomoney" + index);
-
         }
     }
 }
