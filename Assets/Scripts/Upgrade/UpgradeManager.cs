@@ -63,7 +63,7 @@ public class UpgradeManager : MonoBehaviour
     public void Init()
     {
         UpgradeReset();
-        permanentUpgradeData.LoadData(GameManager.Instance.gameData.upgradeData);
+        permanentUpgradeData.LoadData(GameManager.Instance.gameData);
     }
 
     public void UpgradeReset()

@@ -175,6 +175,16 @@ MonoBehaviour:
   - {fileID: 9042726494757051735, guid: 6cd9968515608b748ba9944f2d4dafb8, type: 3}
   - {fileID: 582702308276759449, guid: a7834378d40b5534dba413c693244a58, type: 3}
   - {fileID: 6102266099826236044, guid: 0d110982777c2a9478b4c2ad0239a2fb, type: 3}
+  stage_one_enemies:
+  - {fileID: 2569082191853828536, guid: f6ecf10e34321f544af76775faa3021d, type: 3}
+  - {fileID: 9222517818211460785, guid: 421b947c83e846f4f83a9153a43cdb12, type: 3}
+  - {fileID: 7332990131915474533, guid: 0f8336265d8bb4840b5400755b118a94, type: 3}
+  - {fileID: 7161795180647208378, guid: 48f314e77b675454482b8008894787ca, type: 3}
+  stage_two_enemies:
+  - {fileID: 2621650994454439631, guid: 7cc76e8df1822ea4888bd398ab6a138b, type: 3}
+  - {fileID: 279659957311910310, guid: 6cd9968515608b748ba9944f2d4dafb8, type: 3}
+  - {fileID: 1618457837498767012, guid: a7834378d40b5534dba413c693244a58, type: 3}
+  - {fileID: 3652204991987385785, guid: 0d110982777c2a9478b4c2ad0239a2fb, type: 3}
 --- !u!1 &246888875
 GameObject:
   m_ObjectHideFlags: 0
@@ -6291,6 +6301,7 @@ MonoBehaviour:
   level: 0
   maxHealth: 0
   currentHealth: 0
+  baseHealth: 0
   attackDamage: 0
   defence: 0
   moveSpeed: 0

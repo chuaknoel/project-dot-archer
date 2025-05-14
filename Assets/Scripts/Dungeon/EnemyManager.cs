@@ -4,25 +4,12 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    public static EnemyManager Instance { get; private set; }
-
     public List<BaseEnemy> activeEnemies;
 
     public GameObject[] enemyPrefabs;
 
-
-    void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Debug.LogWarning("여러 개의 DungeonManager 인스턴스가 존재합니다. 하나만 유지해야 합니다.");
-            Destroy(gameObject); // 혹은 중복 방지 처리
-        }
-    }
+    public BaseEnemy[] stage_one_enemies;
+    public BaseEnemy[] stage_two_enemies;
 
     public void SpawnEnemies(RoomManager room)
     {

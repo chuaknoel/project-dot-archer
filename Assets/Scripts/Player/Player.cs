@@ -70,10 +70,10 @@ public class Player : MonoBehaviour
         controller?.OnFixedUpdate();
     }
 
-    public void Init(PlayerData playerData, Inventory inventory)
+    public void Init(GameData gameData, Inventory inventory)
     {
         stat ??= GetComponent<PlayerStat>();
-        stat.Init(this, playerData);
+        stat.Init(this, gameData);
 
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();

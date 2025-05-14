@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
 {
+    public float BaseHealth { get { return baseHealth; } }
+    [SerializeField] protected float baseHealth;
+    
     public float AttackDamage => attackDamage;
     [SerializeField] private float attackDamage;
 
@@ -20,18 +23,23 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
 
     private Player player;
 
+    private GameData gameData;
     private PlayerData playerData;
+    
 
-    public void Init(Player player, PlayerData playerData)
+    public void Init(Player player, GameData gameData)
     {
+        this.gameData = gameData;
         this.player = player;
-        this.playerData = playerData;
+        this.playerData = gameData.playerData;
         attackDamage = playerData.statData.attackStat.attackDamage;
         defence = playerData.statData.defenceStat.defence;
         moveSpeed = playerData.statData.moveStat.moveSpeed;
-        currentHealth = 100;
-        maxHealth = 100;
-        cost = playerData.statData.cost;
+
+        baseHealth = playerData.statData.baseHealth;
+        maxHealth = baseHealth + gameData.upgradeData.health;
+        currentHealth = maxHealth;
+        cost = playerData.statData.cost + gameData.upgradeData.cost;
         useableCost = cost;
     }
 
