@@ -80,9 +80,17 @@ public class GameManager : MonoBehaviour
 
     public void LoadDefaultData()
     {
-        string loadData = File.ReadAllText(dataPath + defaultFile);
-        gameData = JsonUtility.FromJson<GameData>(loadData);
-        Debug.Log($"디폴트 데이터 로드 : {gameData}");
+        TextAsset defaulData = Resources.Load<TextAsset>("DefaultData/defaultData");
+        if (defaulData != null)
+        {
+            string loadData = defaulData.text;
+            gameData = JsonUtility.FromJson<GameData>(loadData);
+            Debug.Log($"디폴트 데이터 로드 : {gameData}");
+        }
+        else
+        {
+            Debug.LogError($"디폴트 데이터 로드에 실패 했습니다.");
+        }
     }
 
     public bool CheckSaveData()
