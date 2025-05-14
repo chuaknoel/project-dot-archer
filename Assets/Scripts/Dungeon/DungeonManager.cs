@@ -3,25 +3,51 @@ using System.Collections.Generic;
 using Enums;
 using UnityEngine;
 
-public class DungeonManager : MonoBehaviour
+public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임자
 {
+    public static DungeonManager Instance { get; private set; }
+
     public RoomGenerator roomGenerator;
     public RoomNavigator navigator;
-    public GameObject player;
+    public Player player;
+    public EnemyManager enemyManager;
 
     public Dictionary<Vector2Int, Room> rooms;
     public Room currentRoom;
 
+    private CameraController cameraController;
+
+    public Inventory inventory;
+
+    public List<GameObject> TestEnemies;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Debug.LogWarning("여러 개의 DungeonManager 인스턴스가 존재합니다. 하나만 유지해야 합니다.");
+            Destroy(gameObject); // 혹은 중복 방지 처리
+        }
+    }
+
     void Start()
-    {   
+    {
+        SetPlayerData();
         // 맵 생성
         rooms = roomGenerator.GenerateDungeon();
+        cameraController = Camera.main.GetComponent<CameraController>();
+        inventory.EquipSelectedItems(); //게임매니저 생기면 그떄 조절
 
         // 시작 위치 설정
         if (rooms.TryGetValue(Vector2Int.zero, out Room startRoom))
         {
             currentRoom = startRoom;
-            navigator.MovePlayerToRoom(currentRoom, player, Vector2Int.zero); // 초기엔 방향 없음
+            cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
+            navigator.MovePlayerToRoom(currentRoom, player.gameObject, Vector2Int.zero); // 초기엔 방향 없음
         }
         else
         {
@@ -37,6 +63,8 @@ public class DungeonManager : MonoBehaviour
         if (rooms.TryGetValue(nextPos, out newRoom))
         {
             currentRoom = newRoom;
+            cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
+            newRoom.GetComponent<RoomManager>().OnPlayerEnter();  // 방 이동 시 적 생성
             return true;
         }
         else
@@ -45,5 +73,17 @@ public class DungeonManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void SetPlayerData()
+    {
+        PlayerData testData = new PlayerData
+            (
+                playerName: "sdf",
+                statData: new StatData(new AttackStatData(), new MoveStatData(5f))
+
+            );
+
+        player.Init(testData,inventory);
     }
 }

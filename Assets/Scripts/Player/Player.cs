@@ -1,18 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Android.Types;
+using Unity.Mathematics;
 using UnityEngine;
+using Enums;
 
 public class Player : MonoBehaviour
 {
-    public Inventory Inventory => inventory;
-    [SerializeField] private Inventory inventory;
+    public Inventory Inventory { get { return inventory; } }
+    private Inventory inventory;
 
-    [HideInInspector] public PlayerStat stat;
-    
+    public PlayerStat stat;
+
     public PlayerController Controller { get { return controller; } }
     private PlayerController controller;
-    private Vector3 inputDir;
 
     private SpriteRenderer characterImage;
     private Animator playerAnime;
@@ -21,10 +22,16 @@ public class Player : MonoBehaviour
     private SearchTarget searchTarget;
 
     [SerializeField] private Transform weaponPivot;
-    [SerializeField] private WeaponHandler weaponHandler;
     public WeaponHandler WeaponHandler { get { return weaponHandler; } }
+    private WeaponHandler weaponHandler;
+
+    public ParticleSystem PlalyerDeathParticle { get { return plalyerDeathParticle; } }
+    [SerializeField] private ParticleSystem plalyerDeathParticle;
 
     public LayerMask targetMask;
+
+    public UpgradeManager UpgradeManager { get { return upgradeManager; } }
+    private UpgradeManager upgradeManager = new UpgradeManager();
 
     // Update is called once per frame
     void Update()
@@ -34,16 +41,18 @@ public class Player : MonoBehaviour
             return;
         }
 
-        GetInputDir();
-        LookRotate();
         controller?.OnUpdate(Time.deltaTime);
-
 
         // UI 매니저 생기면 옮겨주세요!
         // 인벤토리 UI 토글 (I 키)
         if (Input.GetKeyDown(KeyCode.I) && inventory != null)
         {
             inventory.ToggleInventoryUI();
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            stat.GetComponent<IDefenceStat>().TakeDamage(123123);
         }
     }
 
@@ -57,28 +66,52 @@ public class Player : MonoBehaviour
         controller?.OnFixedUpdate();
     }
 
-    private void Start()
-    {
-        Init();
-    }
-
-    public void Init()
+    public void Init(PlayerData playerData, Inventory inventory)
     {
         stat ??= GetComponent<PlayerStat>();
+        stat.Init(this, playerData);
+
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();
         searchTarget ??= GetComponent<SearchTarget>();
+        this.inventory = inventory;
 
-        inventory ??= GetComponent<Inventory>();
-        
-        //SetWeapon();
+        SetWeapon();
         ControllerRegister();
     }
 
-    private void SetWeapon()
+    public void SetWeapon()
     {
-        weaponHandler.Init(inventory.GetCurrentWeapon() , stat, targetMask);
+        // 1) Inventory에서 무기 프리팹(GameObject) 가져오기
+        GameObject prefab = inventory.GetCurrentWeaponPrefab();
+        if (prefab == null)
+        {
+            Debug.LogWarning("장착할 무기 Prefab이 없습니다.");
+            return;
+        }
+
+        // 2) 씬에 인스턴스 생성 (프리팹 에셋을 건드리지 않기 위해 반드시 Instantiate)
+        GameObject instance = Instantiate(prefab, weaponPivot);
+        instance.name = prefab.name;  // 이름 복사
+
+        // 3) Item 컴포넌트 확인 (필요시)
+        Item itemComp = instance.GetComponent<Item>();
+        if (itemComp == null)
+        {
+            Debug.LogError("무기 인스턴스에 Item 컴포넌트가 없습니다!");
+            return;
+        }
+
+        // 4) WeaponHandler 컴포넌트 할당 및 초기화
+        weaponHandler = instance.GetComponent<WeaponHandler>();
+        if (weaponHandler == null)
+        {
+            Debug.LogError("무기 인스턴스에 WeaponHandler 컴포넌트가 없습니다!");
+            return;
+        }
+        weaponHandler.Init(itemComp, stat, targetMask, GetComponent<Collider2D>());
     }
+
 
     public void ControllerRegister()
     {
@@ -91,44 +124,21 @@ public class Player : MonoBehaviour
 
     public void ChangeAnime(PlayerState nextAnime)
     {
-        playerAnime.SetInteger("ChangeState", (int)nextAnime);
-    }
-
-    public Vector3 GetInputDir()
-    {
-        inputDir.x = Input.GetAxisRaw("Horizontal");
-        inputDir.y = Input.GetAxisRaw("Vertical");
-        return inputDir;
-    }
-
-    public void LookRotate()
-    {
-        Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 lookDir = worldPos - (Vector2)transform.position;
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-
-        float rotZ = Mathf.Abs(angle);
-
-        bool isLeft = (rotZ > 90);
-
-        if (isLeft)
+        if (nextAnime == PlayerState.Death)
         {
-            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            playerAnime.SetTrigger("IsDeath");
         }
         else
         {
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            playerAnime.SetInteger("ChangeState", (int)nextAnime);
         }
-
-        //weaponHandler.Rotate(rotZ);
     }
 
-    public float TotalDamage()
+
+    public void LookRotate(bool isLeft)
     {
-        // 인벤토리에서 계산된 총 데미지 사용
-        return stat.AttackDamage + inventory.GetTotalAttackBonus();
+        characterImage.flipX = isLeft;
     }
-
 
     public bool IsAttackable(PlayerState curstate)
     {
@@ -141,13 +151,20 @@ public class Player : MonoBehaviour
             default: return false;
         }
     }
-}
 
-public enum PlayerState
-{
-    Idle,
-    Move,
-    Attack,
-    Jump,
-    Death,
+    //업그레이들 될 정보를 받아 데이터 정보 갱신
+    public void Upgrade(InGameUpgradeData gameUpgradeData)
+    {
+        upgradeManager.MergeUpgrade(gameUpgradeData);
+        ApplyUpgrade(gameUpgradeData);
+    }
+
+    //업그레이드 적용
+    public void ApplyUpgrade(InGameUpgradeData gameUpgradeData)
+    {
+        if (gameUpgradeData.attackType == AttackTpye.Range)
+        {
+            (weaponHandler as RangeWeaponHandler).ApplyUpgrade(upgradeManager.GetRangeUpgrade());
+        }
+    }
 }

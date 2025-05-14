@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class ItemManager : MonoBehaviour
 {
@@ -22,9 +23,6 @@ public class ItemManager : MonoBehaviour
             return instance;
         }
     }
-
-    // 아이템 프리팹
-    [SerializeField] private GameObject itemPrefab;
 
     // 아이템 데이터 딕셔너리
     private Dictionary<string, ItemData> itemDataDict = new Dictionary<string, ItemData>();
@@ -64,10 +62,10 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    // 기본 아이템 생성
+    // 기본 아이템 데이터 생성 및 등록
     private void CreateDefaultItems()
     {
-        Debug.Log("기본 아이템 생성");
+        Debug.Log("기본 아이템 데이터 생성");
 
         // 무기 아이템 생성
         CreateWeaponItems();
@@ -287,8 +285,8 @@ public class ItemManager : MonoBehaviour
         // 일반 낫
         ItemData scythe1 = new ItemData();
         scythe1.itemId = "scythe_common";
-        scythe1.itemName = "일반낫";
-        scythe1.itemDescription = "기본적인 낫입니다.";
+        scythe1.itemName = "일반도끼";
+        scythe1.itemDescription = "기본적인 도끼입니다.";
         scythe1.itemCategory = ItemCategory.Weapon;
         scythe1.weaponType = WeaponType.Scythe;
         scythe1.itemRarity = ItemRarity.Common;
@@ -310,8 +308,8 @@ public class ItemManager : MonoBehaviour
         // 좋은 낫
         ItemData scythe2 = new ItemData();
         scythe2.itemId = "scythe_uncommon";
-        scythe2.itemName = "좋은낫";
-        scythe2.itemDescription = "품질이 좋은 낫입니다.";
+        scythe2.itemName = "좋은도끼";
+        scythe2.itemDescription = "품질이 좋은 도끼입니다.";
         scythe2.itemCategory = ItemCategory.Weapon;
         scythe2.weaponType = WeaponType.Scythe;
         scythe2.itemRarity = ItemRarity.Uncommon;
@@ -333,8 +331,8 @@ public class ItemManager : MonoBehaviour
         // 더좋은 낫
         ItemData scythe3 = new ItemData();
         scythe3.itemId = "scythe_rare";
-        scythe3.itemName = "더좋은낫";
-        scythe3.itemDescription = "희귀한 낫입니다.";
+        scythe3.itemName = "더좋은도끼";
+        scythe3.itemDescription = "희귀한 도끼입니다.";
         scythe3.itemCategory = ItemCategory.Weapon;
         scythe3.weaponType = WeaponType.Scythe;
         scythe3.itemRarity = ItemRarity.Rare;
@@ -356,8 +354,8 @@ public class ItemManager : MonoBehaviour
         // 너무좋은 낫
         ItemData scythe4 = new ItemData();
         scythe4.itemId = "scythe_epic";
-        scythe4.itemName = "너무좋은낫";
-        scythe4.itemDescription = "전설적인 낫입니다.";
+        scythe4.itemName = "너무좋은도끼";
+        scythe4.itemDescription = "전설적인 도끼입니다.";
         scythe4.itemCategory = ItemCategory.Weapon;
         scythe4.weaponType = WeaponType.Scythe;
         scythe4.itemRarity = ItemRarity.Epic;
@@ -630,7 +628,7 @@ public class ItemManager : MonoBehaviour
         itemDataDict[boots4.itemName] = boots4;
     }
 
-    // 이름으로 아이템 데이터 가져오기
+    // 아이템 데이터 접근 메서드
     public ItemData GetItemDataByName(string name)
     {
         if (itemDataDict.TryGetValue(name, out ItemData data))
@@ -642,7 +640,6 @@ public class ItemManager : MonoBehaviour
         return null;
     }
 
-    // ID로 아이템 데이터 가져오기
     public ItemData GetItemDataById(string id)
     {
         if (itemDataDict.TryGetValue(id, out ItemData data))
@@ -654,104 +651,50 @@ public class ItemManager : MonoBehaviour
         return null;
     }
 
-    // 게임 내 아이템 생성하기
-    public GameObject SpawnItem(Vector3 position, ItemData dataToSpawn)
-    {
-        if (dataToSpawn == null || itemPrefab == null)
-        {
-            Debug.LogError("아이템 또는 프리팹이 null입니다");
-            return null;
-        }
-
-        // 아이템 인스턴스 생성
-        GameObject itemInstance = Instantiate(itemPrefab, position, Quaternion.identity);
-
-        // 아이템 컴포넌트 초기화
-        Item item = itemInstance.GetComponent<Item>();
-        if (item != null)
-        {
-            item.Initialize(dataToSpawn);
-        }
-        else
-        {
-            Debug.LogError("생성된 인스턴스에 Item 컴포넌트가 없습니다");
-            Destroy(itemInstance);
-            return null;
-        }
-
-        return itemInstance;
-    }
-
-    // 랜덤 아이템 생성 (적 드롭 등에서 사용)
-    public GameObject SpawnRandomItem(Vector3 position, ItemRarity rarity)
-    {
-        List<ItemData> itemsOfRarity = GetItemsByRarity(rarity);
-
-        if (itemsOfRarity.Count == 0)
-        {
-            Debug.LogWarning($"해당 등급({rarity})의 아이템이 없습니다");
-            return null;
-        }
-
-        // 랜덤으로 아이템 선택
-        int randomIndex = Random.Range(0, itemsOfRarity.Count);
-        ItemData randomItem = itemsOfRarity[randomIndex];
-
-        // 아이템 생성
-        return SpawnItem(position, randomItem);
-    }
-
-    // 등급별 아이템 목록 가져오기
+    // 검색 메서드들
     public List<ItemData> GetItemsByRarity(ItemRarity rarity)
     {
         List<ItemData> result = new List<ItemData>();
 
         foreach (var item in itemDataDict.Values)
         {
-            if (item.ItemRarity == rarity)
+            if (item.ItemRarity == rarity && !result.Contains(item))
             {
-                if (!result.Contains(item))
-                {
-                    result.Add(item);
-                }
+                result.Add(item);
             }
         }
 
         return result;
     }
 
-    // 무기 타입별 아이템 목록 가져오기
     public List<ItemData> GetWeaponsByType(WeaponType type)
     {
         List<ItemData> result = new List<ItemData>();
 
         foreach (var item in itemDataDict.Values)
         {
-            if (item.ItemCategory == ItemCategory.Weapon && item.WeaponType == type)
+            if (item.ItemCategory == ItemCategory.Weapon &&
+                item.WeaponType == type &&
+                !result.Contains(item))
             {
-                if (!result.Contains(item))
-                {
-                    result.Add(item);
-                }
+                result.Add(item);
             }
         }
 
         return result;
     }
 
-    // 방어구 타입별 아이템 목록 가져오기
     public List<ItemData> GetArmorsByType(ArmorType type)
     {
         List<ItemData> result = new List<ItemData>();
 
         foreach (var item in itemDataDict.Values)
         {
-            if (item.ItemCategory == ItemCategory.Armor && item.ArmorType == type)
+            if (item.ItemCategory == ItemCategory.Armor &&
+                item.ArmorType == type &&
+                !result.Contains(item))
             {
-                if (!result.Contains(item))
-                {
-                    result.Add(item);
-                }
+                result.Add(item);
             }
         }
 

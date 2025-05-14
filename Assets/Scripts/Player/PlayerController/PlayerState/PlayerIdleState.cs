@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class PlayerIdleState : PlayerStates
 {
@@ -19,18 +20,20 @@ public class PlayerIdleState : PlayerStates
     public override void OnUpdate(float deltaTime)
     {
         base.OnUpdate(deltaTime);
-        if(player.GetInputDir() != Vector3.zero)
+
+        if(player.Controller.GetInputDir() != Vector3.zero)
         {
             player.Controller.ChangeState(nameof(PlayerMoveState));
+            return;
         }
 
-        //if (player.SearchTarget.SearchNearestTarget() != null)
-        //{
-        //    if (player.WeaponHandler.IsUseable())
-        //    {
-        //        player.Controller.ChangeState(nameof(PlayerAttackState));
-        //    }
-        //}
+        if (player.SearchTarget.SearchNearestTarget() != null)
+        {
+            if (player.WeaponHandler.IsUseable())
+            {
+                player.Controller.ChangeState(nameof(PlayerAttackState));
+            }
+        }
     }
 
     public override void OnExit()
