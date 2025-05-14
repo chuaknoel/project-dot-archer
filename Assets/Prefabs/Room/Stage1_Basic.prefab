@@ -1206,7 +1206,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c126b2d64bd57e34db83a493eef554bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomPos: {x: 0, y: 0}
+  roomGenerator: {fileID: 0}
+  navigator: {fileID: 0}
+  currentRoom: {fileID: 0}
   isCleared: 0
 --- !u!1 &5768321520835558884
 GameObject:
@@ -3611,7 +3613,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
