@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
-public class MoveStatData
+public class SaveData
 {
-    public bool enable;
-    public float moveSpeed;
+    public PlayerData playerData;
+
 }

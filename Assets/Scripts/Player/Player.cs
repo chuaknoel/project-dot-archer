@@ -80,7 +80,7 @@ public class Player : MonoBehaviour
         searchTarget ??= GetComponent<SearchTarget>();
         this.inventory = inventory;
 
-        upgradeManager = DungeonManager.Instance.upgradeManager;
+        upgradeManager = GameManager.Instance.upgradeManager;
 
         SetWeapon();
 
@@ -104,6 +104,7 @@ public class Player : MonoBehaviour
 
         // 3) Item 컴포넌트 확인 (필요시)
         Item itemComp = instance.GetComponent<Item>();
+        itemComp.LoadItemData();
         if (itemComp == null)
         {
             Debug.LogError("무기 인스턴스에 Item 컴포넌트가 없습니다!");

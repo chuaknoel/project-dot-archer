@@ -60,7 +60,7 @@ public class UpgradeManager : MonoBehaviour
         return meleeUpgradeData;
     }
 
-    public void ResetUpgrade()
+    public void Init()
     {
         rangeUpgradeData = new();
         meleeUpgradeData = new();
