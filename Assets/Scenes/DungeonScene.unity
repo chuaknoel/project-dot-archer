@@ -5620,6 +5620,7 @@ MonoBehaviour:
   - {fileID: 9106420927835929464, guid: 1ae2f7e31d09cc849b7f976afc01f0b1, type: 3}
   - {fileID: 3988586288488223422, guid: f2ca76c6971d55e469992ddb8c6e5fb5, type: 3}
   inventoryUIPanel: {fileID: 0}
+  gold: 0
 --- !u!1 &1720869359
 GameObject:
   m_ObjectHideFlags: 0
