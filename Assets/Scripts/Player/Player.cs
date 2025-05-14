@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
     public UpgradeManager UpgradeManager { get { return upgradeManager; } }
     private UpgradeManager upgradeManager;
 
+    [SerializeField] private HeartUIManager heartUI;
+
     // Update is called once per frame
     void Update()
     {
@@ -74,6 +76,16 @@ public class Player : MonoBehaviour
     {
         stat ??= GetComponent<PlayerStat>();
         stat.Init(this, gameData);
+
+
+        //체력 UI 이벤트 연결
+        if (heartUI != null)
+        {
+            stat.OnHealthChanged += heartUI.UpdateHearts;
+            heartUI.UpdateHearts(stat.CurrentHealth, stat.MaxHealth); // 초기값 세팅
+        }
+
+
 
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();

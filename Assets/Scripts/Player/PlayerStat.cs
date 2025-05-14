@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -25,7 +26,11 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
 
     private GameData gameData;
     private PlayerData playerData;
-    
+
+
+    public float CurrentHealth => currentHealth;
+    public float MaxHealth => maxHealth;
+
 
     public void Init(Player player, GameData gameData)
     {
@@ -64,31 +69,53 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
         return useableCost;
     }
 
-    public void TakeDamage(float damage)
-    {
-        if (IsDeath) return;
-        float applyDamage = Mathf.Clamp(damage - Defence, 0, damage - Defence);
-        currentHealth -= applyDamage;
+    //public void TakeDamage(float damage)
+    //{
+    //    if (IsDeath) return;
+    //    float applyDamage = Mathf.Clamp(damage - Defence, 0, damage - Defence);
+    //    currentHealth -= applyDamage;
 
-        if (IsDeath)
-        {
-            Death();
-        }
-    }
+    //    if (IsDeath)
+    //    {
+    //        Death();
+    //    }
+    //}
 
     public void RecoverCost(int recoverCost)
     {
         useableCost = Mathf.Clamp((useableCost + recoverCost), (useableCost + recoverCost), cost);
     }
 
-    public void RecoverHp(float recoverHp)
-    {
-        currentHealth = Mathf.Clamp((currentHealth + recoverHp), (currentHealth + recoverHp), maxHealth);
-    }
+    //public void RecoverHp(float recoverHp)
+    //{
+    //    currentHealth = Mathf.Clamp((currentHealth + recoverHp), (currentHealth + recoverHp), maxHealth);
+    //}
 
     public override void Death()
     {
         base.Death();
         player.Controller.ChangeState(nameof(PlayerDeathState));
+    }
+
+
+
+    public event Action<float, float> OnHealthChanged;
+
+    public void TakeDamage(float damage)
+    {
+        if (IsDeath) return;
+
+        float applyDamage = Mathf.Clamp(damage - Defence, 0, damage - Defence);
+        currentHealth -= applyDamage;
+
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+        if (IsDeath) Death();
+    }
+
+    public void RecoverHp(float recoverHp)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + recoverHp, 0, maxHealth);
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 }

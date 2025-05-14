@@ -6169,8 +6169,7 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 128
-  targetList:
-  - {fileID: 1707525583}
+  targetList: []
 --- !u!114 &1640394994303583149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6213,7 +6212,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -10}
+  m_AnchoredPosition: {x: 20, y: -20}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &4972835396792796529
@@ -6234,6 +6233,7 @@ MonoBehaviour:
   targetMask:
     serializedVersion: 2
     m_Bits: 128
+  heartUI: {fileID: 8041075938826014219}
 --- !u!1 &5309416959821107765
 GameObject:
   m_ObjectHideFlags: 0
