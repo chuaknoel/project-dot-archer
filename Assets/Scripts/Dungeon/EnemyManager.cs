@@ -33,6 +33,7 @@ public class EnemyManager : MonoBehaviour
                 ); // 방의 위치를 기준으로 적 생성
         // 방 위치 기반으로 적 생성
         BaseEnemy e = Instantiate(enemyPrefabs[Random.Range(0, 6)], spawnPosition, Quaternion.identity).GetComponent<BaseEnemy>() ;
+    
         //e.OnDeath += () => OnEnemyDefeated(room, e);
         RegisterEnemy(e);
     }
