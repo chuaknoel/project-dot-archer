@@ -6230,6 +6230,8 @@ MonoBehaviour:
   - {fileID: 9106420927835929464, guid: 1ae2f7e31d09cc849b7f976afc01f0b1, type: 3}
   - {fileID: 3988586288488223422, guid: f2ca76c6971d55e469992ddb8c6e5fb5, type: 3}
   inventoryUIPanel: {fileID: 0}
+  itemSlots: []
+  gold: 0
 --- !u!1 &1698994343
 GameObject:
   m_ObjectHideFlags: 0
@@ -6428,7 +6430,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 1000
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
