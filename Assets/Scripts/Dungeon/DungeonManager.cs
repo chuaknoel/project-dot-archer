@@ -39,6 +39,6 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
     {
         roomManager.Init();
         cameraController = Camera.main.GetComponent<CameraController>();
-        //player.Init(testData, GameManager.Instance.inventory); //게임 매니저에서 데이터 로드 후 데이터를 넘겨주자.
+        player.Init(GameManager.Instance.gameData.playerData, GameManager.Instance.inventory); //게임 매니저에서 데이터 로드 후 데이터를 넘겨주자.
     }
 }

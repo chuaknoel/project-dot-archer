@@ -8,7 +8,7 @@ public class UpgradeManager : MonoBehaviour
     public InGameUpgradeData rangeUpgradeData;
     public InGameUpgradeData meleeUpgradeData;
 
-    public PermanentUpgradeData permanentUpgradeData = new();
+    public PermanentUpgradeData permanentUpgradeData;
 
     public void MergeUpgrade(InGameUpgradeData addUpgrade)
     {
@@ -62,7 +62,13 @@ public class UpgradeManager : MonoBehaviour
 
     public void Init()
     {
-        rangeUpgradeData = new();
-        meleeUpgradeData = new();
+        UpgradeReset();
+        permanentUpgradeData.LoadData(GameManager.Instance.gameData.upgradeData);
+    }
+
+    public void UpgradeReset()
+    {
+        rangeUpgradeData.ResetUpgrade();
+        meleeUpgradeData.ResetUpgrade();
     }
 }
