@@ -27,6 +27,7 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
         this.player = player;
         this.playerData = playerData;
         attackDamage = playerData.statData.attackStat.attackDamage;
+        defence = playerData.statData.defenceStat.defence;
         moveSpeed = playerData.statData.moveStat.moveSpeed;
         currentHealth = 100;
         maxHealth = 100;
