@@ -11,43 +11,32 @@ public class Item : MonoBehaviour
     public bool IsEquipped => isEquipped;
     public string ItemId => itemId;
 
-    private void Awake()
-    {
-        // ID가 설정되어 있으면 해당 데이터 로드
-        if (!string.IsNullOrEmpty(itemId))
-        {
-            LoadItemData();
-        }
-    }
-
     // 아이템 ID로 데이터 로드
-    private void LoadItemData()
+    public void LoadItemData()
     {
-        // ItemManager가 존재하는지 확인
-        if (ItemManager.Instance != null)
+        if (string.IsNullOrEmpty(itemId))
         {
-            itemData = ItemManager.Instance.GetItemDataById(itemId);
+            Debug.Log($"{itemId} : 아이템 프리팹이 없습니다.");
+            return;
+        }
 
-            if (itemData != null)
-            {
-                // 아이템 이름 설정
-                gameObject.name = $"Item_{itemData.ItemName}";
+        itemData = GameManager.Instance.itemManager.GetItemDataById(itemId);
 
-                // 스프라이트 설정
-                SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-                if (spriteRenderer != null && itemData.ItemIcon != null)
-                {
-                    spriteRenderer.sprite = itemData.ItemIcon;
-                }
-            }
-            else
+        if (itemData != null)
+        {
+            // 아이템 이름 설정
+            gameObject.name = $"Item_{itemData.ItemName}";
+
+            // 스프라이트 설정
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null && itemData.ItemIcon != null)
             {
-                Debug.LogError($"아이템 ID '{itemId}'에 해당하는 데이터를 찾을 수 없습니다!");
+                spriteRenderer.sprite = itemData.ItemIcon;
             }
         }
         else
         {
-            Debug.LogError("ItemManager가 존재하지 않습니다!");
+            Debug.LogError($"아이템 ID '{itemId}'에 해당하는 데이터를 찾을 수 없습니다!");
         }
     }
 

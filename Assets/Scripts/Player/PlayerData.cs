@@ -9,6 +9,7 @@ public class PlayerData
     public StatData statData;
     public ItemData equippedWeapon;
     public List<ItemData> inventoryItems;
+    public int gold;
 
     public PlayerData(PlayerData loadData)
     {
@@ -16,11 +17,6 @@ public class PlayerData
         statData = loadData.statData;
         equippedWeapon = loadData.equippedWeapon;
         inventoryItems = new List<ItemData>(loadData.inventoryItems);
-    }
-
-    public PlayerData(string playerName, StatData statData)
-    {
-        this.playerName = playerName;
-        this.statData = statData;
+        gold = loadData.gold;
     }
 }

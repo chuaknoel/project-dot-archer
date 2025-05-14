@@ -5,45 +5,15 @@ using Enums;
 
 public class ItemManager : MonoBehaviour
 {
-    // 싱글톤 인스턴스
-    private static ItemManager instance;
-    public static ItemManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<ItemManager>();
-                if (instance == null)
-                {
-                    GameObject obj = new GameObject("ItemManager");
-                    instance = obj.AddComponent<ItemManager>();
-                }
-            }
-            return instance;
-        }
-    }
-
     // 아이템 데이터 딕셔너리
     private Dictionary<string, ItemData> itemDataDict = new Dictionary<string, ItemData>();
 
     // 아이템 스프라이트 (리소스 폴더에서 로드)
     private Dictionary<string, Sprite> itemSprites = new Dictionary<string, Sprite>();
 
-    private void Awake()
-    {
-        // 싱글톤 설정
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
 
+    public void Init()
+    {
         // 아이템 스프라이트 로드
         LoadItemSprites();
 

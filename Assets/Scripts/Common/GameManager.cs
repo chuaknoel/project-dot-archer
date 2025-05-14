@@ -4,16 +4,43 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager Instance;
     public void Awake()
     {
-        if(instance != null)
+        if(Instance != null)
         {
             Destroy(gameObject);
             return;
         }
 
-        instance = this;
+        Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+
+    public ItemManager itemManager;
+    public Inventory inventory;
+    public UpgradeManager upgradeManager;
+
+    private void Start()
+    {
+        Init();
+    }
+
+    public void Init()
+    {
+        itemManager.Init();
+        inventory.Init();
+        upgradeManager.Init();
+    }
+
+    public void SaveData()
+    {
+
+    }
+
+    public void LoadData()
+    {
+
     }
 }
