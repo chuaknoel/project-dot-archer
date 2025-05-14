@@ -51,11 +51,6 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
         return false;
     }
 
-
-
-
-
-
     public bool isCleared;
 
     public void OnPlayerEnter()
@@ -63,7 +58,7 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
         if (!isCleared)
         {
             // EnemyManager에 몬스터 생성 요청
-            EnemyManager.Instance.SpawnEnemies(this);  // 이 방에 적을 생성하도록 요청
+            dungeonManager.enemyManager.SpawnEnemies(this);  // 이 방에 적을 생성하도록 요청
         }
     }
 
