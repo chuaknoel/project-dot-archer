@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ public class BossSkillController : SkillController, ISkillController
 
     private void OnEnable()
     {      
-        SettingSkills();
+        //SettingSkills();
     }
     private void Update()
     {
@@ -36,15 +37,14 @@ public class BossSkillController : SkillController, ISkillController
         for (int i = 1; i <= skillCount; i++)
         {
             var skill = gameObject.AddComponent<BossSkill>();
-            skill.Initialize($"BossSkill{i:00}", 10 * i, 6);
+            skill.Initialize($"BossSkill{i:00}", 10 * i, 4);
             bossSkills.Add(skill);
         }
     }
 
     public override void UseSkill(BaseEnemy owner)
     {
-        if (!canUse || skills.Count == 0 || skills == null) return;
-
+        if (!canUse) return;
         StartCoroutine(RunSkill(owner));
     }
     // 스킬 실행
@@ -53,8 +53,8 @@ public class BossSkillController : SkillController, ISkillController
         canUse = false;
         canMove = false;
         yield return new WaitForSeconds(0.5f);
+        var skill = bossSkills.Find(s => string.Equals(s.skillName, selectSkill));
 
-         var skill =  bossSkills.Find(s => s.skillName.Equals(selectSkill));
         // 스킬이 사용 가눙하다면
         if (skill.CanUse())
         {
@@ -64,8 +64,7 @@ public class BossSkillController : SkillController, ISkillController
             // 이펙트 발사
             bossEffectController.ExecuteEffect(transform, skill.skillName);
         }
-        yield return new WaitForSeconds(3f);
-
+        yield return new WaitForSeconds(2.5f);
 
         canMove = true;
         canUse = true;
@@ -74,10 +73,14 @@ public class BossSkillController : SkillController, ISkillController
     // 스킬 랜덤 선택
     public BossSkill SelectRandomSkill()
     {
-        string[] skillNames = { "BossSkill01", "BossSkill02", "BossSkill03", "BossSkill04" };
-        int index = UnityEngine.Random.Range(0, skillCount);
+        if (bossSkills == null || bossSkills.Count == 0)
+        {
+            SettingSkills();
+        }
 
-        return bossSkills.Find(s => s.skillName.Equals(skillNames[index])); 
+        int index = UnityEngine.Random.Range(0, bossSkills.Count);
+
+        return bossSkills[index];
     }
 
 

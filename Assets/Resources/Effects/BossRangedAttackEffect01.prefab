@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8811749484222684218}
   m_Layer: 0
   m_Name: BossRangedAttackEffect01
-  m_TagString: Untagged
+  m_TagString: BossRangedAttackEffect
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -179.14891, y: 2.6679404, z: 0}
-  m_LocalScale: {x: 7, y: 7, z: 1}
+  m_LocalScale: {x: 14, y: 14, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e26ad7ea9fff8145b478d53ea88575a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackAble: 0
 --- !u!58 &8811749484222684218
 CircleCollider2D:
   m_ObjectHideFlags: 0
