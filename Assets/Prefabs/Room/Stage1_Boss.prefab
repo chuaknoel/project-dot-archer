@@ -1774,7 +1774,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6270445885451101474}
   - component: {fileID: 2376959291159412292}
-  - component: {fileID: 4302645743595068016}
   - component: {fileID: 2829004445829822658}
   m_Layer: 0
   m_Name: Stage1_Boss
@@ -1817,22 +1816,7 @@ MonoBehaviour:
   roomBounds: {fileID: 5761678177001069102}
   isVisited: 0
   roomType: 0
---- !u!114 &4302645743595068016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3297075146880289798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c126b2d64bd57e34db83a493eef554bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roomGenerator: {fileID: 0}
-  navigator: {fileID: 0}
-  currentRoom: {fileID: 0}
-  isCleared: 0
+  baseEnemyList: []
 --- !u!1839735485 &2829004445829822658
 Tilemap:
   m_ObjectHideFlags: 0
