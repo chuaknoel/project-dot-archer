@@ -11,7 +11,7 @@ public class RandomFlame : EnemySkill
     public int fireCount = 3;
     public float fireRange = 3f;
     public bool isTrigger = false;
-    void Start()
+    public override void Init()
     {
         currentCooldown = cooldown;
     }
@@ -21,16 +21,14 @@ public class RandomFlame : EnemySkill
     }
     public override void UseSkill(BaseEnemy owner)
     {
-        if (CanUse())
-        {
+        
             Debug.Log("Throwing fire!");
             GameObject fireball = Instantiate(firePrefab, owner.transform.position, Quaternion.identity);
             Rigidbody2D rb = fireball.GetComponent<Rigidbody2D>();
             Vector3 dir = (owner.target.position - fireball.transform.position).normalized;
 
             rb.velocity = dir * 7f;
-
-        }
+        base.UseSkill(owner);
     }
 
    

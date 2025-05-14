@@ -11,6 +11,10 @@ public class EnemySkill : MonoBehaviour
     public GameObject effect;
 
 
+    public virtual void Init()
+    {
+
+    }
 
     // Update is called once per frame
     public bool CanUse()
@@ -21,6 +25,7 @@ public class EnemySkill : MonoBehaviour
     public virtual void UseSkill(BaseEnemy owner)
     {
         currentCooldown = 0;
+        Debug.Log($"{currentCooldown}");
     }
 
 }

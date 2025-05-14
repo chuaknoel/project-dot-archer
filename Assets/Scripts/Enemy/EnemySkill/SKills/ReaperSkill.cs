@@ -9,7 +9,7 @@ public class ReaperSkill : EnemySkill
     public int Count = 3;
     public float fireRange = 3f;
 
-    void Start()
+    public override void Init()
     {
         currentCooldown = cooldown;
     }
@@ -19,8 +19,6 @@ public class ReaperSkill : EnemySkill
     }
     public override void UseSkill(BaseEnemy owner)
     {
-        if (CanUse())
-        {
 
             for (int i = 0; i < Count; i++)
             {
@@ -32,7 +30,6 @@ public class ReaperSkill : EnemySkill
                 GameObject dark = Instantiate(darkPrefab, owner.target.position + randomPosition, Quaternion.identity);
 
                 StartCoroutine(SendDarkToPlayer(dark, owner.target));
-            }
 
             base.UseSkill(owner);
         }

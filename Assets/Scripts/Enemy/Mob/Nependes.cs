@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class Nependes : BaseEnemy
 {
-    public NependesStat nependesStat;
 
     public override void Init()
     {
         base.Init();
-        nependesStat = GetComponent<NependesStat>();
 
         
 

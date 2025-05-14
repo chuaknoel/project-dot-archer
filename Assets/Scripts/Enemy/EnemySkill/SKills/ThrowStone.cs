@@ -7,9 +7,10 @@ public class ThrowStone : EnemySkill
     public GameObject stonePrefab;
     public Transform throwPoint;
     public float throwForce = 10f;
-    void Start()
+    public override void Init()
     {
-        currentCooldown = cooldown;
+        currentCooldown = 0;
+        throwPoint = this.transform;
     }
     void Update()
     {
@@ -17,14 +18,11 @@ public class ThrowStone : EnemySkill
     }
     public override void UseSkill(BaseEnemy owner)
     {
-        if (CanUse())
-        {
             Debug.Log("Throwing stone!");
             Vector3 dir = (owner.target.position - throwPoint.position).normalized;
             GameObject stone = Instantiate(stonePrefab, throwPoint.position, throwPoint.rotation);
             Rigidbody2D rb = stone.GetComponent<Rigidbody2D>();
             rb.velocity = dir * throwForce;
             base.UseSkill(owner);
-        }
     }
 }
