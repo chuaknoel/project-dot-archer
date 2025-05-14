@@ -71,6 +71,7 @@ public class RangeWeaponHandler : WeaponHandler
     public override float GetAttackDamage()
     {
         return base.GetAttackDamage() + UpgradeData.addWeaponDamage;
+
     }
 
     public int GetProjectileCount()

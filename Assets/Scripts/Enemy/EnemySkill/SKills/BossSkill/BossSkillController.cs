@@ -15,10 +15,6 @@ public class BossSkillController : SkillController, ISkillController
     private List<BossSkill> bossSkills = new List<BossSkill>();
     public string selectSkill; // 선택한 스킬
 
-    private void OnEnable()
-    {      
-        //SettingSkills();
-    }
     private void Update()
     {
         foreach (var skill in bossSkills)

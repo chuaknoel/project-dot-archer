@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6485291360692547728}
   - component: {fileID: 1729178462052806088}
   - component: {fileID: 8630956951342831275}
+  - component: {fileID: 5759844686929016618}
   m_Layer: 0
   m_Name: Flame
   m_TagString: Untagged
@@ -75,9 +76,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 90
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_SortingOrder: 39
+  m_Sprite: {fileID: 21300000, guid: d298ef63183f5014785ad86fde706956, type: 3}
+  m_Color: {r: 1, g: 0.6094339, b: 0.6094339, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -161,3 +162,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f921a99461050a4a817f5337801d6b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5759844686929016618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6477426533230341577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0db6236f629f445459ca4c5d41bd3ee3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: 
+  damage: 0
+  cooldown: 3
+  currentCooldown: 0
+  effect: {fileID: 0}
+  firePrefab: {fileID: 0}
+  fireInterval: 1
+  fireCount: 3
+  fireRange: 3
+  isTrigger: 0

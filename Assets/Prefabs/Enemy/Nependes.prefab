@@ -115,9 +115,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 1
-  maxHealth: 1
-  currentHealth: 1
-  attackDamage: 1
+  maxHealth: 20
+  currentHealth: 20
+  attackDamage: 6
 --- !u!61 &1483355917421822237
 BoxCollider2D:
   m_ObjectHideFlags: 0

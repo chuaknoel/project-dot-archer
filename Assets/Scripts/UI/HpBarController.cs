@@ -6,10 +6,10 @@ using UnityEngine.UIElements;
 
 public class HpBarController : MonoBehaviour
 {
-    Canvas canvas;
+    [HideInInspector] protected Canvas canvas;
     [HideInInspector] public GameObject hpBar;
-    [HideInInspector] private UnityEngine.UI.Slider hpSlider;
-    RectTransform rt;
+    [HideInInspector] public UnityEngine.UI.Slider hpSlider;
+    [HideInInspector] protected RectTransform rt;
 
     public float heightOffset = 1.5f;      // 적 위에 띄우는 높이
     public float x  = 77.6f; // HP바 사이즈
@@ -25,15 +25,15 @@ public class HpBarController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     { 
         // 타겟을 따라감
         FollowTarget();
     }
     // HpBar 생성
-    void CreateHpBar()
+    protected virtual void CreateHpBar()
     {
-        GameObject hpBarPrefab = Resources.Load<GameObject>("UI/BossHpBar");
+        GameObject hpBarPrefab = Resources.Load<GameObject>("UI/HpBar");
         hpBar = Instantiate(hpBarPrefab);
         hpSlider = hpBar.GetComponent<UnityEngine.UI.Slider>();
 
