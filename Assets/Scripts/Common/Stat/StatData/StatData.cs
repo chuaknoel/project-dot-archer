@@ -11,6 +11,7 @@ public class StatData
     public AttackStatData attackStat;
     public DefenceStatData defenceStat;
     public MoveStatData moveStat;
+    public int cost;
 
     public StatData(StatData statData)
     {
@@ -20,11 +21,13 @@ public class StatData
         attackStat = statData.attackStat;
         defenceStat = statData.defenceStat;
         moveStat = statData.moveStat;
+        cost = statData.cost;
     }
 
     public StatData(AttackStatData attackStat, MoveStatData moveStat)
     {
         this.attackStat = attackStat;
         this.moveStat = moveStat;
+        this.cost = 10;
     }
 }

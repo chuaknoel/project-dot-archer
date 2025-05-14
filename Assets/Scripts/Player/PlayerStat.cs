@@ -1,17 +1,22 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
 {
-    [SerializeField] private float attackDamage;
     public float AttackDamage => attackDamage;
+    [SerializeField] private float attackDamage;
 
-    [SerializeField] private float defence;
     public float Defence => defence;
+    [SerializeField] private float defence;
 
-    [SerializeField] private float moveSpeed;
     public float MoveSpeed => moveSpeed;
+    [SerializeField] private float moveSpeed;
+
+    private int cost;
+    private int useableCost;
 
     private Player player;
 
@@ -25,6 +30,8 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
         moveSpeed = playerData.statData.moveStat.moveSpeed;
         currentHealth = 100;
         maxHealth = 100;
+        cost = playerData.statData.cost;
+        useableCost = cost;
     }
 
     public float GetTotalStatDamage()
@@ -43,6 +50,11 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
         return moveSpeed + player.UpgradeManager.permanentUpgradeData.GetMoveSpeed();
     }
 
+    public int GetUseableCost()
+    {
+        return useableCost;
+    }
+
     public void TakeDamage(float damage)
     {
         if (IsDeath) return;
@@ -53,6 +65,16 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
         {
             Death();
         }
+    }
+
+    public void RecoverCost(int recoverCost)
+    {
+        useableCost = Mathf.Clamp((useableCost + recoverCost), (useableCost + recoverCost), cost);
+    }
+
+    public void RecoverHp(float recoverHp)
+    {
+        currentHealth = Mathf.Clamp((currentHealth + recoverHp), (currentHealth + recoverHp), maxHealth);
     }
 
     public override void Death()

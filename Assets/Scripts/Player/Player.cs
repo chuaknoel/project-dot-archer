@@ -14,6 +14,9 @@ public class Player : MonoBehaviour
     
     public PlayerController Controller { get { return controller; } }
     private PlayerController controller;
+
+    public SkillExecutor SkillExecutor { get { return skillExecutor; } }
+    private SkillExecutor skillExecutor;
    
     private SpriteRenderer characterImage;
     private Animator playerAnime;
@@ -33,9 +36,6 @@ public class Player : MonoBehaviour
     public UpgradeManager UpgradeManager { get { return upgradeManager; } }
     private UpgradeManager upgradeManager;
 
-    public SkillManager SkillManager { get { return skillManager; } }
-    private SkillManager skillManager;
-
     // Update is called once per frame
     void Update()
     {
@@ -45,6 +45,7 @@ public class Player : MonoBehaviour
         }
 
         controller?.OnUpdate(Time.deltaTime);
+        skillExecutor?.OnUpdate(Time.deltaTime);
 
         // UI 매니저 생기면 옮겨주세요!
         // 인벤토리 UI 토글 (I 키)
@@ -83,9 +84,8 @@ public class Player : MonoBehaviour
 
         SetWeapon();
 
-        skillManager = DungeonManager.Instance.skillManager;
-
         ControllerRegister();
+        skillExecutor = new SkillExecutor(this, DungeonManager.Instance.skillManager.skillList);
     }
 
     public void SetWeapon()
@@ -120,7 +120,6 @@ public class Player : MonoBehaviour
         weaponHandler.Init(itemComp, stat, targetMask, GetComponent<Collider2D>());
     }
 
-
     public void ControllerRegister()
     {
         controller = new PlayerController(new PlayerIdleState(), this);
@@ -129,6 +128,11 @@ public class Player : MonoBehaviour
         controller.RegisterState(new PlayerJumpState(), this);
         controller.RegisterState(new PlayerDeathState(), this);
         controller.RegisterState(new PlayerSkillState(), this);
+    }
+
+    private void SkillRegister(Skill<Player> skill)
+    {
+        skillExecutor.RegisterSkill(skill);
     }
 
     public void ChangeAnime(PlayerState nextAnime)

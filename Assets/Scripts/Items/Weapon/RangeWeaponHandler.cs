@@ -141,4 +141,9 @@ public class RangeWeaponHandler : WeaponHandler
     {
         return weapon.ItemData.attackCooldown - UpgradeData.addAttackCooldown;
     }
+
+    public Item GetWeapon()
+    {
+        return weapon;
+    }
 }

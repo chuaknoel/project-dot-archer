@@ -1,29 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SkillManager : MonoBehaviour
 {
     public List<Skill<Player>> skillList;
 
-    private void Update()
-    {
-        
-    }
+    public Transform equipSkillSlot;
 
-    public void Init(Player player)
+    public Skill<Player> CreateSkill(int skillNum)
     {
-        foreach (Skill<Player> skill in skillList)
-        {
-            skill.Init(player);
-        }
-    }
-
-    public void UseSkill(int num)
-    {
-        if (skillList[num] != null)
-        {
-            skillList[num].UseSkill();
-        }
+        Skill<Player> newSkill = Instantiate(skillList[skillNum], equipSkillSlot);
+        return newSkill;
     }
 }

@@ -186,7 +186,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &64276320
 RectTransform:
   m_ObjectHideFlags: 0
@@ -313,13 +313,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackType: 0
-  addProjectileCount: 1
-  addProjectileSpeed: 5
+  addProjectileCount: 5
+  addProjectileSpeed: 0
   addBurstCount: 0
   addWeaponDamage: 0
   addAttackCooldown: 0
   addAttackDelay: 0
-  addReflection: 1
+  addReflection: 0
 --- !u!1 &189570118
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,6 +850,37 @@ MonoBehaviour:
   addAttackCooldown: 0
   addAttackDelay: 0
   addReflection: 0
+--- !u!1 &925844167
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 925844168}
+  m_Layer: 0
+  m_Name: EquipSkillSlot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &925844168
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925844167}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1391004259}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &959622475
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,6 +919,7 @@ MonoBehaviour:
   upgradeManager: {fileID: 1698994344}
   TestEnemies:
   - {fileID: 1707525583}
+  skillManager: {fileID: 1391004260}
 --- !u!4 &959622477
 Transform:
   m_ObjectHideFlags: 0
@@ -5860,6 +5892,7 @@ Transform:
   - {fileID: 647819894}
   - {fileID: 1698994345}
   - {fileID: 189570119}
+  - {fileID: 1391004259}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1333247118
@@ -5907,6 +5940,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1142426129}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1391004258
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1391004259}
+  - component: {fileID: 1391004260}
+  m_Layer: 0
+  m_Name: SkillManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1391004259
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391004258}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 925844168}
+  m_Father: {fileID: 1180671189}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1391004260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391004258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e209e68edea61c04a90883107dedb625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillList:
+  - {fileID: 1765580085085389961, guid: b4f13d0281a84fd4d925f1975e633d22, type: 3}
+  - {fileID: 7021518735091760979, guid: 60f5cce3760c4fa4ab071b1733dbf119, type: 3}
+  equipSkillSlot: {fileID: 925844168}
 --- !u!1 &1399725922
 GameObject:
   m_ObjectHideFlags: 0
