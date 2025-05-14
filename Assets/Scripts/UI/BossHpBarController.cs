@@ -20,7 +20,8 @@ public class BossHpBarController : HpBarController
         // 부모를 Canvas로 설정
         hpBar.transform.SetParent(canvas.transform, false);
 
+        // 위치 설정
         rt = hpBar.GetComponent<RectTransform>();
-        rt.anchoredPosition = new Vector2(0, -96f);  // UI 기준 상대 좌표
+        rt.anchoredPosition = new Vector2(0, -96f); 
     }
 }
