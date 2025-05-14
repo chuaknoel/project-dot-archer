@@ -47,9 +47,9 @@ public class EnemyStat : BaseStat ,IDefenceStat
         animator.SetBool("isDamaged", false);
     }
     public override void Death()
-    {        // 코인 증가
-        Inventory inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
-        inventory.AddGold(1);
+    {        
+        GameManager.Instance.inventory.AddGold(1);                                               // 코인 증가
+        DungeonManager.Instance.enemyManager.OnEnemyDefeated(this.GetComponent<BaseEnemy>());    // 에너미 죽음 체크
         Destroy(hpBarController.hpBar);
         Destroy(this.gameObject);
     }

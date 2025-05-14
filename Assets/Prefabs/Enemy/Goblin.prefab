@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2302175328477759711}
   - component: {fileID: 8417512202454428490}
   - component: {fileID: 2520937962167137940}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Goblin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 1
   maxHealth: 20
-  currentHealth: 20
+  currentHealth: 1
   attackDamage: 3
   moveSpeed: 3
 --- !u!61 &8417512202454428490

@@ -4,7 +4,7 @@
     "statData": {
       "level": 1,
       "exp": 0,
-      "maxHp": 100.0,
+      "baseHealth": 100.0,
       "attackStat": {
         "enable": false,
         "attackDamage": 10.0
@@ -43,6 +43,9 @@
   "upgradeData": {
     "attackDamage": 0.0,
     "defence": 0.0,
-    "moveSpeed": 0.0
+    "moveSpeed": 0.0,
+
+    "health": 0.0,
+    "cost": 0.0
   }
 }

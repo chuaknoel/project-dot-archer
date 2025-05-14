@@ -31,6 +31,12 @@ public class RoomNavigator : MonoBehaviour
         Vector3 offset = ((Vector2)fromDirection).normalized * 1.5f;
         Vector3 targetPos = entry + offset;
 
+        if (room.isVisited == false)
+        {
+            Debug.Log("처음 오는 방?");
+            DungeonManager.Instance.roomManager.OnPlayerEnter(room);  //이동한 방이 처음 온 방이면 Enemy 생성
+        }
+
         StartCoroutine(MovePlayerWithCollisionPause(player, targetPos));
         room.isVisited = true;
     }

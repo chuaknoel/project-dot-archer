@@ -7,7 +7,7 @@ public class StatData
 {
     public int level;
     public int exp;
-    public float maxHp;
+    public float baseHealth;
     public AttackStatData attackStat;
     public DefenceStatData defenceStat;
     public MoveStatData moveStat;
@@ -17,7 +17,7 @@ public class StatData
     {
         level = statData.level;
         exp = statData.exp;
-        maxHp = statData.maxHp;
+        baseHealth = statData.baseHealth;
         attackStat = statData.attackStat;
         defenceStat = statData.defenceStat;
         moveStat = statData.moveStat;
