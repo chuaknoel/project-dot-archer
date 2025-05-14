@@ -385,10 +385,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fdab574a36138d46904cb3cf8e870b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storyImages: []
-  storyTexts: []
+  storyImages:
+  - {fileID: 230596833}
+  - {fileID: 304958771}
+  - {fileID: 745744470}
+  - {fileID: 521059404}
+  - {fileID: 773686660}
+  storyTexts:
+  - {fileID: 1128774944}
+  - {fileID: 1491973517}
+  - {fileID: 1532847581}
+  - {fileID: 1929827080}
+  - {fileID: 393817150}
   typingSpeed: 0.15
-  tapToContinue: {fileID: 0}
+  tapToContinue: {fileID: 1481225567}
 --- !u!1 &393817150
 GameObject:
   m_ObjectHideFlags: 0
