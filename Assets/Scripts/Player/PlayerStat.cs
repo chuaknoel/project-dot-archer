@@ -21,7 +21,6 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
     private Player player;
 
     private PlayerData playerData;
-
     public void Init(Player player, PlayerData playerData)
     {
         this.player = player;

@@ -13,8 +13,10 @@ public class HeartUIManager : MonoBehaviour
 
     private List<Image> hearts = new();
 
-    public void UpdateHearts(int currentHealth, int maxHealth)
+    public void UpdateHearts(float currentHealth, float maxHealth)
     {
+        Debug.Log($"하트 UI 업데이트:");
+
         int heartCount = Mathf.CeilToInt(maxHealth / 20f);
 
         // 하트 개수 맞추기
@@ -37,7 +39,7 @@ public class HeartUIManager : MonoBehaviour
         // 각 하트 상태 갱신
         for (int i = 0; i < heartCount; i++)
         {
-            int heartHealth = currentHealth - (i * 20);
+            float heartHealth = currentHealth - (i * 20);
 
             if (heartHealth >= 20)
                 hearts[i].sprite = fullHeart;

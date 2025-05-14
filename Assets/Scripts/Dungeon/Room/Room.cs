@@ -55,8 +55,6 @@ public class Room : MonoBehaviour
             occupiedPositions.Add(position);
             occupiedPositions.Add(position + Vector2Int.right);
 
-            Debug.Log("OccupiedPositions: " + string.Join(", ", occupiedPositions)); 
-
             name = $"Room_Long_{position.x}_{position.y}_to_{position.x + 1}_{position.y}";
 
             Vector2 mid = (position + position + Vector2Int.right) / 2f;
@@ -71,8 +69,6 @@ public class Room : MonoBehaviour
         {
             occupiedPositions.Add(position);
             occupiedPositions.Add(position + Vector2Int.right);
-
-            Debug.Log("OccupiedPositions: " + string.Join(", ", occupiedPositions));
 
             Vector2 mid1 = (position + position + Vector2Int.right) / 2f;
             Vector2 mid2 = (position + position + Vector2Int.right) / 2f;
