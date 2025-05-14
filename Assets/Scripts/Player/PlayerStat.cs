@@ -27,6 +27,7 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
         this.player = player;
         this.playerData = playerData;
         attackDamage = playerData.statData.attackStat.attackDamage;
+        defence = playerData.statData.defenceStat.defence;
         moveSpeed = playerData.statData.moveStat.moveSpeed;
         currentHealth = 100;
         maxHealth = 100;
@@ -36,7 +37,7 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
 
     public float GetTotalStatDamage()
     {
-        // 인벤토리에서 계산된 총 데미지 사용
+        //플레이어 기본 공격력 + 장비 아이템 보너스 공격력 + 업그레이드로 올라간 공격력 
         return attackDamage + player.Inventory.GetTotalAttackBonus() + player.UpgradeManager.permanentUpgradeData.GetAttackDamage();
     }
 

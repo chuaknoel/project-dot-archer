@@ -8,11 +8,11 @@ public class PermanentUpgradeData : MonoBehaviour
     private float Defence;
     private float MoveSpeed;
 
-    public void LoadData(PermanentUpgradeData upgradeData)
+    public void LoadData(UpgradeData upgradeData)
     {
-        AttackDamage = upgradeData.AttackDamage;
-        Defence = upgradeData.Defence;
-        MoveSpeed = upgradeData.MoveSpeed;
+        AttackDamage = upgradeData.attackDamage;
+        Defence = upgradeData.defence;
+        MoveSpeed = upgradeData.moveSpeed;
     }
 
     public void UpgradeAttackDamage(float amount)

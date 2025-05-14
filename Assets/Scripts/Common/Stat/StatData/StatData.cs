@@ -23,11 +23,4 @@ public class StatData
         moveStat = statData.moveStat;
         cost = statData.cost;
     }
-
-    public StatData(AttackStatData attackStat, MoveStatData moveStat)
-    {
-        this.attackStat = attackStat;
-        this.moveStat = moveStat;
-        this.cost = 10;
-    }
 }

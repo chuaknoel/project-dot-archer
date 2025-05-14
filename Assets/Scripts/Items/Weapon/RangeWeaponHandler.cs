@@ -32,7 +32,7 @@ public class RangeWeaponHandler : WeaponHandler
     //무기의 발사체 정보를 오브젝트 풀링으로 관리
     public void SetProjectile()
     {
-        projectileManager = ProjectileManager.Instance;
+        projectileManager = DungeonManager.Instance.projectileManager;
 
         //발사체 프리팹 정보를 이용하여 오브젝트 풀에 등록
         projectileManager.RegisterPoolObject(projectilePrefab.name,

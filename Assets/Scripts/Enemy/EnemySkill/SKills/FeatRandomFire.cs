@@ -7,7 +7,7 @@ public class FeatRandomFire : MonoBehaviour
     private bool isTrigger = false;
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && !isTrigger)
+        if (collision.CompareTag("Player") )
         {
             isTrigger = true;
             transform.localScale *= 7f;
@@ -16,5 +16,8 @@ public class FeatRandomFire : MonoBehaviour
 
             Destroy(gameObject, 3f);
         }
+
+        
     }
+
 }

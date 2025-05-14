@@ -24,4 +24,19 @@ public class InGameUpgradeData : MonoBehaviour
     {
         DungeonManager.Instance.player.Upgrade(this);
     }
+
+    public void ResetUpgrade() 
+    {
+        addProjectileCount = 0;
+        addProjectileSpeed = 0;
+
+        addBurstCount = 0;
+
+        addWeaponDamage = 0;
+
+        addAttackCooldown = 0;
+        addAttackDelay = 0;
+
+        addReflection = 0;
+    }
 }

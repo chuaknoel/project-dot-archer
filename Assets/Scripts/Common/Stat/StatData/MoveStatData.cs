@@ -7,9 +7,4 @@ public class MoveStatData
 {
     public bool enable;
     public float moveSpeed;
-
-    public MoveStatData(float moveSpeed)
-    {
-        this.moveSpeed = moveSpeed;
-    }
 }
