@@ -51,6 +51,6 @@ MonoBehaviour:
   useCost: 3
   amount: 0
   arrowQuantity: 60
-  stormAngle: 20
+  stormAngle: 30
   stormDelay: 0.1
   stormBurst: 10
