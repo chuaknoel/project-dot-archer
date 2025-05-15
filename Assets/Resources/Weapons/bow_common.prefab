@@ -5069,7 +5069,7 @@ MonoBehaviour:
   ownerDeathParticle: {fileID: 1106341528960155245}
   projectilePrefab: {fileID: 2758401517387962552, guid: 2acd1cbb62e22ef4da8fbebd686736ab, type: 3}
   projectilePivot: {fileID: 926813264509975057}
-  projectileCount: 1
+  projectileCount: 3
   burstCount: 0
   burstDelay: 0.125
   spread: 0
