@@ -33,7 +33,6 @@ public class MainMenuController : MonoBehaviour
 
     public void OnStats()
     {
-        // 현재 씬에서 StatsScene 으로 전환
         SceneManager.LoadScene("StatsScene");
     }
 
