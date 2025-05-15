@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7161795180647208378}
   - component: {fileID: 7703941305345465907}
   - component: {fileID: 1483355917421822237}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Nependes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,7 +116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 1
   maxHealth: 20
-  currentHealth: 20
+  currentHealth: 1
   attackDamage: 6
 --- !u!61 &1483355917421822237
 BoxCollider2D:

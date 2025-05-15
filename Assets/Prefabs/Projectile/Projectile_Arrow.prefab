@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 2758401517387962552}
   - component: {fileID: 5930038169204023068}
   - component: {fileID: 2403151879309304754}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Projectile_Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

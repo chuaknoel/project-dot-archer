@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -11,28 +12,64 @@ public class EnemyManager : MonoBehaviour
     public BaseEnemy[] stage_one_enemies;
     public BaseEnemy[] stage_two_enemies;
 
-    public void SpawnEnemies(RoomManager room)
+    public BaseEnemy[] currnetEnemyGroup;
+
+    public void Init()
     {
-         Vector3 spawnPosition = new Vector3(
-                    Random.Range(-3, 3),
-                    Random.Range(-3, 3),
-                    0
-                ); // 방의 위치를 기준으로 적 생성
-        // 방 위치 기반으로 적 생성
-        BaseEnemy e = Instantiate(enemyPrefabs[Random.Range(0, 6)], spawnPosition, Quaternion.identity).GetComponent<BaseEnemy>() ;
-    
-        //e.OnDeath += () => OnEnemyDefeated(room, e);
-        RegisterEnemy(e);
+        if (DungeonManager.dungeonStage == 1)
+        {
+            currnetEnemyGroup = stage_one_enemies;
+        }
+        else if (DungeonManager.dungeonStage == 2)
+        {
+            currnetEnemyGroup = stage_two_enemies;
+        }
+        else
+        {
+            Debug.Log("스테이지 정보가 없습니다.");
+            return;
+        }
     }
 
-    public void OnEnemyDefeated(RoomManager room, BaseEnemy enemy)
+    public List<BaseEnemy> SpawnEnemies(Room room)
+    {
+        Bounds roomSize = room.tilemap.GetComponent<TilemapRenderer>().bounds; //해당 룸의 floor bounds를 구한다.
+
+        var min = roomSize.min; //바운스의 min 값과
+        var max = roomSize.max; //바운스의 max 값을 구해서
+
+        int enemyCount = Random.Range(5, 9);
+
+        for (int i = 0; i < enemyCount; i++)
+        {
+            Vector3 spawnPosition = new Vector3(    //룸 floor 내부의 랜덤한 위치 좌표를 받아온다.
+                  Random.Range(min.x, max.x),
+                  Random.Range(min.y, max.y),
+                  0
+              );
+
+            
+            BaseEnemy e = Instantiate(
+                currnetEnemyGroup[Random.Range(1, currnetEnemyGroup.Length-1)], //0번은 보스 에너미 임으로 제외한 기본 에너미를 랜던하게 호출
+                spawnPosition,                                                  //룸 내부에 랜덤하게 위치하여 소환
+                Quaternion.identity
+                ).GetComponent<BaseEnemy>();
+
+            RegisterEnemy(e);
+        }
+
+        return activeEnemies;
+    }
+
+    public void OnEnemyDefeated(BaseEnemy enemy) //에너미가 죽으면 호출
     {
         UnregisterEnemy(enemy);
 
         // 해당 방에 남은 적이 없으면
         if (activeEnemies.Count == 0)
         {
-            room.OnAllEnemiesDefeated();
+            DungeonManager.Instance.roomManager.OnAllEnemiesDefeated();
+            DungeonManager.Instance.player.Controller.ChangeLook(false);
         }
     }
 
