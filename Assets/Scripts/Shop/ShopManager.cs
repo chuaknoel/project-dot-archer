@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ShopManager : MonoBehaviour
@@ -31,15 +32,6 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private int currentStage; //던전매니저에?
     public int CurrentStage => currentStage;
 
-    public Ability ability;
-
-    public GameObject abilityGO;
-
-    //public Inventory inventory;
-
-    //public ItemManager itemManager;
-
-    //public static GameManager Instance;
     private void Awake()
     {
 
@@ -124,21 +116,8 @@ public class ShopManager : MonoBehaviour
             Text description = gameObject.transform.Find("Description").GetComponent<Text>();
             description.text = itemsForSale[i].ItemDescription;
 
-
-
-            //gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = itemsForSale[i].ItemIcon;
-            //gameObject.transform.GetChild(1).GetComponent<TMP_Text>().text = itemsForSale[i].price.ToString();
-            //gameObject.transform.GetChild(2).GetComponent<TMP_Text>().text = itemsForSale[i].itemName;
-            //gameObject.transform.GetChild(3).GetComponent<TMP_Text>().text = itemsForSale[i].ItemDescription;
-
-
             int index = i;
             gameObject.transform.GetComponent<Button>().onClick.AddListener(() => OnClickToBuyItem(index));
-
-            //sprite = itemsForSale[i].ItemIcon;
-            //float price = itemsForSale[i].price;
-            //string name = itemsForSale[i].itemName;
-            //string description = itemsForSale[i].ItemDescription;
         }
     }
 
@@ -153,6 +132,11 @@ public class ShopManager : MonoBehaviour
         {
             Debug.Log("nomoney" + index);
         }
+    }
+
+    public void OnExitButtonClick()
+    {
+        SceneManager.LoadScene("StartScene");
     }
 
 }
