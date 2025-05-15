@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: 
-  damage: 0
+  damage: 1
   cooldown: 3
   currentCooldown: 0
   effect: {fileID: 0}
