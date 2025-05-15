@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class Dark : MonoBehaviour
 {
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
+            PlayerStat playerStat = collision.GetComponent<PlayerStat>();
+            if (playerStat != null)
+            {
+                playerStat.TakeDamage(1);
+            }
             Destroy(gameObject);
         }
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+
+        if (collision.CompareTag("Wall"))
         {
-            Destroy(gameObject,3f );
+            Destroy(gameObject);
         }
     }
 }

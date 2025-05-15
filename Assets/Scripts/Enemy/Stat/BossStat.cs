@@ -27,6 +27,7 @@ public class BossStat : EnemyStat, IAttackStat, IMoveStat
         {
             Death();
         }
+
     }
     protected override void UpdateHp()
     {
