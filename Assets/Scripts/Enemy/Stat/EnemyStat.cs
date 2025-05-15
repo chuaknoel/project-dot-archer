@@ -33,8 +33,8 @@ public class EnemyStat : BaseStat ,IDefenceStat
     }
     protected virtual void UpdateHp()
     {
-        //hpBarController = GetComponent<HpBarController>();
-        //hpBarController.UpdateHP(CurrentHealth, MaxHealth);
+        hpBarController = GetComponent<HpBarController>();
+        hpBarController.UpdateHP(CurrentHealth, MaxHealth);
     }
 
     protected virtual void PlayAnimation()
@@ -51,7 +51,7 @@ public class EnemyStat : BaseStat ,IDefenceStat
     {        
         GameManager.Instance.inventory.AddGold(1);                                               // 코인 증가
         DungeonManager.Instance.enemyManager.OnEnemyDefeated(this.GetComponent<BaseEnemy>());    // 에너미 죽음 체크
-        //Destroy(hpBarController.hpBar);
+        Destroy(hpBarController.hpBar);
         Destroy(this.gameObject);
     }
 }
