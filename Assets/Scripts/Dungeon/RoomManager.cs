@@ -18,6 +18,8 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
     public static RoomManager Instance;
     private void Awake() => Instance = this;
 
+    public int bossRoom;
+
     public void Init()
     {
         dungeonManager = DungeonManager.Instance;
@@ -29,8 +31,11 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
         if (startRoom != null)
         {
             currentRoom = startRoom;
+            bossRoom++;
             currentRoom.isVisited = true; //처음방에서는 몬스터가 나오지 않아야 하기 때문에 방문한 방 체크를 미리 해준다.
+
             currentRoom.isCleared = true;
+
             dungeonManager.cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
             navigator.MovePlayerToRoom(currentRoom, dungeonManager.player.gameObject, Vector2Int.zero); // 초기엔 방향 없음
         }
@@ -74,10 +79,19 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
 
     public void OnAllEnemiesDefeated()
     {
+
+        DungeonManager.Instance.UpgradeSelect.SetCard();
+
         currentRoom.isCleared = true;
-        // 문 열기 등 처리
+        if(bossRoom == 6)
+        {
+            MovePlayerToBossRoom(rooms[bossRoom]);
+        }
+
+        /*
         if (!currentRoom.isBossRoom)
             CheckAllRoomsCleared();
+        */
     }
     public void OnBossDefeated()
     {
@@ -122,6 +136,23 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
         Player player = FindObjectOfType<Player>();
 
         Vector3 bossCenter = room.transform.position;
+        dungeonManager.cameraController.SetCameraBounds(room.GetRoomBounds());
         player.transform.position = bossCenter;
+
+        Invoke("SpawnBoss", 2f);
+    }
+
+    private void SpawnBoss()
+    {
+        Vector3 spawnPosition = rooms[bossRoom].transform.position;
+
+        BaseEnemy e = Instantiate(
+            dungeonManager.enemyManager.currnetEnemyGroup[0],
+            spawnPosition,
+            Quaternion.identity
+            ).GetComponent<BaseEnemy>();
+
+        dungeonManager.enemyManager.activeEnemies.Add( e );
+        dungeonManager.player.SearchTarget.SetTarget(dungeonManager.enemyManager.activeEnemies);
     }
 }
