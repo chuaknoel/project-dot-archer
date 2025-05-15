@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -4475106147440469931}
   - component: {fileID: 5452599077378880604}
   - component: {fileID: 7269351302560571347}
-  - component: {fileID: 8777551495328341156}
+  - component: {fileID: -2330661269868283427}
   m_Layer: 7
   m_Name: Reaper
   m_TagString: Untagged
@@ -208,7 +208,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8777551495328341156
+--- !u!114 &-2330661269868283427
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

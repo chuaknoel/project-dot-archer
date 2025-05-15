@@ -28,7 +28,7 @@ public class BaseEnemy : MonoBehaviour
         monsterAnime = GetComponent<Animator>();
         AddController();
         rb = GetComponent<Rigidbody2D>();
-        target= GameObject.FindGameObjectWithTag("Player").transform;
+        target = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

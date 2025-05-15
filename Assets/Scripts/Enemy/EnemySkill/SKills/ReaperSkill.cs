@@ -19,21 +19,18 @@ public class ReaperSkill : EnemySkill
     }
     public override void UseSkill(BaseEnemy owner)
     {
-        
+        for (int i = 0; i < Count; i++)
+        {
+            Vector3 randomPosition = new Vector3(
+                Random.Range(-fireRange, fireRange),
+                Random.Range(-fireRange, fireRange),
+                0
+            );
+            GameObject dark = Instantiate(darkPrefab, owner.target.position + randomPosition, Quaternion.identity);
 
-            for (int i = 0; i < Count; i++)
-            {
-                Vector3 randomPosition = new Vector3(
-                    Random.Range(-fireRange, fireRange),
-                    Random.Range(-fireRange, fireRange),
-                    0
-                );
-                GameObject dark = Instantiate(darkPrefab, owner.target.position + randomPosition, Quaternion.identity);
-
-                StartCoroutine(SendDarkToPlayer(dark, owner.target));
-
-            currentCooldown = 0;
+            StartCoroutine(SendDarkToPlayer(dark, owner.target));
         }
+        base.UseSkill(owner);
     }
 
     IEnumerator SendDarkToPlayer(GameObject dark, Transform target)

@@ -13,8 +13,5 @@ public class Reaper : BaseEnemy
 
         ReaperSkill reaperSkill = GetComponent<ReaperSkill>();
         skills.Add(reaperSkill);
-
-
-
     }
 }

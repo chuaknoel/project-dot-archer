@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5998723208981923528}
   - component: {fileID: 8967399752320244516}
   - component: {fileID: 6864682144734181935}
-  - component: {fileID: -3651645311925831272}
+  - component: {fileID: 8412994587710301148}
   m_Layer: 7
   m_Name: Orc
   m_TagString: Untagged
@@ -187,7 +187,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-3651645311925831272
+--- !u!114 &8412994587710301148
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

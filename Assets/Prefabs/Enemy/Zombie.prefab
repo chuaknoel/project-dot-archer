@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -1333700540430730735}
   - component: {fileID: -7387111192787804190}
   - component: {fileID: 2425594983831361048}
-  - component: {fileID: -7562175781517441077}
+  - component: {fileID: 4899255710172302090}
   m_Layer: 7
   m_Name: Zombie
   m_TagString: Untagged
@@ -208,7 +208,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-7562175781517441077
+--- !u!114 &4899255710172302090
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

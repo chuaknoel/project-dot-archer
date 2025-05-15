@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -338444632104644964}
   - component: {fileID: -4828779201515521858}
   - component: {fileID: 4098685726851278918}
-  - component: {fileID: -3693069690962574190}
+  - component: {fileID: -1295667661540975864}
   m_Layer: 7
   m_Name: Salamandra
   m_TagString: Untagged
@@ -209,7 +209,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-3693069690962574190
+--- !u!114 &-1295667661540975864
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

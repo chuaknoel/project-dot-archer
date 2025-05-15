@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2302175328477759711}
   - component: {fileID: 8417512202454428490}
   - component: {fileID: 2520937962167137940}
-  - component: {fileID: -1074413841143220287}
+  - component: {fileID: 1642264287969557916}
   m_Layer: 7
   m_Name: Goblin
   m_TagString: Untagged
@@ -117,8 +117,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 1
-  maxHealth: 20
-  currentHealth: 1
+  maxHealth: 10
+  currentHealth: 10
   attackDamage: 3
   moveSpeed: 3
 --- !u!61 &8417512202454428490
@@ -187,7 +187,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-1074413841143220287
+--- !u!114 &1642264287969557916
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

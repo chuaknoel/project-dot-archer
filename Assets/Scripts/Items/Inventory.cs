@@ -89,7 +89,8 @@ public class Inventory : MonoBehaviour
     public void Init()
     {
         // (A) 저장된 골드를 불러옵니다.
-        LoadGold();
+        LoadGold(GameManager.Instance.gameData);
+        AddGold(gold);
 
         // (B) Inspector에 드롭된 Prefab들을 ID→Prefab 딕셔너리에 채워넣기
         weaponPrefabDict.Clear();
@@ -139,15 +140,14 @@ public class Inventory : MonoBehaviour
     // 4) 골드 저장/불러오기 메서드
     //────────────────────────────────────────────────────────────────────────
 
-    private void LoadGold()
+    private void LoadGold(GameData gameData)
     {
-        gold = PlayerPrefs.GetInt("PlayerGold", 0);
+        gold = gameData.playerData.gold;
     }
 
     private void SaveGold()
     {
-        PlayerPrefs.SetInt("PlayerGold", gold);
-        PlayerPrefs.Save();
+        GameManager.Instance.gameData.playerData.gold = gold;
     }
 
     //────────────────────────────────────────────────────────────────────────
