@@ -25,6 +25,7 @@ public class Room : MonoBehaviour
     [SerializeField] private TilemapRenderer roomBounds;
 
     public bool isVisited = false;
+    public bool isCleared = false;
     public bool isBossRoom = false;
 
     public ROOMTYPE roomType;

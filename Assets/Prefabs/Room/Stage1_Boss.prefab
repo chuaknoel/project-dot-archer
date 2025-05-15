@@ -1817,6 +1817,7 @@ MonoBehaviour:
   tilemap: {fileID: 1403427084560627525}
   roomBounds: {fileID: 5761678177001069102}
   isVisited: 0
+  isBossRoom: 0
   roomType: 2
   entryPositions: []
 --- !u!114 &4302645743595068016
@@ -1831,7 +1832,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c126b2d64bd57e34db83a493eef554bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomPos: {x: 0, y: 0}
+  roomGenerator: {fileID: 0}
+  navigator: {fileID: 0}
+  currentRoom: {fileID: 0}
   isCleared: 0
 --- !u!1839735485 &2829004445829822658
 Tilemap:
