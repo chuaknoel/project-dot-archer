@@ -1,7 +1,8 @@
+using Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class BossStat : EnemyStat, IAttackStat, IMoveStat
 {
     public float MoveSpeed => moveSpeed;
@@ -47,5 +48,9 @@ public class BossStat : EnemyStat, IAttackStat, IMoveStat
     public override void Death()
     {
         base.Death();
+        if (IsDeath)
+        {
+            SceneManager.LoadScene("EndingScene");
+        }
     }
 }
