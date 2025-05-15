@@ -6,13 +6,13 @@ using UnityEngine;
 public class SearchTarget : MonoBehaviour
 {
     [SerializeField] private LayerMask targetLayer;
-    public List<GameObject> targetList = new List<GameObject>();
+    public List<BaseEnemy> targetList = new List<BaseEnemy>();
 
     private float targetDistance;
     private float nearestDistance;
     private int targetNum;
 
-    public void SetTarget(List<GameObject> targetList)
+    public void SetTarget(List<BaseEnemy> targetList)
     {
         this.targetList = targetList;
     }
@@ -35,6 +35,6 @@ public class SearchTarget : MonoBehaviour
             }
         }
 
-        return targetList[targetNum];
+        return targetList[targetNum].gameObject;
     }
 }

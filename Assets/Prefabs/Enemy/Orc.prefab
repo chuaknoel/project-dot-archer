@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5998723208981923528}
   - component: {fileID: 8967399752320244516}
   - component: {fileID: 6864682144734181935}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Orc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 1
   maxHealth: 50
-  currentHealth: 50
+  currentHealth: 1
   moveSpeed: 1
   attackDamage: 10
 --- !u!61 &8967399752320244516

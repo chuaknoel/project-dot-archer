@@ -23,9 +23,36 @@ public class RoomFactory : MonoBehaviour
         }
     }
 
-    public Vector2 roomSize = new Vector2(10f, 8f); // 방 1칸의 월드 크기 (예시)
+    public Vector2 roomSize = new Vector2(10f, 8f); // 방 1칸의 월드 크기
 
-    public Room CreateRoom(Vector2Int position, ROOMTYPE type)
+    // 1. 기본 방
+    // 3. 보스방 (2x2)
+    // centerPos: 중심 좌표 (4칸 평균값), occupiedPositions: 실제 논리 좌표 목록
+    public Room CreateRoom(Vector2 position, ROOMTYPE type)
+    {
+        if (type == ROOMTYPE.Long)
+        {
+            Debug.LogError("ROOMTYPE.Long은 좌표 2개를 받아야 합니다. 오버로드된 CreateRoom을 사용하세요.");
+            return null;
+        }
+        return CreateRoomInternal(position, type, position);
+    }
+
+    // 2. 긴 방
+    public Room CreateLongRoom(Vector2 left, Vector2 right, ROOMTYPE type)
+    {
+        if (type != ROOMTYPE.Long)
+        {
+            Debug.LogWarning("ROOMTYPE.Long이 아닌데 좌표 2개를 전달했습니다. 첫 좌표를 기준으로 사용합니다.");
+            return CreateRoomInternal(left, type, left);
+        }
+        Vector2 mid = (left + (Vector2)right) / 2f;
+        return CreateRoomInternal(mid, type, left);
+    }
+
+
+    // 내부 공통 처리 함수
+    private Room CreateRoomInternal(Vector2 worldGridPos, ROOMTYPE type, Vector2 logicalPos)
     {
         if (!prefabDict.TryGetValue(type, out GameObject prefab))
         {
@@ -34,13 +61,11 @@ public class RoomFactory : MonoBehaviour
         }
 
         GameObject obj = Instantiate(prefab);
-
-        // === 위치 설정 추가 ===
-        Vector3 worldPos = new Vector3(position.x * roomSize.x, position.y * roomSize.y, 0f);
-        obj.transform.position = worldPos;
+        obj.transform.position = new Vector3(worldGridPos.x, worldGridPos.y, 0f);
 
         Room room = obj.GetComponent<Room>();
-        room.Init(position, type);
+        room.Init(worldGridPos, type, logicalPos);
         return room;
     }
+
 }
