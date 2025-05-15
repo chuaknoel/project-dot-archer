@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -338444632104644964}
   - component: {fileID: -4828779201515521858}
   - component: {fileID: 4098685726851278918}
+  - component: {fileID: 2861293095554203727}
   m_Layer: 0
   m_Name: Salamandra
   m_TagString: Untagged
@@ -139,9 +140,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 1
-  maxHealth: 30
-  currentHealth: 30
-  attackDamage: 6
+  maxHealth: 1
+  currentHealth: 1
+  attackDamage: 1
 --- !u!61 &-4828779201515521858
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -208,3 +209,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2861293095554203727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582702308276759449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18dc24b05b3b9a64ca70adfcca51a0bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpBar: {fileID: 0}
+  hpSlider: {fileID: 0}
+  heightOffset: 1.5
+  x: 77.6
+  y: 32.2
