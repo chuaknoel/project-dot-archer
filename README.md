@@ -1,6 +1,6 @@
 
 # TextRPG_13  
-> 내일배움캠프 2~3주차 TextRPG Team Project  
+> 내일배움캠프 5주차 Unity 2D Team Project  
 
 ---
 
