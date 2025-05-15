@@ -38,7 +38,6 @@ public class RoomNavigator : MonoBehaviour
 
             DungeonManager.Instance.roomManager.OnPlayerEnter(room);  //이동한 방이 처음 온 방이면 Enemy 생성
         }
-
         StartCoroutine(MovePlayerWithCollisionPause(player, targetPos));
         room.isVisited = true;
     }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
@@ -9,13 +10,15 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
     private List<Room> rooms = new();
     public List<Room> Rooms => rooms;
     public Room currentRoom;
-
+    private Room bossroom;
     private DungeonManager dungeonManager;
+    private Room room;
+    private bool isBossRoomTriggered = false;
 
     public void Init()
     {
         dungeonManager = DungeonManager.Instance;
-
+        room = Room.Instance;
         // 맵 생성
         rooms = roomGenerator.GenerateDungeon();
 
@@ -72,5 +75,37 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
     {
         isCleared = true;
         // 문 열기 등 처리
+        if (!room.isBossRoom)
+            CheckAllRoomsCleared();
+    }
+
+    public void CheckAllRoomsCleared()
+    {
+        //일반 방 중 클리어 안 된 방이 있으면 종료
+        foreach (Room room in rooms)
+        {
+            if (!room.isBossRoom && !isCleared) return;
+            bossroom = room;
+        }
+            
+        if (!isBossRoomTriggered)
+        {
+            isBossRoomTriggered = true;
+            StartCoroutine(AutoMoveToBossRoomAfterDelay(bossroom));
+        }
+    }
+
+    private IEnumerator AutoMoveToBossRoomAfterDelay(Room room)
+    {
+        yield return new WaitForSeconds(3f);
+        MovePlayerToBossRoom(room);
+    }
+
+    private void MovePlayerToBossRoom(Room room)
+    {
+        Player player = FindObjectOfType<Player>();
+
+        Vector3 bossCenter = room.transform.position;
+        player.transform.position = bossCenter;
     }
 }
