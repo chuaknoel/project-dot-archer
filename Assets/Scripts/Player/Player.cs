@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
     public UpgradeManager UpgradeManager { get { return upgradeManager; } }
     private UpgradeManager upgradeManager;
 
+    [SerializeField] private HeartUIManager heartUI;
+
     // Update is called once per frame
     void Update()
     {
@@ -70,17 +72,27 @@ public class Player : MonoBehaviour
         controller?.OnFixedUpdate();
     }
 
-    public void Init(PlayerData playerData, Inventory inventory)
+    public void Init(GameData gameData, Inventory inventory)
     {
         stat ??= GetComponent<PlayerStat>();
-        stat.Init(this, playerData);
+        stat.Init(this, gameData);
+
+
+        //체력 UI 이벤트 연결
+        if (heartUI != null)
+        {
+            stat.OnHealthChanged += heartUI.UpdateHearts;
+            heartUI.UpdateHearts(stat.CurrentHealth, stat.MaxHealth); // 초기값 세팅
+        }
+
+
 
         characterImage ??= GetComponentInChildren<SpriteRenderer>();
         playerAnime ??= GetComponent<Animator>();
         searchTarget ??= GetComponent<SearchTarget>();
         this.inventory = inventory;
 
-        upgradeManager = DungeonManager.Instance.upgradeManager;
+        upgradeManager = GameManager.Instance.upgradeManager;
 
         SetWeapon();
 
@@ -104,6 +116,7 @@ public class Player : MonoBehaviour
 
         // 3) Item 컴포넌트 확인 (필요시)
         Item itemComp = instance.GetComponent<Item>();
+        itemComp.LoadItemData();
         if (itemComp == null)
         {
             Debug.LogError("무기 인스턴스에 Item 컴포넌트가 없습니다!");
@@ -117,6 +130,7 @@ public class Player : MonoBehaviour
             Debug.LogError("무기 인스턴스에 WeaponHandler 컴포넌트가 없습니다!");
             return;
         }
+
         weaponHandler.Init(itemComp, stat, targetMask, GetComponent<Collider2D>());
     }
 

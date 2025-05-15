@@ -1,0 +1,51 @@
+{
+  "playerData": {
+    "playerName": "sayjoh-jo",
+    "statData": {
+      "level": 1,
+      "exp": 0,
+      "baseHealth": 100.0,
+      "attackStat": {
+        "enable": false,
+        "attackDamage": 10.0
+      },
+      "defenceStat": {
+        "enable": false,
+        "defence": 5.0
+      },
+      "moveStat": {
+        "enable": false,
+        "moveSpeed": 5.0
+      },
+      "cost": 10
+    },
+    "equippedWeapon": {
+      "itemId": "",
+      "itemName": "",
+      "itemDescription": "",
+      "itemIcon": {
+        "instanceID": 0
+      },
+      "itemRarity": 0,
+      "itemCategory": 0,
+      "weaponType": 0,
+      "armorType": 0,
+      "attackBonus": 0.0,
+      "defenseBonus": 0.0,
+      "price": 0.0,
+      "attackRange": 0.0,
+      "attackDelay": 0.0,
+      "attackCooldown": 0.0
+    },
+    "inventoryItems": [],
+    "gold": 1
+  },
+  "upgradeData": {
+    "attackDamage": 0.0,
+    "defence": 0.0,
+    "moveSpeed": 0.0,
+
+    "health": 0.0,
+    "cost": 0.0
+  }
+}

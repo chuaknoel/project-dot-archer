@@ -9,7 +9,7 @@ public class BossControllerManager : EnemyControllerManager
     private ISkillController skillInterface;
    
     public float trackingtDis = 20f; // 추적 거리
-    public float rangedAttacktDis = 7f; //  원거리 공격 거리
+    public float rangedAttacktDis = 3f; //  원거리 공격 거리
     public float closeRangeAttack = 2f; // 근거리 공격 거리
 
     private float skillCheckDelay = 6f;

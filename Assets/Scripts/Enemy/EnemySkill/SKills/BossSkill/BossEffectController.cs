@@ -7,7 +7,7 @@ public class BossEffectController : MonoBehaviour
     GameObject circleEffect;
 
     List<GameObject> rangedAttackEffectList= new List<GameObject>();
-    public float effectPower = 5f;
+    public float effectPower = 15f;
 
     private void OnEnable()
     {

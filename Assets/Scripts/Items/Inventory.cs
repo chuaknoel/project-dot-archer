@@ -86,10 +86,11 @@ public class Inventory : MonoBehaviour
     // 3) Unity 생명주기 콜백
     //────────────────────────────────────────────────────────────────────────
 
-    private void Awake()
+    public void Init()
     {
         // (A) 저장된 골드를 불러옵니다.
-        LoadGold();
+        LoadGold(GameManager.Instance.gameData);
+        AddGold(gold);
 
         // (B) Inspector에 드롭된 Prefab들을 ID→Prefab 딕셔너리에 채워넣기
         weaponPrefabDict.Clear();
@@ -119,10 +120,7 @@ public class Inventory : MonoBehaviour
         foreach (ArmorType at in Enum.GetValues(typeof(ArmorType)))
             if (at != ArmorType.None)
                 equippedArmors[at] = null;
-    }
 
-    private void Start()
-    {
         // 기존 장착 사항 재설정
         EquipSelectedItems();
         // UI 갱신
@@ -142,15 +140,14 @@ public class Inventory : MonoBehaviour
     // 4) 골드 저장/불러오기 메서드
     //────────────────────────────────────────────────────────────────────────
 
-    private void LoadGold()
+    private void LoadGold(GameData gameData)
     {
-        gold = PlayerPrefs.GetInt("PlayerGold", 0);
+        gold = gameData.playerData.gold;
     }
 
     private void SaveGold()
     {
-        PlayerPrefs.SetInt("PlayerGold", gold);
-        PlayerPrefs.Save();
+        GameManager.Instance.gameData.playerData.gold = gold;
     }
 
     //────────────────────────────────────────────────────────────────────────
@@ -209,7 +206,7 @@ public class Inventory : MonoBehaviour
             if (i < ownedItemIds.Count)
             {
                 string id = ownedItemIds[i];
-                var data = ItemManager.Instance.GetItemDataById(id);
+                var data = GameManager.Instance.itemManager.GetItemDataById(id);
                 if (data != null)
                 {
                     icon.sprite = data.ItemIcon;
@@ -256,7 +253,7 @@ public class Inventory : MonoBehaviour
 
     private ArmorType DetermineArmorType(string itemId)
     {
-        var data = ItemManager.Instance.GetItemDataById(itemId);
+        var data = GameManager.Instance.itemManager.GetItemDataById(itemId);
         return data != null ? data.ArmorType : ArmorType.None;
     }
 
@@ -266,7 +263,7 @@ public class Inventory : MonoBehaviour
 
     private void SetupEquippedWeaponById(string weaponId)
     {
-        var data = ItemManager.Instance.GetItemDataById(weaponId);
+        var data = GameManager.Instance.itemManager.GetItemDataById(weaponId);
         if (data != null)
             UpdateEquippedWeapon(data);
         else
@@ -275,7 +272,7 @@ public class Inventory : MonoBehaviour
 
     private void SetupEquippedArmorById(string armorId, ArmorType type)
     {
-        var data = ItemManager.Instance.GetItemDataById(armorId);
+        var data = GameManager.Instance.itemManager.GetItemDataById(armorId);
         if (data != null)
             UpdateEquippedArmor(data, type);
         else
@@ -309,8 +306,10 @@ public class Inventory : MonoBehaviour
         if (armorPrefabDict.TryGetValue(item.ItemId, out var prefab))
         {
             var obj = Instantiate(prefab, transform);
+            
             obj.name = $"Armor_{item.ItemId}";
             var comp = obj.GetComponent<Item>() ?? obj.AddComponent<Item>();
+            comp.LoadItemData();
             comp.Initialize(item);
         }
         else

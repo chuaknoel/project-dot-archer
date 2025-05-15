@@ -6,18 +6,6 @@ using UnityEngine.Pool;
 //발사체를 관리하는 매니저 클래스
 public class ProjectileManager : MonoBehaviour
 {
-    public static ProjectileManager Instance;
-    
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
-
     //생성한 발사체 정보를 가지고 있는 딕셔너리. 발사체이름 - 발사체 풀로 연결
     public Dictionary<string, IObjectPool<Projectile>> projectilePools = new Dictionary<string, IObjectPool<Projectile>>();
 

@@ -33,7 +33,7 @@ public class BossSkillController : SkillController, ISkillController
         for (int i = 1; i <= skillCount; i++)
         {
             var skill = gameObject.AddComponent<BossSkill>();
-            skill.Initialize($"BossSkill{i:00}", 10 * i, 4);
+            skill.Initialize($"BossSkill{i:00}", 10 * i, 2);
             bossSkills.Add(skill);
         }
     }
@@ -60,6 +60,7 @@ public class BossSkillController : SkillController, ISkillController
             // ¿Ã∆Â∆Æ πﬂªÁ
             bossEffectController.ExecuteEffect(transform, skill.skillName);
         }
+
         yield return new WaitForSeconds(2.5f);
 
         canMove = true;
