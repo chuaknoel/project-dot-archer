@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -30,10 +31,15 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private int currentStage; //던전매니저에?
     public int CurrentStage => currentStage;
 
-    public Inventory inventory;
+    public Ability ability;
 
-    public ItemManager itemManager;
+    public GameObject abilityGO;
 
+    //public Inventory inventory;
+
+    //public ItemManager itemManager;
+
+    //public static GameManager Instance;
     private void Awake()
     {
 
@@ -66,7 +72,7 @@ public class ShopManager : MonoBehaviour
     private void AddShopItems(int currentStage)
     {
         itemsForSale.Clear();
-        itemsForSale = itemManager.GetItemsByRarity((ItemRarity)(currentStage));
+        itemsForSale = GameManager.Instance.itemManager.GetItemsByRarity(Enums.ItemRarity.Uncommon);
 
     }
 
@@ -127,7 +133,7 @@ public class ShopManager : MonoBehaviour
 
 
             int index = i;
-            gameObject.transform.GetComponent<Button>().onClick.AddListener(() => BuyItem(index));
+            gameObject.transform.GetComponent<Button>().onClick.AddListener(() => OnClickToBuyItem(index));
 
             //sprite = itemsForSale[i].ItemIcon;
             //float price = itemsForSale[i].price;
@@ -136,11 +142,11 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    public void BuyItem(int index) //클릭한 아이템
+    public void OnClickToBuyItem(int index) //클릭한 아이템
     {
-        if (inventory.SpendGold((int)itemsForSale[index].price))
+        if (GameManager.Instance.inventory.SpendGold((int)itemsForSale[index].price))
         {
-            inventory.AddOwnedItem(itemsForSale[index].itemId);
+            GameManager.Instance.inventory.AddOwnedItem(itemsForSale[index].itemId);
             Debug.Log("buy" + index);
         }
         else
@@ -148,4 +154,5 @@ public class ShopManager : MonoBehaviour
             Debug.Log("nomoney" + index);
         }
     }
+
 }
