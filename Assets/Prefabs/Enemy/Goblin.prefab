@@ -14,8 +14,7 @@ GameObject:
   - component: {fileID: 2302175328477759711}
   - component: {fileID: 8417512202454428490}
   - component: {fileID: 2520937962167137940}
-  - component: {fileID: -2528291782536276636}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Goblin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,10 +116,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 1
-  maxHealth: 1
+  maxHealth: 20
   currentHealth: 1
-  attackDamage: 1
-  moveSpeed: 1
+  attackDamage: 3
+  moveSpeed: 3
 --- !u!61 &8417512202454428490
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -187,20 +186,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-2528291782536276636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2628999518825426194}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18dc24b05b3b9a64ca70adfcca51a0bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hpBar: {fileID: 0}
-  hpSlider: {fileID: 0}
-  heightOffset: 1.5
-  x: 77.6
-  y: 32.2

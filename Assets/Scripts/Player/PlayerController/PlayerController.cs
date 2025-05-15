@@ -12,12 +12,11 @@ public class PlayerController : BaseController<Player>
 
     private Action lookAction;
 
-    private bool enemyAlive;
-
     public PlayerController(State<Player> initState, Player player) : base(initState, player)
     {
         this.player = player;
         lookAction = LookEnemy;
+        ChangeLook(false);      //현재 던전 생성 로직이 첫방은 Enemy가 없음. false처리해준다. 
     }
 
     public override void OnUpdate(float deltaTime)
@@ -30,12 +29,6 @@ public class PlayerController : BaseController<Player>
         }
 
         base.OnUpdate(deltaTime);
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            enemyAlive = !enemyAlive;
-            ChangeLook();
-        }
     }
 
     public Vector3 GetInputDir()
@@ -45,11 +38,9 @@ public class PlayerController : BaseController<Player>
         return inputDir;
     }
 
-    public void ChangeLook()
+    public void ChangeLook(bool enemyAlive)
     {
-        lookAction = null;
-
-        if (enemyAlive) //임시로 만든 bool 변수 //추후 EnemyManager에서 남은 Enemy를 체크하여 변경
+        if (enemyAlive)
         {
             lookAction = LookEnemy;
         }

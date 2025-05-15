@@ -31,9 +31,9 @@ public class BaseEnemy : MonoBehaviour
         target= GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.TryGetComponent<IDefenceStat>(out IDefenceStat damage))
+        if (collision.gameObject.TryGetComponent<IDefenceStat>(out IDefenceStat damage))
         {
             if (TryGetComponent<IAttackStat>(out IAttackStat attack))
                 damage.TakeDamage(attack.AttackDamage);
