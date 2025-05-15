@@ -46,5 +46,6 @@ public class BossStat : EnemyStat, IAttackStat, IMoveStat
     public override void Death()
     {
         base.Death();
+        RoomManager.Instance.OnBossDefeated();
     }
 }
