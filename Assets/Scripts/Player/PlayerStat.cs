@@ -28,10 +28,6 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
     private PlayerData playerData;
 
 
-    public float CurrentHealth => currentHealth;
-    public float MaxHealth => maxHealth;
-
-
     public void Init(Player player, GameData gameData)
     {
         this.gameData = gameData;
@@ -69,38 +65,6 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
         return useableCost;
     }
 
-    //public void TakeDamage(float damage)
-    //{
-    //    if (IsDeath) return;
-    //    float applyDamage = Mathf.Clamp(damage - Defence, 0, damage - Defence);
-    //    currentHealth -= applyDamage;
-
-    //    if (IsDeath)
-    //    {
-    //        Death();
-    //    }
-    //}
-
-    public void RecoverCost(int recoverCost)
-    {
-        useableCost = Mathf.Clamp((useableCost + recoverCost), (useableCost + recoverCost), cost);
-    }
-
-    //public void RecoverHp(float recoverHp)
-    //{
-    //    currentHealth = Mathf.Clamp((currentHealth + recoverHp), (currentHealth + recoverHp), maxHealth);
-    //}
-
-    public override void Death()
-    {
-        base.Death();
-        player.Controller.ChangeState(nameof(PlayerDeathState));
-    }
-
-
-
-    public event Action<float, float> OnHealthChanged;
-
     public void TakeDamage(float damage)
     {
         if (IsDeath) return;
@@ -110,12 +74,33 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
-        if (IsDeath) Death();
+        if (currentHealth <= 0)
+        {
+            Death();
+        }
     }
+    
+    public void RecoverCost(int recoverCost)
+    {
+        useableCost = Mathf.Clamp((useableCost + recoverCost), (useableCost + recoverCost), cost);
+    }
+
+    public override void Death()
+    {
+        base.Death();
+        if (!IsDeath)
+        {
+            IsDeath = true;
+            player.Controller.ChangeState(nameof(PlayerDeathState));
+        }
+    }
+
+
+    public event Action<float, float> OnHealthChanged;
 
     public void RecoverHp(float recoverHp)
     {
-        currentHealth = Mathf.Clamp(currentHealth + recoverHp, 0, maxHealth);
+        currentHealth = Mathf.Clamp((currentHealth + recoverHp), (currentHealth + recoverHp), maxHealth);
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 }

@@ -79,7 +79,7 @@ public class Projectile : MonoBehaviour
             if (collision.gameObject.TryGetComponent<IDefenceStat>(out IDefenceStat target))
             {
                 target.TakeDamage(rangeWeaponHandler.GetAttackDamage());
-                Debug.Log($"{collision.gameObject.name} 에게 {rangeWeaponHandler.GetAttackDamage()} 데미지!");
+                //Debug.Log($"{collision.gameObject.name} 에게 {rangeWeaponHandler.GetAttackDamage()} 데미지!");
             }
             ReleaseProjectile();
         }

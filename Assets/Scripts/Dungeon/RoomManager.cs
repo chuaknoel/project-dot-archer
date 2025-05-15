@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
 {
     public RoomGenerator roomGenerator;
     public RoomNavigator navigator;
+    public RoomTracker roomTracker;
     private List<Room> rooms = new();
     public List<Room> Rooms => rooms;
     public Room currentRoom;
@@ -18,7 +20,7 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
     public static RoomManager Instance;
     private void Awake() => Instance = this;
 
-    public int bossRoom;
+    public int clearedRoomCount;
 
     public void Init()
     {
@@ -31,7 +33,7 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
         if (startRoom != null)
         {
             currentRoom = startRoom;
-            bossRoom++;
+            clearedRoomCount++;
             currentRoom.isVisited = true; //처음방에서는 몬스터가 나오지 않아야 하기 때문에 방문한 방 체크를 미리 해준다.
 
             currentRoom.isCleared = true;
@@ -79,34 +81,15 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
 
     public void OnAllEnemiesDefeated()
     {
-
         DungeonManager.Instance.UpgradeSelect.SetCard();
 
+        clearedRoomCount++;
         currentRoom.isCleared = true;
-        if(bossRoom == 6)
+
+        if(clearedRoomCount == rooms.Count-1)
         {
-            MovePlayerToBossRoom(rooms[bossRoom]);
+            StartCoroutine(AutoMoveToBossRoomAfterDelay(rooms[clearedRoomCount]));
         }
-
-        /*
-        if (!currentRoom.isBossRoom)
-            CheckAllRoomsCleared();
-        */
-    }
-    public void OnBossDefeated()
-    {
-        StartCoroutine(NextStageRoutine());
-    }
-    private IEnumerator NextStageRoutine()
-    {
-        yield return new WaitForSeconds(3f); // 연출용
-
-        currentStage++;
-        roomGenerator.GenerateStage(currentStage);
-
-        // 플레이어 초기화 또는 이동
-        Player player = FindObjectOfType<Player>();
-        player.transform.position = Vector3.zero; // 시작 위치로 이동
     }
 
     public void CheckAllRoomsCleared()
@@ -133,26 +116,38 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
 
     private void MovePlayerToBossRoom(Room room)
     {
-        Player player = FindObjectOfType<Player>();
-
+        roomTracker.isChecking = false;
         Vector3 bossCenter = room.transform.position;
+        dungeonManager.player.transform.position = bossCenter;
         dungeonManager.cameraController.SetCameraBounds(room.GetRoomBounds());
-        player.transform.position = bossCenter;
 
-        Invoke("SpawnBoss", 2f);
+        Debug.Log("보스방 이동");
+        dungeonManager.player.SearchTarget.SetTarget(dungeonManager.enemyManager.SpawnBoss(room));  // 이 방에 적을 생성하도록 요청후 적 리스트를 플레이어에게 전달
+        dungeonManager.player.Controller.ChangeLook(true);
     }
 
-    private void SpawnBoss()
+    public void OnNextStage()
     {
-        Vector3 spawnPosition = rooms[bossRoom].transform.position;
+        StartCoroutine(NextStageRoutine());
+    }
+    private IEnumerator NextStageRoutine()
+    {
+        dungeonManager.player.Controller.ChangeLook(false);
 
-        BaseEnemy e = Instantiate(
-            dungeonManager.enemyManager.currnetEnemyGroup[0],
-            spawnPosition,
-            Quaternion.identity
-            ).GetComponent<BaseEnemy>();
+        yield return new WaitForSeconds(3f); // 연출용
 
-        dungeonManager.enemyManager.activeEnemies.Add( e );
-        dungeonManager.player.SearchTarget.SetTarget(dungeonManager.enemyManager.activeEnemies);
+        currentStage++;
+        roomGenerator.GenerateStage(currentStage);
+
+        dungeonManager.player.transform.position = Vector3.zero; // 시작 위치로 이동
+
+        if (DungeonManager.dungeonStage == 1)
+        {
+            SceneManager.LoadScene("DungeonScene");
+        }
+        else
+        {
+            SceneManager.LoadScene("EndingScene");
+        }
     }
 }

@@ -16,7 +16,7 @@ public abstract class BaseStat : MonoBehaviour
     [SerializeField] protected float currentHealth;
     public float CurrentHealth { get { return currentHealth; } }
 
-    public bool IsDeath { get { return CurrentHealth <= 0; } }
+    public bool IsDeath;
 
     public virtual void Death()
     {

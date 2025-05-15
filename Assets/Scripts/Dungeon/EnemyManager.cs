@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class EnemyManager : MonoBehaviour
@@ -43,20 +44,35 @@ public class EnemyManager : MonoBehaviour
         for (int i = 0; i < enemyCount; i++)
         {
             Vector3 spawnPosition = new Vector3(    //룸 floor 내부의 랜덤한 위치 좌표를 받아온다.
-                  Random.Range(min.x, max.x),
-                  Random.Range(min.y, max.y),
+                  Random.Range(min.x+2, max.x-2),
+                  Random.Range(min.y+2, max.y-2),
                   0
               );
 
             
             BaseEnemy e = Instantiate(
-                currnetEnemyGroup[Random.Range(1, currnetEnemyGroup.Length-1)], //0번은 보스 에너미 임으로 제외한 기본 에너미를 랜던하게 호출
+                currnetEnemyGroup[Random.Range(1, currnetEnemyGroup.Length)], //0번은 보스 에너미 임으로 제외한 기본 에너미를 랜던하게 호출
                 spawnPosition,                                                  //룸 내부에 랜덤하게 위치하여 소환
                 Quaternion.identity
                 ).GetComponent<BaseEnemy>();
 
             RegisterEnemy(e);
         }
+
+        return activeEnemies;
+    }
+
+    public List<BaseEnemy> SpawnBoss(Room bossRoom)
+    {
+        Vector3 spawnPosition = bossRoom.transform.position;
+
+        BaseEnemy e = Instantiate(
+            currnetEnemyGroup[0],
+            spawnPosition,
+            Quaternion.identity
+            ).GetComponent<BaseEnemy>();
+
+        RegisterEnemy(e);
 
         return activeEnemies;
     }
@@ -68,11 +84,18 @@ public class EnemyManager : MonoBehaviour
         // 해당 방에 남은 적이 없으면
         if (activeEnemies.Count == 0)
         {
-            DungeonManager.Instance.roomManager.OnAllEnemiesDefeated();
+            Debug.Log("모든적 처치");
             DungeonManager.Instance.player.Controller.ChangeLook(false);
+            DungeonManager.Instance.roomManager.OnAllEnemiesDefeated();
         }
     }
 
+    public void OnBossDefeated(BaseEnemy boss)
+    {
+        UnregisterEnemy(boss);
+        DungeonManager.Instance.roomManager.OnNextStage();
+    }
+  
     public void ClearAllEnemies()
     {
         foreach (var enemy in activeEnemies)

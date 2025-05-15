@@ -45,6 +45,7 @@ public class PlayerController : BaseController<Player>
 
     public void ChangeLook(bool enemyAlive)
     {
+        Debug.Log(enemyAlive);
         if (enemyAlive)
         {
             lookAction = LookEnemy;

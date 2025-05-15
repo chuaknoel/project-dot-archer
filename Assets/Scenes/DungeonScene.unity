@@ -6606,8 +6606,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomGenerator: {fileID: 293030891}
   navigator: {fileID: 1333247119}
+  roomTracker: {fileID: 1590505899}
   currentRoom: {fileID: 0}
   currentStage: 1
+  clearedRoomCount: 0
 --- !u!1001 &1209439563
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7284,6 +7286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomManager: {fileID: 1142426130}
   checkCooldown: 0.2
+  isChecking: 1
 --- !u!4 &1590505900
 Transform:
   m_ObjectHideFlags: 0
@@ -7916,6 +7919,7 @@ MonoBehaviour:
   level: 0
   maxHealth: 0
   currentHealth: 0
+  IsDeath: 0
   baseHealth: 0
   attackDamage: 0
   defence: 0

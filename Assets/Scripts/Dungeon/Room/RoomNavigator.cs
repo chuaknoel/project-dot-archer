@@ -34,8 +34,7 @@ public class RoomNavigator : MonoBehaviour
         if (room.isVisited == false)
         {
             Debug.Log("처음 오는 방?");
-            //모든 출입구 봉쇄
-            DungeonManager.Instance.roomManager.bossRoom++;
+        
             DungeonManager.Instance.roomManager.OnPlayerEnter(room);  //이동한 방이 처음 온 방이면 Enemy 생성
         }
         StartCoroutine(MovePlayerWithCollisionPause(player, targetPos));

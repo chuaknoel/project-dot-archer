@@ -7,7 +7,7 @@ public class RoomTracker : MonoBehaviour
     public RoomManager roomManager;
     public float checkCooldown = 0.2f;
 
-    private bool isChecking = true;
+    public bool isChecking = true;
 
     void Update()
     {
