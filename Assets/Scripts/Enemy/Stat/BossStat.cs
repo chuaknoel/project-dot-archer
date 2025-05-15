@@ -46,11 +46,14 @@ public class BossStat : EnemyStat, IAttackStat, IMoveStat
         return attackDamage;
     }
     public override void Death()
-    {
-        base.Death();
+    {      
         if (IsDeath)
         {
-            SceneManager.LoadScene("EndingScene");
+            GameManager.Instance.inventory.AddGold(1);                                               // 코인 증가
+            DungeonManager.Instance.enemyManager.OnEnemyDefeated(this.GetComponent<BaseEnemy>());    // 에너미 죽음 체크
+            Destroy(hpBarController.hpBar);
+            Destroy(this.gameObject);
+            SceneManager.LoadScene("EndingScene"); 
         }
     }
 }
