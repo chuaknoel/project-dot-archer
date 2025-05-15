@@ -18,7 +18,6 @@ public struct EntryInfo
 
 public class Room : MonoBehaviour
 {
-    public static Room Instance;
     public Vector2 position; // 기준 좌표 (긴방은 왼쪽 기준)
     public List<Vector2> occupiedPositions = new();
 
@@ -26,6 +25,7 @@ public class Room : MonoBehaviour
     [SerializeField] private TilemapRenderer roomBounds;
 
     public bool isVisited = false;
+    public bool isCleared = false;
     public bool isBossRoom = false;
 
     public ROOMTYPE roomType;

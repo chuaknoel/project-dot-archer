@@ -12,15 +12,17 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
     public Room currentRoom;
     private Room bossroom;
     private DungeonManager dungeonManager;
-    private Room room;
     private bool isBossRoomTriggered = false;
+    public int currentStage = 1;
+
+    public static RoomManager Instance;
+    private void Awake() => Instance = this;
 
     public void Init()
     {
         dungeonManager = DungeonManager.Instance;
-        room = Room.Instance;
         // 맵 생성
-        rooms = roomGenerator.GenerateDungeon();
+        rooms = roomGenerator.GenerateDungeon(1);
 
         // 시작 위치 설정
         Room startRoom = FindRoomAtPosition(Vector2Int.zero);
@@ -28,7 +30,7 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
         {
             currentRoom = startRoom;
             currentRoom.isVisited = true; //처음방에서는 몬스터가 나오지 않아야 하기 때문에 방문한 방 체크를 미리 해준다.
-            isCleared = true;
+            currentRoom.isCleared = true;
             dungeonManager.cameraController.SetCameraBounds(currentRoom.GetRoomBounds());
             navigator.MovePlayerToRoom(currentRoom, dungeonManager.player.gameObject, Vector2Int.zero); // 초기엔 방향 없음
         }
@@ -61,22 +63,36 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
         return rooms.Find(r => r.IsOccupyingPosition(position));
     }
 
-    public bool isCleared;
-
     public void OnPlayerEnter(Room visitRoom)
     {
         // EnemyManager에 몬스터 생성 요청
         dungeonManager.player.SearchTarget.SetTarget(dungeonManager.enemyManager.SpawnEnemies(visitRoom));  // 이 방에 적을 생성하도록 요청후 적 리스트를 플레이어에게 전달
         dungeonManager.player.Controller.ChangeLook(true);
-        isCleared = false;
+        visitRoom.isVisited = true;
+        visitRoom.isCleared = false;
     }
 
     public void OnAllEnemiesDefeated()
     {
-        isCleared = true;
+        currentRoom.isCleared = true;
         // 문 열기 등 처리
-        if (!room.isBossRoom)
+        if (!currentRoom.isBossRoom)
             CheckAllRoomsCleared();
+    }
+    public void OnBossDefeated()
+    {
+        StartCoroutine(NextStageRoutine());
+    }
+    private IEnumerator NextStageRoutine()
+    {
+        yield return new WaitForSeconds(3f); // 연출용
+
+        currentStage++;
+        roomGenerator.GenerateStage(currentStage);
+
+        // 플레이어 초기화 또는 이동
+        Player player = FindObjectOfType<Player>();
+        player.transform.position = Vector3.zero; // 시작 위치로 이동
     }
 
     public void CheckAllRoomsCleared()
@@ -84,7 +100,7 @@ public class RoomManager : MonoBehaviour // 방 클리어 여부, 적 목록, 입장처리
         //일반 방 중 클리어 안 된 방이 있으면 종료
         foreach (Room room in rooms)
         {
-            if (!room.isBossRoom && !isCleared) return;
+            if (!room.isBossRoom && !room.isCleared) return;
             bossroom = room;
         }
             

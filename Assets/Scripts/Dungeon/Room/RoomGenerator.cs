@@ -23,7 +23,28 @@ public class RoomGenerator : MonoBehaviour
     [SerializeField] private RoomFactory roomFactory;
     [SerializeField] private DoorSpawner doorSpawner;
 
-    public List<Room> GenerateDungeon()
+    public int currentStage = 1;
+    public List<Room> currentRooms = new();
+
+    public void GenerateStage(int stage)
+    {
+        currentStage = stage;
+        ClearCurrentRooms(); // 기존 방 제거
+
+        // 여기서 stage에 따라 난이도 or 방 개수 조정 가능
+        GenerateDungeon(stage);
+    }
+
+    private void ClearCurrentRooms()
+    {
+        foreach (var room in currentRooms)
+        {
+            Destroy(room.gameObject);
+        }
+        currentRooms.Clear();
+    }
+
+    public List<Room> GenerateDungeon(int stage)
     {
         rooms.Clear();
         Vector2Int currentPos = Vector2Int.zero;
