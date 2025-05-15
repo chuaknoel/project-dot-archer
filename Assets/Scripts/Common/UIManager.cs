@@ -28,7 +28,6 @@ public class UIManager : MonoBehaviour
 
     public void SetCoinUI(int coin)
     {
-        Debug.Log("asdasd");
         coinText.text = coin.ToString();
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,7 +27,7 @@ public class EnemyStat : BaseStat ,IDefenceStat
         // 피격 애니메이션 재생
         PlayAnimation();
 
-        if (IsDeath)
+        if (currentHealth <= 0)
         {
             Death();
         }
@@ -48,11 +49,15 @@ public class EnemyStat : BaseStat ,IDefenceStat
         animator.SetBool("isDamaged", false);
     }
     public override void Death()
-    {        
-        GameManager.Instance.inventory.AddGold(1);                                               // 코인 증가
-        DungeonManager.Instance.enemyManager.OnEnemyDefeated(this.GetComponent<BaseEnemy>());    // 에너미 죽음 체크
-        Destroy(hpBarController.hpBar);
-        Destroy(this.gameObject);
+    {
+        if (!IsDeath)
+        {
+            IsDeath = true;
+            GameManager.Instance.inventory.AddGold(1);                                               // 코인 증가
+            DungeonManager.Instance.enemyManager.OnEnemyDefeated(this.GetComponent<BaseEnemy>());    // 에너미 죽음 체크
+            Destroy(hpBarController.hpBar);
+            Destroy(this.gameObject);
+        }
     }
 }
     

@@ -24,8 +24,9 @@ public class BossStat : EnemyStat, IAttackStat, IMoveStat
         // 피격 애니메이션 재생
         PlayAnimation();
 
-        if (IsDeath)
+        if (currentHealth <= 0 && !IsDeath)
         {
+            IsDeath = true;
             Death();
         }
 
@@ -47,15 +48,10 @@ public class BossStat : EnemyStat, IAttackStat, IMoveStat
     }
     public override void Death()
     {
-
-        if (IsDeath)
-        {
-            GameManager.Instance.inventory.AddGold(1);                                               // 코인 증가
-            DungeonManager.Instance.enemyManager.OnEnemyDefeated(this.GetComponent<BaseEnemy>());    // 에너미 죽음 체크
-            Destroy(hpBarController.hpBar);
-            Destroy(this.gameObject);
-            SceneManager.LoadScene("EndingScene");
-            RoomManager.Instance.OnBossDefeated();
-        }
+        Debug.Log("보스 죽음");
+        GameManager.Instance.inventory.AddGold(1); // 코인 증가
+        DungeonManager.Instance.enemyManager.OnBossDefeated(this.GetComponent<BaseEnemy>());
+        Destroy(hpBarController.hpBar);
+        Destroy(this.gameObject);
     }
 }

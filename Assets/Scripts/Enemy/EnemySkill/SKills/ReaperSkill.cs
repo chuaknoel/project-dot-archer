@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class ReaperSkill : EnemySkill
 {
     public GameObject darkPrefab;
     public int Count = 3;
     public float fireRange = 3f;
+
+    private Transform target;
 
     void Start()
     {
@@ -19,21 +22,21 @@ public class ReaperSkill : EnemySkill
     }
     public override void UseSkill(BaseEnemy owner)
     {
-        
+        for (int i = 0; i < Count; i++)
+        {
+            Vector3 randomPosition = new Vector3(
+                Random.Range(-fireRange, fireRange),
+                Random.Range(-fireRange, fireRange),
+                0
+            );
 
-            for (int i = 0; i < Count; i++)
-            {
-                Vector3 randomPosition = new Vector3(
-                    Random.Range(-fireRange, fireRange),
-                    Random.Range(-fireRange, fireRange),
-                    0
-                );
-                GameObject dark = Instantiate(darkPrefab, owner.target.position + randomPosition, Quaternion.identity);
+            target = owner.target;
 
-                StartCoroutine(SendDarkToPlayer(dark, owner.target));
+            GameObject dark = Instantiate(darkPrefab, target.position + randomPosition, Quaternion.identity);
 
-            currentCooldown = 0;
+            StartCoroutine(SendDarkToPlayer(dark, target));
         }
+        base.UseSkill(owner);
     }
 
     IEnumerator SendDarkToPlayer(GameObject dark, Transform target)
