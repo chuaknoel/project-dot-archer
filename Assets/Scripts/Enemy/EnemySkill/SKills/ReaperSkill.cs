@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class ReaperSkill : EnemySkill
 {
     public GameObject darkPrefab;
     public int Count = 3;
     public float fireRange = 3f;
+
+    private Transform target;
 
     void Start()
     {
@@ -26,9 +29,12 @@ public class ReaperSkill : EnemySkill
                 Random.Range(-fireRange, fireRange),
                 0
             );
-            GameObject dark = Instantiate(darkPrefab, owner.target.position + randomPosition, Quaternion.identity);
 
-            StartCoroutine(SendDarkToPlayer(dark, owner.target));
+            target = owner.target;
+
+            GameObject dark = Instantiate(darkPrefab, target.position + randomPosition, Quaternion.identity);
+
+            StartCoroutine(SendDarkToPlayer(dark, target));
         }
         base.UseSkill(owner);
     }

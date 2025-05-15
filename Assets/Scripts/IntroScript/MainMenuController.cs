@@ -33,13 +33,12 @@ public class MainMenuController : MonoBehaviour
 
     public void OnStats()
     {
-        // 현재 씬에서 StatsScene 으로 전환
         SceneManager.LoadScene("StatsScene");
     }
 
     public void OnShop()
     {
-        // TODO: 샵 화면 추후 구현
+        SceneManager.LoadScene("ShopScene");
     }
 
     // Options 버튼 클릭

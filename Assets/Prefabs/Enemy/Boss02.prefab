@@ -171,9 +171,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 1
-  maxHealth: 100
-  currentHealth: 100
-  isEndingBoss: 1
+  maxHealth: 4000
+  currentHealth: 4000
+  IsDeath: 0
   moveSpeed: 6
   attackDamage: 10
 --- !u!114 &6247869312629661253

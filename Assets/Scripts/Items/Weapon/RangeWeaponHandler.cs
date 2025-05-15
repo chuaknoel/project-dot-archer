@@ -93,6 +93,7 @@ public class RangeWeaponHandler : WeaponHandler
 
     public void MultiProjectile()
     {
+
         int count = GetProjectileCount();
         int halfCount = count / 2;
         float angle = 0;

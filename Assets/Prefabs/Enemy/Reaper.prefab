@@ -118,8 +118,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: 
-  damage: 0
-  cooldown: 3
+  damage: 1
+  cooldown: 50
   currentCooldown: 0
   effect: {fileID: 0}
   darkPrefab: {fileID: 1597012028145183507, guid: b74e081c148ee9c42a1eea4f046cf97b, type: 3}
@@ -140,6 +140,7 @@ MonoBehaviour:
   level: 1
   maxHealth: 30
   currentHealth: 30
+  IsDeath: 0
   moveSpeed: 3
   attackDamage: 6
 --- !u!61 &5452599077378880604

@@ -29,6 +29,11 @@ public class PlayerController : BaseController<Player>
         }
 
         base.OnUpdate(deltaTime);
+
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            ChangeLook(false);
+        }
     }
 
     public Vector3 GetInputDir()
@@ -40,6 +45,7 @@ public class PlayerController : BaseController<Player>
 
     public void ChangeLook(bool enemyAlive)
     {
+        Debug.Log(enemyAlive);
         if (enemyAlive)
         {
             lookAction = LookEnemy;
