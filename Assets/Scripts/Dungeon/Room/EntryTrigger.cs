@@ -21,7 +21,7 @@ public class EntryTrigger : MonoBehaviour
         if (!DungeonManager.Instance.roomManager.isCleared) { return; }
         if (!other.CompareTag("Player") || parentRoom == null) return;
 
-        Vector2Int targetRoomPos = parentRoom.position + direction;
+        Vector2 targetRoomPos = parentRoom.position + direction;
         RoomNavigator navigator = FindObjectOfType<RoomNavigator>();
         navigator?.MovePlayerToRoomByPosition(targetRoomPos, other.gameObject);
     }
