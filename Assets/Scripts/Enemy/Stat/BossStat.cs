@@ -1,7 +1,8 @@
+using Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class BossStat : EnemyStat, IAttackStat, IMoveStat
 {
     public float MoveSpeed => moveSpeed;
@@ -27,6 +28,7 @@ public class BossStat : EnemyStat, IAttackStat, IMoveStat
         {
             Death();
         }
+
     }
     protected override void UpdateHp()
     {
@@ -39,13 +41,21 @@ public class BossStat : EnemyStat, IAttackStat, IMoveStat
         Invoke("EndDamaged", 0.15f);
 
     }
-     float IAttackStat.GetTotalStatDamage()
+    float IAttackStat.GetTotalStatDamage()
     {
         return attackDamage;
     }
     public override void Death()
     {
-        base.Death();
-        RoomManager.Instance.OnBossDefeated();
+
+        if (IsDeath)
+        {
+            GameManager.Instance.inventory.AddGold(1);                                               // 코인 증가
+            DungeonManager.Instance.enemyManager.OnEnemyDefeated(this.GetComponent<BaseEnemy>());    // 에너미 죽음 체크
+            Destroy(hpBarController.hpBar);
+            Destroy(this.gameObject);
+            SceneManager.LoadScene("EndingScene");
+            RoomManager.Instance.OnBossDefeated();
+        }
     }
 }
