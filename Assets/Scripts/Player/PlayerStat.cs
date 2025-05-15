@@ -22,6 +22,12 @@ public class PlayerStat : BaseStat, IAttackStat, IDefenceStat, IMoveStat
     private int cost;
     private int useableCost;
 
+    private float buffDamage;
+    public float BuffDamage => buffDamage;
+
+    private float buffSpeed;
+    public float BuffSpeed => buffSpeed;
+
     private Player player;
 
     private GameData gameData;

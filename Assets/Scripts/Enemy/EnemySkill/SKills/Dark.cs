@@ -18,7 +18,7 @@ public class Dark : MonoBehaviour
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
-            Destroy(gameObject);
+            Destroy(gameObject,3f );
         }
     }
 }
