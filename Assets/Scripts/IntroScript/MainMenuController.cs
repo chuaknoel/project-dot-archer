@@ -33,7 +33,8 @@ public class MainMenuController : MonoBehaviour
 
     public void OnStats()
     {
-        // TODO: 스탯 화면 추후 구현
+        // 현재 씬에서 StatsScene 으로 전환
+        SceneManager.LoadScene("StatsScene");
     }
 
     public void OnShop()
