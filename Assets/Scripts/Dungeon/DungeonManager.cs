@@ -33,7 +33,7 @@ public class DungeonManager : MonoBehaviour //방 이동, 전체 흐름 등 맵 전체 책임
     public Player player;
     public CameraController cameraController;
 
-    
+    public UpgradeSelect UpgradeSelect;
 
     void Start()
     {

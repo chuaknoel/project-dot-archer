@@ -10,7 +10,7 @@ public class EnemyStat : BaseStat ,IDefenceStat
     HpBarController hpBarController;
     void Start()
     {
-         animator =transform.GetChild(0).GetComponent<Animator>();
+         animator = transform.GetComponentInChildren<Animator>();
     }
 
     public virtual void TakeDamage(float damage)
@@ -36,6 +36,7 @@ public class EnemyStat : BaseStat ,IDefenceStat
         hpBarController = GetComponent<HpBarController>();
         hpBarController.UpdateHP(CurrentHealth, MaxHealth);
     }
+
     protected virtual void PlayAnimation()
     {
         animator.SetBool("isDamaged", true);

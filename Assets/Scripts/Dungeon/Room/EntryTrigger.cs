@@ -18,6 +18,7 @@ public class EntryTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (!DungeonManager.Instance.roomManager.isCleared) { return; }
         if (!other.CompareTag("Player") || parentRoom == null) return;
 
         Vector2Int targetRoomPos = parentRoom.position + direction;

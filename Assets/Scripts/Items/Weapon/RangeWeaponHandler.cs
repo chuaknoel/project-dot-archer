@@ -121,7 +121,7 @@ public class RangeWeaponHandler : WeaponHandler
     {
         yield return new WaitForSeconds(burstDelay); ;
 
-        for (int i = 0; i < burstCount; i++)
+        for (int i = 0; i < GetBurstCount(); i++)
         {
             MultiProjectile();
             yield return new WaitForSeconds(burstDelay);
