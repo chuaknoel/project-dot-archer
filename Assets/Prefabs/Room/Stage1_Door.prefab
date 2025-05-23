@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8967502494658834444}
   - component: {fileID: 7410116291407393254}
-  - component: {fileID: 5077077003168235440}
+  - component: {fileID: 6312959276956326426}
   m_Layer: 0
   m_Name: Stage1_Door
   m_TagString: Untagged
@@ -79,7 +79,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
---- !u!114 &5077077003168235440
+--- !u!114 &6312959276956326426
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

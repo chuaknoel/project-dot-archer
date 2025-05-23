@@ -21,7 +21,7 @@ public class EntryTrigger : MonoBehaviour
         if (!parentRoom.isCleared) return;
 
         if (!other.CompareTag("Player") || parentRoom == null) return;
-        
+
         Vector2 targetRoomPos = parentRoom.position + direction;
         RoomNavigator navigator = FindObjectOfType<RoomNavigator>();
         navigator?.MovePlayerToRoomByPosition(targetRoomPos, other.gameObject);
