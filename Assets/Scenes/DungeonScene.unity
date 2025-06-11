@@ -177,7 +177,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 208325811}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WeaponPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,7 +263,8 @@ GameObject:
   - component: {fileID: 402479124}
   - component: {fileID: 402479123}
   - component: {fileID: 402479128}
-  m_Layer: 0
+  - component: {fileID: 402479129}
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -321,7 +322,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 1000
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -414,6 +415,24 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   targetList: []
+--- !u!114 &402479129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 402479122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62a0009d92307cc418b6fe8c065fea8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 0
+  maxHealth: 0
+  currentHealth: 0
+  attackDamage: 0
+  defence: 0
+  moveSpeed: 0
 --- !u!1 &414628834
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,7 +665,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1013221300}
   - component: {fileID: 1013221301}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MainRenerer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -878,13 +897,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeEnemies: []
-  enemyPrefabs:
-  - {fileID: 2628999518825426194, guid: 421b947c83e846f4f83a9153a43cdb12, type: 3}
-  - {fileID: 2410510397216180042, guid: 48f314e77b675454482b8008894787ca, type: 3}
-  - {fileID: 4126301989809614797, guid: 0f8336265d8bb4840b5400755b118a94, type: 3}
-  - {fileID: 9042726494757051735, guid: 6cd9968515608b748ba9944f2d4dafb8, type: 3}
-  - {fileID: 582702308276759449, guid: a7834378d40b5534dba413c693244a58, type: 3}
-  - {fileID: 6102266099826236044, guid: 0d110982777c2a9478b4c2ad0239a2fb, type: 3}
+  enemyPrefabs: []
 --- !u!1 &1590505898
 GameObject:
   m_ObjectHideFlags: 0

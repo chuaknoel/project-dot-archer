@@ -24,7 +24,7 @@ public class SkillController : MonoBehaviour
 
     }
 
-    private IEnumerator RunSkill(BaseEnemy owner)
+    protected virtual IEnumerator RunSkill(BaseEnemy owner)
     {
         canUse = false;
 

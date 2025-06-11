@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5543736753988889593}
   - component: {fileID: 4292865577478828342}
   - component: {fileID: -9002857716765498031}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BossSmallEffect
   m_TagString: BossEffect
   m_Icon: {fileID: 0}
@@ -99,9 +99,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e59c0eeed0524ad498d2f0d25019cddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  count: 0
   smalleffect: {fileID: 0}
   effecDamage: 1
+  damage: 0
 --- !u!58 &4292865577478828342
 CircleCollider2D:
   m_ObjectHideFlags: 0

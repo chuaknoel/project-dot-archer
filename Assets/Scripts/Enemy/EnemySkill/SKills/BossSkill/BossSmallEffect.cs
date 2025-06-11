@@ -15,8 +15,12 @@ public class BossSmallEffect : BossEffect
             Destroy(gameObject);
         }   
        else if(col.gameObject.tag == "Player")
-        {           
-            
+        {
+            GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+
+            // 플레이어 피격
+            col.gameObject.GetComponent<IDefenceStat>()?.TakeDamage(2f);
+
             Destroy(gameObject);
         }
     }
